@@ -1,0 +1,523 @@
+# Mode D: Job Application Mode（岗位投递模式 v1.4）
+
+## Trigger（触发条件）
+
+用户提供以下任一信息：
+- JD（Job Description）
+- 职位描述
+- 招聘链接
+- 岗位要求
+
+## Preconditions（前置条件）
+
+`career-dna/` 目录必须已存在。如不存在，先执行 Mode A（Career DNA Build Mode）。
+
+## Objective（目标 v1.4）
+
+从 JD 关键词提取升级为 Talent Persona Inference（人才画像推理）。不仅分析 JD"要什么技能"，更要推理"要什么样的人、为什么招、怎样证明匹配"。
+
+## Talent Intelligence Pipeline（人才智能分析管线 v1.4）
+
+```
+JD
+↓
+Step 1: Role Decomposition（岗位能力拆解）
+    └── 输出：Core Functions / Responsibilities / Expected Ownership
+↓
+Step 2: Hiring Intent Analysis（招聘意图分析）
+    └── 输出：Explicit / Implicit Requirements / Business Context
+↓
+Step 3: Talent Persona Inference（人才画像推理）
+    └── 输出：Ideal Candidate / Career Background / Typical Experience / Preferred Traits
+↓
+Step 4: Evidence Expectation Analysis（证据需求分析）
+    └── 输出：Critical Evidence / Expected Stories / Expected Results
+↓
+Step 5: DNA Match Analysis（基因库匹配分析 v1.4.2）
+    └── Persona Match(35%) + Evidence Match(35%) + Capability Match(30%)
+↓
+Step 5.5: Capability Translation Analysis（能力迁移分析 v1.4.4）
+    └── Direct Match(100%) / Adjacent Match(60%) / Missing(0%) / Mapping Boundary
+↓
+Step 6: Targeted Discovery（定向证据发现）
+    └── 基于 Evidence Expectation + Match Gaps 定向追问
+↓
+Step 7: Career DNA Update（职业资产回写）
+Step 8: Resume Package（求职材料包）
+Step 9: Knowledge Update（知识更新 → 沉淀 Talent Persona/Evidence Expectation 到 knowledge/）
+```
+
+---
+
+## Step 1: Role Decomposition（岗位能力拆解）
+
+### 目标
+
+对 JD 进行深层次拆解，不仅识别技能标签，更要理解岗位的核心职能和期望责任级别。
+
+### 拆解维度
+
+从 JD 中分析：
+
+| 维度 | 说明 | 示例 |
+|------|------|------|
+| **Core Functions（核心职能）** | 这个岗位在公司里承担什么角色 | 交付执行者 / 客户对接窗口 / 项目 Owner |
+| **Responsibilities（核心职责）** | 具体的日常工作和关键任务 | 项目排期和进度管理 / 客户需求调研 / 团队协调 |
+| **Expected Ownership（期望责任级别）** | 独立执行？带人？跨部门推动？ | Lead（独立负责完整项目）/ Support（辅助） |
+| **Reporting Structure Hint（管理层级暗示）** | 向谁汇报？带不带团队？ | 向 VP 汇报 → 高级别 |
+| **Scope Hint（范围暗示）** | 单项目？多项目？跨地域？ | 多项目并行 → 需要强资源协调能力 |
+
+### 输出格式
+
+```yaml
+Role: [标准化 Role 名称]
+Core Functions: [核心职能描述]
+Responsibilities:
+  - [职责1]
+  - [职责2]
+Expected Ownership: [Lead / Partial Lead / Support]
+Management Scope: [带团队 / 独立执行 / 辅助]
+Project Scope: [单项目 / 多项目 / 跨地域]
+```
+
+---
+
+## Step 2: Hiring Intent Analysis（招聘意图分析）
+
+### 目标
+
+超越 JD 字面意思，推理公司真正的招聘动机——为什么招这个人？要解决什么问题？
+
+### 分析维度
+
+| 维度 | 说明 | 分析方式 |
+|------|------|----------|
+| **Explicit Requirements（显性要求）** | JD 明文写出的要求 | 直接提取 |
+| **Implicit Requirements（隐性要求）** | JD 没写出但可推理的要求 | 从 JD 上下文 + Role Snapshot Trend + 行业常识推理 |
+| **Business Context（业务背景）** | 招这个人的业务原因 | 从公司阶段（扩张？替补？新业务？）推理 |
+| **Pain Point（痛点推断）** | 团队当前缺什么能力 | 从 JD 高频强调或特殊要求推理 |
+
+### 输出格式
+
+```yaml
+Explicit Requirements: [显性要求列表]
+Implicit Requirements: [隐性要求列表]
+Business Context: [业务背景推理]
+Pain Point: [团队痛点推断]
+Hiring Reason: [新设岗位 / 替补离职 / 业务扩张 / 项目需求]
+```
+
+---
+
+## Step 3: Talent Persona Inference（人才画像推理）
+
+### 目标
+
+基于 Role Decomposition + Hiring Intent + Role Snapshot，推理出理想候选人的完整画像——不只是一串技能，而是一个有职业背景、有典型经历、有特质的人。
+
+### 推理维度
+
+| 维度 | 说明 |
+|------|------|
+| **Ideal Candidate（理想候选人）** | Natural-language 描述：什么样的人？ |
+| **Career Background（职业背景）** | 典型来自什么行业、什么岗位、几年经验 |
+| **Typical Experience（典型经历）** | 应该经历过什么项目、做过什么角色 |
+| **Preferred Traits（偏好特质）** | 独立性强？沟通力强？推动力强？ |
+
+### 输出格式（Human-readable 自然语言输出, not keyword list 非关键词列表）
+
+```yaml
+Ideal Candidate:
+  "具有项目交付经验，能独立面对客户，具备需求梳理和推进能力的实施型人才"
+Career Background:
+  - 来自 [行业]
+  - [N] 年以上 [领域] 经验
+Typical Experience:
+  - [典型经历1]
+  - [典型经历2]
+Preferred Traits:
+  - [特质1]
+  - [特质2]
+```
+
+---
+
+## Step 3.5: Skill Weight Analysis（能力权重分析 v1.4.1）
+
+### 目标
+
+从 JD 措辞、Role Snapshot 频率、行业常识三个维度推理各能力的相对重要性，输出带权重的能力列表。
+
+### 推理三维度
+
+| 维度 | 权重来源 | 评分逻辑 |
+|------|----------|----------|
+| **JD 措辞优先级** | JD 文本 | "必须/要求" > "优先" > "熟悉/了解"；首段出现 > 中段 > 尾段 |
+| **Role Snapshot 频率** | `knowledge/role_snapshots/{role_name}.md` Skill Frequency | 频率 ≥ 80% → 3pt, 50-80% → 2pt, < 50% → 1pt |
+| **行业常识** | 基于 Evidence Expectation 推理 | Critical Evidence 对应的能力自动 +1pt |
+
+### 输出格式
+
+```yaml
+Skill Weights:
+  - 能力: Stakeholder Management
+    Weight: 35%
+    Reasoning: JD 高频出现 + Role Snapshot 频率 90% + Critical Evidence 对应
+  - 能力: Project Delivery
+    Weight: 25%
+    Reasoning: JD 明确要求（必须）
+  - 能力: Risk Management
+    Weight: 20%
+    Reasoning: Role Snapshot 频率 75%
+  - 能力: Data Analysis
+    Weight: 10%
+    Reasoning: JD 提及但非核心
+```
+
+### 用途
+
+- Step 5 DNA Match 时：Gap 按能力权重加权评分（Critical + 高权重缺失 = 严重 Gap）
+- Skill Graph Gap 优先级排序：权重越高的能力，Evidence Count = 0 时越致命
+- 未来 v1.5 Skill Mapping（技能映射引擎）：直接使用权重表作为映射输入
+
+---
+
+## Step 4: Evidence Expectation Analysis（证据需求分析 v1.5.2 内部推理）
+
+### 目标
+
+从 Talent Persona 反向推理面试官期望的证据类型。**v1.5.2 不单独写入报告 Part 5**（与 Evidence Mapping 3.5 重复），作为 Step 5 DNA Match 中 Evidence Quality 评定的内部推理依据。
+
+### 推理维度（v1.4.1 结构化 / v1.5.2 Internal Use Only）
+
+### 目标
+
+从 Talent Persona 反向推理——面试官会问什么来验证候选人？简历和面试中需要展示什么证据？
+
+### 推理维度（v1.4.1 结构化）
+
+| 维度 | 说明 |
+|------|------|
+| **Critical Evidence（关键证据）** | 必须在简历/面试中展示的证据，缺一不可 |
+| **Expected Ownership（期望责任级别）** | 该证据应展现的责任层级：Owner(独立负责) / Lead(主导) / Support(辅助) |
+| **Expected Scope（期望范围）** | 该证据应展现的影响范围：Global(跨组织) / Department(跨团队) / Team(团队内) |
+| **Expected Impact（期望影响）** | 该证据应展现的业务影响类型：Revenue / Efficiency / Delivery / Quality |
+| **Expected Stories（预期案例）** | 面试官可能问的项目案例类型 |
+| **Evidence Risks（证据风险）** | 用户可能缺乏的证据区域，附关联能力权重 |
+
+### 输出格式（v1.4.1 结构化）
+
+```yaml
+Critical Evidence:
+  - 证据项: Cross-team Coordination
+    Importance: Critical
+    Expected Ownership: Lead
+    Expected Scope: Department
+    Expected Impact: Efficiency
+    Interview Question: "请举一个跨部门推动项目的例子"
+  - 证据项: Client-facing Delivery
+    Importance: High
+    Expected Ownership: Owner
+    Expected Scope: Global
+    Expected Impact: Revenue
+    Interview Question: "如何处理客户现场的需求变更？"
+Expected Stories:
+  - 案例类型: 需求调研案例 → 期望 Ownership: Lead / Scope: Department
+  - 案例类型: 客户培训案例 → 期望 Ownership: Owner / Scope: Global
+Evidence Risks:
+  - 证据薄弱区域: 跨组织推动经验 → 缺失影响: High（对应能力权重 35%）
+  - 证据薄弱区域: 量化交付数据 → 缺失影响: Medium（对应能力权重 20%）
+```
+
+**Evidence Scoring Rule（证据评分规则）**：
+- Ownership (Owner=3, Lead=2, Support=1) + Scope (Global=3, Dept=2, Team=1) + Impact (Revenue=3, Efficiency=2, Delivery=2, Quality=1) = Evidence Score
+- ≥7pt = Strong Evidence / 4-6pt = Moderate / ≤3pt = Weak
+
+---
+
+## Step 5: DNA Match Analysis（基因库匹配分析）
+
+### 目标
+
+将 Talent Persona + Evidence Expectation 与 Career DNA 交叉比对，输出匹配度。v1.4 的匹配更精准——不是比技能列表，而是比画像+证据。
+
+### 读取的数据源
+
+- `career-dna/04_skill_graph.md` — 能力图谱
+- `career-dna/03_projects.md` — 项目资产
+- `career-dna/05_story_bank.md` — 故事库
+- `career-dna/07_career_identity.md` — 职业身份
+- `career-dna/10_career_tracks/{track}.md` — Career Track
+- `career-dna/02_timeline.md` — 职业轨迹
+- `knowledge/role_snapshots/{role_name}.md` — Role Snapshot
+
+### 匹配维度（v1.5.2 升级为 4 维度）
+
+| 匹配维度 | 权重 | 说明 |
+|----------|------|------|
+| **Hard Requirement Match（硬性要求匹配）** | 40% | 学历/语言/证书/年限 — 逐项给分 0-100（v1.5.3 颗粒化），终结 ✓/△/✗ 三值判定 |
+| **Experience Match（经验匹配）** | 30% | 行业/场景/角色重叠度 — Career Background vs Ideal Candidate |
+| **Capability Match（能力迁移匹配）** | 20% | Direct(100%) + Adjacent(60%) + Missing(0%) — 同 v1.4.4 |
+| **Industry Match（行业匹配）** | 10% | 同行业/同客户群/同业务场景 — 从 Role Snapshot Industries 判定 |
+
+**Hard Requirement 评分逻辑（v1.5.3 颗粒化）**：
+逐项给分 0-100，替代旧的 ✓/△/✗ 三值判定。每项附「扣分来源」说明。
+
+扣分规则：
+- 头衔不匹配但经验存在 → 扣 20-30（Adjacent-style）
+- 年限差距 → 按比例扣（差1年扣10-15）
+- 证书缺失但能力存在 → 扣 10-20
+- 完全缺失 → Score = 0
+
+最终 Hard Requirement Match = ∑(各项 Score) / 项数。
+
+### Match Confidence 计算（v1.5.2 新增）
+
+**Match Confidence = Evidence Count(30%) + Evidence Quality(30%) + Direct Relevance(25%) + Market Validation(15%)**
+
+| 分量 | 计算方式 |
+|------|----------|
+| **Evidence Count（证据数量）** | 可用证据项数 / 总匹配能力数 → 百分比转分数 |
+| **Evidence Quality（证据质量）** | High/Medium/Low 证据占比加权（High×100 + Medium×60 + Low×30）/ 总数 |
+| **Direct Relevance（直接相关性）** | Direct 匹配占比（Direct 占比 > 60% → 85pt, 40-60% → 65pt, < 40% → 45pt） |
+| **Market Validation（市场验证度）** | Role Snapshot Observed JD Count 分级（≥10→85pt, 5-9→65pt, <5→45pt） |
+
+### Track Validation 计算（v1.5.2 新增）
+
+三角验证链路：用户 ↔ Track ↔ JD
+
+- **DNA→Track**: 取 `10_career_tracks/{track}.md` 的 Track Confidence
+- **Track→JD**: Track Core Skills 在 JD 中的覆盖比例（覆盖数/总数）
+- **Triangulated**: 两段均 ≥ 70 → Strong / 一段 < 70 → Moderate / 两段均 < 70 → Weak
+
+### 写入文件
+
+`resume-outputs/{YYYYMMDD}-{company}-{role}/01_jd_match_report.md`（使用 v1.5.2 3-Part 模板）
+
+---
+
+## Step 5.5: Capability Translation Analysis（能力迁移分析 v1.4.4）
+
+### 目标
+
+将 JD 的能力要求逐项映射到 Career DNA，输出 Direct / Adjacent / Missing 三类映射结果。不再依赖"关键词是否重复出现"判断匹配，而是推理"证据是否可迁移"。
+
+### 推理优先级
+
+| 优先级 | 类型 | 逻辑 | 计分 |
+|--------|------|------|------|
+| **P1 Direct Match（直接匹配）** | JD Skill = DNA Skill（同能力） | 同名能力直通 | 100% |
+| **P2 Adjacent Match（迁移匹配）** | JD Skill ≈ DNA Skill（可迁移） | 不同名但证据链/技能域/业务场景交叉 | 60%（需附推理过程） |
+| **P3 Missing（缺失）** | JD Skill ≠ DNA（无映射） | 无可信迁移路径 | 0% |
+
+### Adjacent Match 判定规则
+
+以下情况允许 Adjacent Match（置信度依据相似度评定）：
+
+1. **同一 Domain（域内迁移）**：Skill Graph Domain 相同，Skill 名称不同 → Confidence 70-85
+2. **Related Skills（关联能力）**：Skill Graph 中已标记的 Related Skills → Confidence 60-75
+3. **业务场景交叉（工作交叉）**：不同 Domain 但同一项目中体现（从 Evidence 推断） → Confidence 50-65
+4. **Skill Snapshot Alias 匹配（别名命中）**：JD 用词命中 Skill Snapshot 的 Aliases 字段 → Confidence 80-90
+
+Adjacent Mapping Confidence < 50 的不计入匹配，归入 Missing。
+
+### Speculative Match 禁止规则（推测匹配禁止）
+
+以下情况**强制归入 Missing，不可建立 Adjacent**：
+
+| 拒绝类型 | 示例 |
+|----------|------|
+| 跨行业跳跃（行业不相关） | 客服经验 → 架构师职责 |
+| 无证据关联（无项目支撑） | 财务经验 → Unity 开发 |
+| 领域无交集 | 设计经验 → DevOps |
+
+### Evidence Coverage 计算（v1.5.3 新增）
+
+对每个 JD 能力拆分「子证据项」（如 Scrum→站会/Sprint Review/Retro/Burn-down），分别判定 Direct/Adjacent/Missing，汇总计算覆盖率：
+
+```
+Coverage = (Direct子证据数×100 + Adjacent子证据数×60) / (Direct + Adjacent + Missing 子证据总数)
+```
+
+写入 `01_jd_match_report.md` Part 3.5 Evidence Mapping 表的 Coverage 列。
+
+### 输出格式
+
+写入 `01_jd_match_report.md` Part 6.5：
+
+```yaml
+Capability Translation:
+  Direct Matches（直接匹配）:
+    - JD: 项目管理 → DNA: 项目管理 (Confidence 90)
+    共 N 项
+  Adjacent Matches（迁移匹配）:
+    - JD: 客户沟通 → DNA: 海外团队协作 (Migration Confidence 75)
+      推理: 跨文化沟通包含主动对齐、冲突化解、定期同步 → 客户沟通核心能力可迁移
+    共 N 项
+  Missing（缺失）:
+    - JD: 客户培训 → 无交付培训经验
+    共 N 项
+  Capability Score: (Direct×100 + Adjacent×60 + Missing×0) / 总数 = XX
+  Mapping Boundary: 未发现 Speculative Match
+```
+
+---
+
+## Step 6: Targeted Discovery（定向证据发现）
+
+**目的**：基于 Evidence Expectation 的 Evidence Risks 和 DNA Match 的 Gaps，定向追问。
+
+**规则**：
+- 只追问 3-10 个高价值问题
+- 优先追问 Critical Evidence 覆盖缺失
+- 利用 Talent Persona 提供的 Preferred Traits 作为追问方向
+
+详细规则见 `references/targeted_discovery.md`。
+
+---
+
+## Step 7: Application Strategy Decision（求职策略决策 v1.5.1）
+
+### 目标
+
+基于 Overall Match Score + Capability Translation 结果，判定求职策略，选择对应的 Package。
+
+### 策略判定
+
+| Strategy（策略） | Match Score | 适用场景 | Package |
+|------------------|-------------|----------|---------|
+| **Strong Fit（强匹配）** | ≥ 80 | Persona + Evidence + Capability 三项均高 | Pack A |
+| **Moderate Fit（中等匹配）** | 60-79 | 两项以上中等，有可补强的 Gap | Pack B |
+| **Stretch Fit（拉伸匹配）** | 40-59 | Adjacent 占比高，跨方向转岗申请 | Pack C |
+| **Weak Fit（弱匹配）** | < 40 | 匹配度极低，不建议直接投递 | Pack D |
+
+### 边界升级/降级规则
+
+- Adjacent 占比 > 60% 且 Match Score ≥ 40 → **升为 Stretch Fit**
+- Missing 中含有 Skill Weight > 30% 的 Critical 缺失 → **降一档**
+- 用户已明确"只投这个方向" → 不降档
+
+### 策略输出
+
+写入 `resume-outputs/{YYYYMMDD}-{company}-{role}/01_jd_match_report.md` Part 6 匹配总览新增一行：
+
+```yaml
+Application Strategy（求职策略）: Strong Fit / Moderate Fit / Stretch Fit / Weak Fit
+Package（生成包）: Pack A / B / C / D
+```
+
+---
+
+## Step 8: Career DNA Update（职业资产回写）
+
+同 v1.3 逻辑，新增 v1.4 更新：
+- 更新 `10_career_tracks/{track}.md` 的 **Market Validation / Matched Hiring Intent / Evidence Strength**
+
+---
+
+## Step 9: Resume Package（求职材料包 v1.5.1）
+
+按 Step 7 的策略决定生成哪套文件。详细产出合约见 `references/output_contracts.md`。
+
+### Pack A: Strong Fit — 投递包（Match ≥ 80）
+
+| # | 文件 | 用途 |
+|---|------|------|
+| 1 | `01_jd_match_report.md` | 完整 JD 分析 + Capability Translation |
+| 2 | `02_resume_cn.md` | 中文 ATS 简历 |
+| 3 | `03_resume_en.md` | 英文 ATS 简历 |
+| 4 | `04_interview_pack.md` | 面试准备包 |
+| 5 | `05_answer_cards.md` | 回答卡片库 |
+| 6 | `06_upgrade_plan.md` | 竞争力升级计划 |
+
+### Pack B: Moderate Fit — 投递+补强包（Match 60-79）
+
+| # | 文件 | 用途 |
+|---|------|------|
+| 1 | `01_jd_match_report.md` | 完整 JD 分析 |
+| 2 | `02_resume_cn.md` | 中文 ATS 简历 |
+| 3 | `03_resume_en.md` | 英文 ATS 简历 |
+| 4 | `04_interview_pack.md` | 面试准备包 |
+| 5 | `05_answer_cards.md` | 回答卡片库 |
+| 6 | `06_gap_analysis.md` | **能力差距分析（v1.5.1 新增）** |
+| 7 | `07_upgrade_plan.md` | 升级计划 |
+
+### Pack C: Stretch Fit — 转岗包（Match 40-59）
+
+| # | 文件 | 用途 |
+|---|------|------|
+| 1 | `01_jd_match_report.md` | 完整 JD 分析 |
+| 2 | `02_transition_resume_cn.md` | **转岗中文简历** — 突出 Adjacent Match 可迁移能力 |
+| 3 | `03_transition_resume_en.md` | **转岗英文简历** |
+| 4 | `04_capability_translation.md` | 能力迁移分析报告（基于 Part 6.5） |
+| 5 | `05_gap_analysis.md` | 能力差距分析 |
+| 6 | `06_interview_pack.md` | 面试准备包（含转岗高频问题） |
+| 7 | `07_upgrade_plan.md` | 升级计划 |
+
+### Pack D: Weak Fit — 学习路线包（Match < 40）
+
+| # | 文件 | 用途 |
+|---|------|------|
+| 1 | `01_jd_match_report.md` | JD 分析 |
+| 2 | `02_gap_analysis.md` | 能力差距分析 |
+| 3 | `03_transition_feasibility.md` | 转岗可行性评估 |
+| 4 | `04_learning_roadmap.md` | 学习路线图 |
+
+> Pack D 不生成简历和面试包，避免硬包装。
+
+---
+
+## Step 10: Knowledge Update（知识更新）
+
+### A. 更新 knowledge/role_snapshots/{role_name}.md（v1.4.1 增强）
+
+1. 更新 **Common Hiring Intent**：基于本次 Hiring Intent Analysis 合并更新（典型招聘意图）
+2. 更新 **Talent Persona**：基于本次 Talent Persona Inference 合并更新（典型画像特征）
+3. 更新 **Typical Evidence**：基于本次 Evidence Expectation（含 Ownership/Scope/Impact）合并更新
+4. 更新 **Career Background Distribution**：本 Role 常见职业背景分布
+5. 更新 **Skill Weight Baseline**（v1.4.1 新增）：基于多次 Skill Weight Analysis 累积各能力的平均权重
+6. 更新 **Hiring Intent Trends / Talent Persona Trends / Evidence Trends**（≥3 次观察后）
+
+### B. 更新 knowledge/skill_snapshots/{domain_name}.md（v1.4.1 增强）
+
+每个 Skill 更新：
+
+1. 更新 **Aliases**（v1.4.1 新增）：如 JD 中出现该 Skill 的新表述，追加到 Aliases 列表（去重）
+2. 更新 **Typical Evidence**：含 Ownership/Scope/Impact 三维度的典型证据形式
+3. 更新 **Business Meaning**：该 Skill 在业务中的价值解释
+4. 更新 **Related Hiring Intent**：该 Skill 关联哪类招聘意图
+5. 更新 **Typical Results**：该 Skill 的典型成果量化方式
+6. 更新 **Typical Ownership**：基于多次 Evidence Expectation 的 Expected Ownership 均值
+
+### C. 更新 career-dna/10_career_tracks/{track}.md（v1.4.2 增强）
+
+1. 重新计算 **Track Confidence Breakdown**：Evidence Strength / Role Snapshot Validation / Market Demand 三分量
+2. 更新 **Validation Status**：基于 JD 频率和覆盖比例判定 Validated / Emerging / Uncertain
+3. 更新 **Market Validation**：本次 JD 是否验证了该 Track 的市场需求
+4. 更新 **Matched Hiring Intent**：哪些 Hiring Intent 被本次 JD 覆盖
+5. 更新 **Evidence Strength**：基于 Evidence Expectation 评估证据强度（Strong / Moderate / Weak）
+6. 更新 **Market Demand Signals / Recent JD Coverage / Market Signal**
+
+### Knowledge Update 逻辑总结（v1.4.2）
+
+```
+JD
+↓
+Talent Persona → Role Snapshot（Skill Weight Baseline + Persona Statistics）
+    ↓
+Evidence Expectation → Skill Snapshot（Typical Evidence + Aliases + Ownership 均值）
+    ↓
+Career Track（Track Confidence Breakdown + Market Validation + Recent JD Coverage）
+```
+
+---
+
+## Important Rules（重要规则 v1.4）
+
+1. **JD 不只是技能列表**。每个 JD 背后有 Hiring Intent、Talent Persona、Evidence Expectation 三层深度信息。
+2. **Talent Persona 优先于技能匹配**。先推理"要什么样的人"，再做"能力匹配"。
+3. **Evidence 是连接器**。Talent Persona → Evidence Expectation → Career DNA Evidence 形成完整证据链。
+4. **JD Match Report 是完整分析档案**。保存 6 部分完整推理过程，不只存匹配结果。
+5. **Knowledge 层积累推理结果**。Role Snapshot 不只记录职责，更记录 Hiring Intent 和 Talent Persona 的趋势。
+6. **resume-outputs 按次隔离**。`{YYYYMMDD}-{company}-{role}/` 子目录。
+7. **Targeted Discovery 严格控制**。最多 10 个问题，不长时间盘问。
