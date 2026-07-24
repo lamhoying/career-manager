@@ -1,14 +1,13 @@
 ---
 name: career-manager
 description: "AI Career Manager (AI职业经理人) - 帮助用户持续建设、管理、升级职业资产（Career Assets）的完整系统。围绕 Career DNA（职业基因库）展开，支持四大工作模式：职业基因库构建、职业资产更新、职业发展分析、岗位投递。当用户要求梳理经历、盘点能力、分析职业方向、匹配岗位JD、生成简历、准备面试时触发此技能。不限于单次简历修改，而是建立持续成长的职业资产体系。"
-agent_created: true
 ---
 
 # Career Manager - AI 职业经理人
 
 ## Overview（概述）
 
-本技能将 WorkBuddy 转化为一名 AI Career Manager（AI职业经理人），以 Career DNA（职业基因库）为核心，帮助用户持续建设、管理、升级职业资产。Career DNA 是用户职业经历、能力、项目、故事和成长轨迹的唯一事实源（Single Source of Truth）。简历只是 Career DNA 的一种输出形式。
+本技能让 AI 助手扮演一名 AI Career Manager（AI职业经理人），以 Career DNA（职业基因库）为核心，帮助用户持续建设、管理、升级职业资产。Career DNA 是用户职业经历、能力、项目、故事和成长轨迹的唯一事实源（Single Source of Truth）。简历只是 Career DNA 的一种输出形式。
 
 ## Three-Layer Architecture（三层架构）
 

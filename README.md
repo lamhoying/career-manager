@@ -1,6 +1,6 @@
 # Career Manager — AI 职业经理人
 
-> 把 WorkBuddy 变成你的私人 AI Career Manager：以 **Career DNA（职业基因库）** 为唯一事实源，持续建设、管理、升级你的职业资产，而不是每次都从零改简历。
+> 把你的 AI 助手变成私人 Career Manager：以 **Career DNA（职业基因库）** 为唯一事实源，持续建设、管理、升级你的职业资产，而不是每次都从零改简历。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-v1.5.3-green.svg)](CHANGELOG.md)
@@ -9,11 +9,22 @@
 
 ## 这是什么
 
-Career Manager 是一个 WorkBuddy **Skill（技能包）**。它围绕一个核心思想设计：
+Career Manager 是一个 **AI 助手技能包（Skill）**，可运行于 WorkBuddy、Claude Code、OpenAI Codex、Cursor 等多种支持自定义指令 / 技能的 agent 环境。它围绕一个核心思想设计：
 
 > **Career DNA = 你职业经历、能力、项目、故事与成长轨迹的唯一事实源（Single Source of Truth）。简历只是 Career DNA 的一种输出形式。**
 
 传统做法是「每次看到 JD 就重写一遍简历」，信息是碎片化的、不可复用的。本技能把职业资产沉淀成一个可持续演进的系统，简历 / 面试材料 / 岗位匹配报告都从同一个事实源自动派生。
+
+---
+
+## 跨平台兼容性
+
+本技能只依赖两样东西，因此可在任意 AI 助手中复用：
+
+- **纯文本指令**：`SKILL.md` + `references/*.md` 都是 Markdown，不含任何平台专属 API 调用。
+- **标准库 Python**：`scripts/*.py` 仅使用 `os / sys / re / pathlib / shutil / datetime` 等 Python 标准库，可在任意装有 Python 3 的环境直接运行。
+
+没有写死的平台私有 SDK，没有平台专属路径依赖。各 agent 的差异只在于「如何加载这段指令」和「如何触发」，技能的内容本身完全通用。
 
 ---
 
@@ -48,26 +59,43 @@ Career Manager 是一个 WorkBuddy **Skill（技能包）**。它围绕一个核
 
 ## 安装方式
 
-### 方式一：从源码安装（推荐）
+### 方式一：WorkBuddy
 
 ```bash
 git clone <本仓库地址> career-manager
 cp -R career-manager ~/.workbuddy/skills/career-manager
 ```
 
-完成后重启 WorkBuddy 即可在任意对话中触发。
+重启 WorkBuddy 即可在任意对话中触发。
 
 > 路径说明：
 > - **macOS**：`~/.workbuddy/skills/career-manager/`
 > - **Windows / Linux**：`%USERPROFILE%/.workbuddy/skills/career-manager/`（或 `~/.workbuddy/skills/career-manager/`）
 
-### 方式二：从 Release 安装
+### 方式二：Claude Code
 
-在仓库的 **Releases** 页面下载 `career-manager.zip`，解压后将 `career-manager/` 文件夹复制到上述 `skills/` 目录即可。
+Claude Code 同样以 `SKILL.md` 的 `name` / `description` 作为技能声明，可直接识别本技能包：
 
-### 方式三：WorkBuddy 推荐市场（如已上架）
+```bash
+git clone <本仓库地址> career-manager
+cp -R career-manager ~/.claude/skills/career-manager    # 用户级
+# 或放到项目级：<你的项目>/.claude/skills/career-manager
+```
 
-在 WorkBuddy 中直接说「安装 career-manager 技能」，由内置推荐市场一键安装。
+### 方式三：OpenAI Codex / 通用 agent
+
+Codex 等没有原生的「技能包」概念，两种用法皆可：
+
+1. 把 `SKILL.md` 的核心流程与 `scripts/` 用法写入你的 `AGENTS.md`（或 system prompt），让 agent 在对话中按指令执行；
+2. 直接在对话里粘贴 `SKILL.md` 内容作为上下文，脚本通过其 shell 工具运行。
+
+### 方式四：Cursor / Windsurf / Cline
+
+将 `SKILL.md` 转换为对应工具的 rule 文件（如 `.cursor/rules/career-manager.mdc`）或自定义 command，脚本照常通过其终端运行。
+
+### 方式五：从 Release 安装
+
+在仓库的 **Releases** 页面下载 `career-manager.zip`，解压后将 `career-manager/` 文件夹复制到对应 agent 的技能目录即可（各 agent 的目录见上方各方式）。
 
 ---
 
@@ -103,10 +131,18 @@ career-manager/
 
 ## 使用流程（首次）
 
-1. 在 WorkBuddy 中开启一个新任务，说：「帮我构建 Career DNA」。
+1. 在任意支持的 AI 助手中开启一个新任务，说：「帮我构建 Career DNA」。
 2. 技能会调用 `init_career_dna.py` 在当前工作区生成 `career-dna/`、`knowledge/`、`resume-outputs/` 目录。
 3. 按引导逐步填写经历、项目、能力、故事。
 4. 之后每次有新材料，用模式 B 增量更新；要投岗位时用模式 D。
+
+---
+
+## 兼容性说明
+
+- 从本仓库克隆的版本 **不含** `agent_created` 标记（那是 WorkBuddy 专属的可管理标记，其他 agent 会忽略）。若你只用 WorkBuddy 并希望用内置 Skill 管理功能编辑此技能，可在 `SKILL.md` frontmatter 加回一行 `agent_created: true`。
+- 所有 `references/*.md` 与 `assets/templates/*.md` 均为纯 Markdown，可直接被任意 agent 读取。
+- 本仓库不含任何写死的绝对路径（除各 agent 的可选技能安装目录 `skills/` 外），无平台私有依赖。
 
 ---
 
