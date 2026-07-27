@@ -17,6 +17,18 @@
 | Career Identity | 0% | ❌ |
 | Career Tracks | 0% | ❌ |
 
+### Evidence Strength Coverage（证据强度覆盖率 v1.5.5）
+
+| 等级 | 数量 | 覆盖率 |
+|:--:|:--:|:--:|
+| Strength 5（强证据） | [N] | [X]% |
+| Strength 4（中强证据） | [N] | [X]% |
+| Strength 3（中等证据） | [N] | [X]% |
+| Strength 1-2（弱证据） | [N] | [X]% |
+| 无证据 | [N] | [X]% |
+
+> 强证据占比 ≥ 40% → A级 | 20-39% → B级 | < 20% → C级
+
 ## 信息缺口
 1. （暂无）
 

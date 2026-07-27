@@ -24,3 +24,9 @@
 
 ### 风险提示
 - [追问时可能暴露的弱点，以及应对策略]
+
+### Evidence Strength（证据强度 v1.5.5）
+- **可复述性（Retellability）**: 高 / 中 / 低
+- **可验证性（Verifiability）**: 高 / 中 / 低
+- **场景适配度（Scenario Fit）**: 高 / 中 / 低
+- **强度等级（Strength）**: 5 / 4 / 3 / 2 / 1

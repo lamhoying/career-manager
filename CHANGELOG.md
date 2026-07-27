@@ -1,5 +1,130 @@
 # CHANGELOG
 
+## v1.5.6 — 2026-07-27
+
+### Output Quality & Convergence（输出质量收敛 v1.5.6）
+
+v1.5.5 报告存在摘要值与正文值不一致、Confidence 计算口径偏宽、Part 4/4.5 表格重复等问题。v1.5.6 做一个纯粹的质量收敛，不新增分析维度。
+
+**修复 1：摘要-正文值统一来源**
+- 3.1 Match Summary 改为引用型（值 → 来源列），不独立填值
+- 3.2/3.3/Part 7 底部增加收敛线，标注"计算值 → 填入 3.1"
+
+**修复 2：Match Confidence 计算口径收紧**
+- 3.3 新增 Scoring Reference（评分因子参考表）：每个分量明确公式 + 扣分条件
+- 3.3 Breakdown 表从宽松占位符改为具体示例（原始分/扣分/最终分三列）
+- mode_d Step 5 Confidence 同步扣分条件
+
+**修复 3：Decision Score 因子分类**
+- Part 7 新增 Factor Types（Core/Multiplier/Additive 三类）
+- 明确公式构成和每项因子的类型标签
+
+**修复 4：Part 4 / Part 4.5 表格合并**
+- Part 4 改为 Evidence Matrix 合并表（Distance + Strength 同表）
+- Part 4.5 删除独立映射表，仅保留 Strength Rules
+- Part 8 新增 8.0 Usable Evidence Summary（可用证据 Top3 / Secondary）
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `assets/templates/resume-outputs/01_jd_match_report.md` | 3.1 来源化 / 3.2/3.3 收敛线 / 3.3 评分因子+扣分表 / Part 4 合并矩阵 / Part 4.5 缩小 / Part 7 因子分类 / Part 8 可用证据汇总 |
+| `references/mode_d_job_application.md` | Step 5 Confidence 扣分条件同步 |
+
+---
+
+## v1.5.5 — 2026-07-26
+
+### Evidence Strength Upgrade（证据强度升级）
+
+**核心目标**：v1.5.4 解决了"像不像"（Evidence Distance），v1.5.5 补充解决"硬不硬"（Evidence Strength）。同样都能映射，但这条证据能不能写进主简历？能不能拿去打面试？
+
+### 新增 Part 4.5: Evidence Strength
+
+`01_jd_match_report.md` 新增独立章节：
+
+**5 维度评分**（0-2 分/维度，总分 0-10 → Strength 0-5）：
+- Ownership（主导程度）: 主导=2 / 参与=1 / 无=0
+- Scope（覆盖范围）: 跨团队=2 / 单团队=1 / 单人=0
+- Impact（结果影响）: 有量化=2 / 有过程=1 / 无=0
+- Recency（时效性）: 1年内=2 / 1-4年=1 / 4年+=0
+- Relevance（相关性）: 直接=2 / 间接=1 / 不相关=0
+
+**Strength 使用规则**：
+- Strength 5 �� 主简历标题区 + 面试开场故事
+- Strength 4 → 简历主体，适合补强
+- Strength 3 → Interview Pack / Answer Cards
+- Strength ≤ 2 → 仅内部参考，不写进外部材料
+
+**关键设计**: Evidence Strength 不进入 Match Score 公式，仅决定材料投放策略。
+
+### DNA 模板联动
+
+- `03_projects.md`: 每个项目追加 Evidence Strength 字段块
+- `05_story_bank.md`: 每个故事追加 Strength 评级
+- `09_completeness_report.md`: 新增 Strength Coverage 覆盖率统计
+
+### mode_d 推理联动
+
+- Step 5.5 末尾追加 Evidence Strength 判定逻辑 + 联动规则
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `assets/templates/resume-outputs/01_jd_match_report.md` | Part 4.5 新增 |
+| `assets/templates/career-dna/03_projects.md` | 项目追加 Strength 字段 |
+| `assets/templates/career-dna/05_story_bank.md` | 故事追加 Strength 字段 |
+| `assets/templates/career-dna/09_completeness_report.md` | 新增 Strength Coverage |
+| `references/mode_d_job_application.md` | Step 5.5 末尾追加 Strength 判定 |
+
+---
+
+## v1.5.4 — 2026-07-25
+
+### Career Decision Engine（求职决策系统）
+
+**核心转变**：从"能力匹配报告"升级为"求职决策报告"。3 Parts → 8 Parts。
+
+```
+v1.5.3: 能不能做 / 匹配多少 / 缺什么能力 / 怎么包装
+v1.5.4: 能不能拿面试 / 招聘方信不信 / 卡在哪一关 / 包装后成功率多少
+```
+
+### 新增 Part 4: Evidence Distance（证据距离 D0-D4）
+
+- D0 Strong Direct / D1 Functional Equivalent / D2 Transferable / D3 Inferential / D4 No Evidence
+- 替代 Direct/Adjacent/Missing 三值，解决"两个 Adjacent 距离完全不同"
+- D0-D4 对外展示等级名，百分数内化
+
+### 新增 Part 5: Role Authenticity（角色真实性）
+
+- Level A-D 四级判定职业身份接近度
+- Hire Probability = Match × (Authenticity/100)
+
+### 新增 Part 6: Recruiter Risk Funnel（招聘漏斗风险）
+
+- ATS / HR / Hiring Manager / Offer Committee 四阶段风险预测 + 对策
+
+### 新增 Part 7: Decision Score（决策评分）
+
+- Decision = 0.5×Match + 0.25×HireProbability + Location + Language + Industry
+- 全部因子来自 JD+DNA，零市场假设
+
+### 删除 Market Validation / Market Gap / Observed JD Count
+
+- Match Confidence: Market Validation → Evidence Stability（DNA内部证据稳定性）
+- Decision Score: Market Gap → Hire Probability
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `assets/templates/resume-outputs/01_jd_match_report.md` | 完全重写（3 Parts→8 Parts） |
+| `references/mode_d_job_application.md` | Step 5 Conf+公式 + Step 5.5 D0-D4 + Step 5.6/5.7/5.8 新增 |
+
+---
+
 ## v1.5.3 — 2026-07-23
 
 ### Scoring Granularity Enhancement（评分颗粒度增强）

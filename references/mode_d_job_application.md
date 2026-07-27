@@ -257,7 +257,7 @@ Evidence Risks:
 |----------|------|------|
 | **Hard Requirement Match（硬性要求匹配）** | 40% | 学历/语言/证书/年限 — 逐项给分 0-100（v1.5.3 颗粒化），终结 ✓/△/✗ 三值判定 |
 | **Experience Match（经验匹配）** | 30% | 行业/场景/角色重叠度 — Career Background vs Ideal Candidate |
-| **Capability Match（能力迁移匹配）** | 20% | Direct(100%) + Adjacent(60%) + Missing(0%) — 同 v1.4.4 |
+| **Capability Match（能力迁移匹配 v1.5.4）** | 20% | D0=100% / D1=85% / D2=65% / D3=40% / D4=0%（v1.5.4 升级：五级证据距离替代 Direct/Adjacent/Missing） |
 | **Industry Match（行业匹配）** | 10% | 同行业/同客户群/同业务场景 — 从 Role Snapshot Industries 判定 |
 
 **Hard Requirement 评分逻辑（v1.5.3 颗粒化）**：
@@ -271,16 +271,18 @@ Evidence Risks:
 
 最终 Hard Requirement Match = ∑(各项 Score) / 项数。
 
-### Match Confidence 计算（v1.5.2 新增）
+### Match Confidence 计算（v1.5.6 公式+扣分收紧）
 
-**Match Confidence = Evidence Count(30%) + Evidence Quality(30%) + Direct Relevance(25%) + Market Validation(15%)**
+**Match Confidence = Evidence Count(30%) + Evidence Quality(30%) + Direct Relevance(25%) + Evidence Stability(15%)**
 
-| 分量 | 计算方式 |
-|------|----------|
-| **Evidence Count（证据数量）** | 可用证据项数 / 总匹配能力数 → 百分比转分数 |
-| **Evidence Quality（证据质量）** | High/Medium/Low 证据占比加权（High×100 + Medium×60 + Low×30）/ 总数 |
-| **Direct Relevance（直接相关性）** | Direct 匹配占比（Direct 占比 > 60% → 85pt, 40-60% → 65pt, < 40% → 45pt） |
-| **Market Validation（市场验证度）** | Role Snapshot Observed JD Count 分级（≥10→85pt, 5-9→65pt, <5→45pt） |
+| 分量 | 计算方式 | 扣分条件 |
+|------|----------|----------|
+| **Evidence Count（证据数量）** | (可用证据项数 / 总匹配能力数) × 100 | 总能力 < 3 项 → 直接扣 20 |
+| **Evidence Quality（证据质量）** | (High×100 + Medium×60 + Low×30) / 总数 | Low 占比 > 50% → 直接 -15 |
+| **Direct Relevance（直接相关性）** | D0+D1 占比（>50%=85 / 30-50%=65 / <30%=45） | D3+D4 > 60% → 直接 -10 |
+| **Evidence Stability（证据稳定性）** | 核心能力跨项目频次（3+=90 / 2=65 / 1=40） | 最高频次能力 ≠ 最高权重能力 → -5 |
+
+> Evidence Stability 替代 Market Validation。全部基于 DNA 内部证据。
 
 ### Track Validation 计算（v1.5.2 新增）
 
@@ -292,38 +294,81 @@ Evidence Risks:
 
 ### 写入文件
 
-`resume-outputs/{YYYYMMDD}-{company}-{role}/01_jd_match_report.md`（使用 v1.5.2 3-Part 模板）
+`resume-outputs/{YYYYMMDD}-{company}-{role}/01_jd_match_report.md`（使用 v1.5.4 8-Part 模板）
 
 ---
 
-## Step 5.5: Capability Translation Analysis（能力迁移分析 v1.4.4）
+## Step 5.5: Evidence Distance Analysis（证据距离分析 v1.5.4）
 
 ### 目标
 
-将 JD 的能力要求逐项映射到 Career DNA，输出 Direct / Adjacent / Missing 三类映射结果。不再依赖"关键词是否重复出现"判断匹配，而是推理"证据是否可迁移"。
+替代 v1.4.4 的 Direct/Adjacent/Missing 三值分类，升级为 D0-D4 五级证据距离。解决"两个 Adjacent 距离完全不同但都被标为 Adjacent"的问题。
 
-### 推理优先级
+### 距离等级
 
-| 优先级 | 类型 | 逻辑 | 计分 |
-|--------|------|------|------|
-| **P1 Direct Match（直接匹配）** | JD Skill = DNA Skill（同能力） | 同名能力直通 | 100% |
-| **P2 Adjacent Match（迁移匹配）** | JD Skill ≈ DNA Skill（可迁移） | 不同名但证据链/技能域/业务场景交叉 | 60%（需附推理过程） |
-| **P3 Missing（缺失）** | JD Skill ≠ DNA（无映射） | 无可信迁移路径 | 0% |
+| 级别 | 等级含义 | 判定条件 | 内部映射 | 需附依据 |
+|:--:|------|------|:--:|:--:|
+| **D0** | Strong Direct（强力直接） | JD能力=DNA能力（同岗位同名） | 100 | |
+| **D1** | Functional Equivalent（职能等同） | 同职责/不同岗位（核心流程一致） | 85 | 职责分析 |
+| **D2** | Transferable Evidence（可转移） | 同能力域/不同场景（方法论相同） | 65 | 场景对比 |
+| **D3** | Inferential Evidence（推理证据） | 推理映射（需解释为什么） | 40 | 必须附推理 |
+| **D4** | No Evidence（无证据） | 无证据或 Speculative | 0 | |
 
-### Adjacent Match 判定规则
+**升级规则**：
+- D3 必须附推理依据（1-2句），否则强制降为 D4
+- D0-D4 为对外展示等级名，百分数不直接对用户展示
+- Speculative Match 禁止规则不变
 
-以下情况允许 Adjacent Match（置信度依据相似度评定）：
+### Evidence Coverage 计算（v1.5.3 + v1.5.4 升级）
 
-1. **同一 Domain（域内迁移）**：Skill Graph Domain 相同，Skill 名称不同 → Confidence 70-85
-2. **Related Skills（关联能力）**：Skill Graph 中已标记的 Related Skills → Confidence 60-75
-3. **业务场景交叉（工作交叉）**：不同 Domain 但同一项目中体现（从 Evidence 推断） → Confidence 50-65
-4. **Skill Snapshot Alias 匹配（别名命中）**：JD 用词命中 Skill Snapshot 的 Aliases 字段 → Confidence 80-90
+对每个 JD 能力拆分子证据项，分别判定 D0-D4，汇总计算：
 
-Adjacent Mapping Confidence < 50 的不计入匹配，归入 Missing。
+```
+Coverage = (D0子证据数×100 + D1×85 + D2×65 + D3×40 + D4×0) / 总子证据数
+```
 
-### Speculative Match 禁止规则（推测匹配禁止）
+### 输出
 
-以下情况**强制归入 Missing，不可建立 Adjacent**：
+写入 `01_jd_match_report.md` Part 4 Evidence Distance Mapping 表。
+
+### Evidence Strength 判定（v1.5.5 新增）
+
+#### 目标
+
+在 Distance 映射完成后，评估每条证据的强度——能不能进主简历？能不能打面试？
+
+#### 评分维度
+
+| 维度 | 说明 |
+|------|------|
+| Ownership（主导程度） | 主导=2pt / 参与=1pt / 无=0pt |
+| Scope（覆盖范围） | 跨团队=2pt / 单团队=1pt / 单人=0pt |
+| Impact（结果影响） | 有量化=2pt / 有过程=1pt / 无=0pt |
+| Recency（时效性） | 1年内=2pt / 1-4年=1pt / 4年+=0pt |
+| Relevance（相关性） | 直接=2pt / 间接=1pt / 不相关=0pt |
+
+#### 映射规则
+
+- 总分 9-10 → Strength 5：主简历主证据，面试开场故事
+- 总分 7-8 → Strength 4：简历可写，适合补强
+- 总分 5-6 → Strength 3：面试补充，不作主打
+- 总分 3-4 → Strength 2：内部参考，不建议写进简历
+- 总分 1-2 → Strength 1：极弱证据
+- 总分 0 → Strength 0：不写
+
+#### 联动规则
+
+- Strength 5 证据 → 优先进入 Interview Pack 开场故事
+- Strength ≤ 2 → 不进入主简历，仅内部参考
+- **Evidence Strength 不进入 Match Score 公式**，仅影响材料投放策略
+
+#### 输出
+
+写入 `01_jd_match_report.md` Part 4.5 Evidence Strength Mapping 表。
+
+### 输出格式
+
+以下情况**强制归入 D4，不可建立任何 Distance**：
 
 | 拒绝类型 | 示例 |
 |----------|------|
@@ -331,37 +376,78 @@ Adjacent Mapping Confidence < 50 的不计入匹配，归入 Missing。
 | 无证据关联（无项目支撑） | 财务经验 → Unity 开发 |
 | 领域无交集 | 设计经验 → DevOps |
 
-### Evidence Coverage 计算（v1.5.3 新增）
+---
 
-对每个 JD 能力拆分「子证据项」（如 Scrum→站会/Sprint Review/Retro/Burn-down），分别判定 Direct/Adjacent/Missing，汇总计算覆盖率：
+## Step 5.6: Role Authenticity Inference（角色真实性推理 v1.5.4）
 
-```
-Coverage = (Direct子证据数×100 + Adjacent子证据数×60) / (Direct + Adjacent + Missing 子证据总数)
-```
+### 目标
 
-写入 `01_jd_match_report.md` Part 3.5 Evidence Mapping 表的 Coverage 列。
+判断用户的职业身份与 JD 岗位的接近程度。招聘先看"你是谁"，再看"你做过什么"。
 
-### 输出格式
+### 判定逻辑
 
-写入 `01_jd_match_report.md` Part 6.5：
+1. 提取用户在 `07_career_identity.md` 和 `02_timeline.md` 中的最近岗位头衔
+2. 与 JD Role 对比：
+   - 同岗位 → Level A (90+)
+   - 同域不同岗 → Level B (70-89)
+   - 跨域可迁移 → Level C (40-69)
+   - 跨赛道 → Level D (0-39)
+3. 根据 Track Confidence 和 Evidence Distance D0/D1 占比微调 ±10
 
-```yaml
-Capability Translation:
-  Direct Matches（直接匹配）:
-    - JD: 项目管理 → DNA: 项目管理 (Confidence 90)
-    共 N 项
-  Adjacent Matches（迁移匹配）:
-    - JD: 客户沟通 → DNA: 海外团队协作 (Migration Confidence 75)
-      推理: 跨文化沟通包含主动对齐、冲突化解、定期同步 → 客户沟通核心能力可迁移
-    共 N 项
-  Missing（缺失）:
-    - JD: 客户培训 → 无交付培训经验
-    共 N 项
-  Capability Score: (Direct×100 + Adjacent×60 + Missing×0) / 总数 = XX
-  Mapping Boundary: 未发现 Speculative Match
-```
+### 输出
+
+写入 `01_jd_match_report.md` Part 5（含 Authenticity Assessment + Hire Probability 修正）。
 
 ---
+
+## Step 5.7: Recruiter Risk Funnel（招聘漏斗风险 v1.5.4）
+
+### 目标
+
+预测候选人在招聘 4 阶段中的通过风险，回答"为什么投了没面试"。
+
+### 判定逻辑
+
+| 阶段 | 判定依据 |
+|------|----------|
+| **ATS** | Hard Requirement Coverage — < 70% → High Risk |
+| **HR** | Role Authenticity Level — C/D → High, B → Medium |
+| **Hiring Manager** | Evidence Distance D2+D3 占比 — > 40% → High |
+| **Offer Committee** | Gap Priority P0 数量 — ≥ 2 → High |
+
+### 输出
+
+写入 `01_jd_match_report.md` Part 6（含风险评估表 + 阶段对策）。
+
+---
+
+## Step 5.8: Decision Score（决策评分 v1.5.4）
+
+### 目标
+
+不只看"匹配度"，更看"值不值得现在投"。全部因子来自 JD+DNA。
+
+### 公式
+
+**Decision Score = 0.5×Match + 0.25×HireProbability + Location + Language + Industry**
+
+- Match = Part 3.2 Overall Match Score（0-100）
+- Hire Probability = Match × (Role Authenticity / 100)（来自 Step 5.6）
+- Location = JD城市=用户城市→10pt
+- Language = 外语能力→10pt | 方言优势→10pt（取最高）
+- Industry = 同行业→5pt（来自 Role Snapshot Industries 比对）
+
+### 输出
+
+写入 `01_jd_match_report.md` Part 7。
+
+---
+
+## Step 6: Targeted Discovery（定向证据发现）
+
+**目的**：基于 Evidence Expectation 的 Evidence Risks 和 DNA Match 的 Gaps，定向追问。
+
+**规则**：---
 
 ## Step 6: Targeted Discovery（定向证据发现）
 
