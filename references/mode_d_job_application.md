@@ -553,6 +553,193 @@ Package（生成包）: Pack A / B / C / D
 
 ---
 
+## Step X: Boss Greeting Generation（Boss 打招呼语生成 v1.6.1）
+
+### 目标
+
+将 v1.5.6 最终收敛结果压缩为一条可诱导 HR 回复的首条消息。不重新计算分数。
+
+### 输入字段（仅读取 v1.5.6 收敛值）
+
+| 输入 | 来源 |
+|------|------|
+| Match Score + Decision Score | `01_jd_match_report.md` 3.1 |
+| Greeting Objective + Primary Hook + Safe Evidence + Curiosity Bait | `01_jd_match_report.md` 8.5 |
+| 可用证据 Top1/Top2 | `01_jd_match_report.md` 8.0 |
+| HR 风险阶段 | `01_jd_match_report.md` Part 6 |
+
+### Greeting Objective 选择（v1.6.1 升级）
+
+| 条件 | Objective | 版本 |
+|------|-----------|------|
+| Decision ≥ 80 + HR 风险 Low | Type A: Build Connection | Version A |
+| Decision 60-79 + HR 风险 Low-Medium | Type B: Prove Value | Version B |
+| Authenticity C/D 或 HR 风险 High | Type C: Break Risk | Version C |
+| 有技术亮点 / AI 项目 / 独特经历 | Type D: Spark Curiosity | Version D |
+| Match < 40 | 不生成 | — |
+
+### Evidence Selection 规则（v1.6.1 新增）
+
+从 `01_jd_match_report.md` 8.0 Usable Evidence Summary 自动选取：
+- Top 1（主证据）：Strength=5 + Distance≤D1
+- Top 2（辅证据）：Strength≥4，与 Top 1 不重复
+- 备选（Type B 用）：8.0 Secondary
+- 安全区（Type C 用）：8.5 Safe Evidence
+- 好奇心诱饵（Type D 用）：8.0 中 D2/D3 但 Strength 最高的证据（制造意外感）
+
+### 平台变体（v1.6.1 新增）
+
+| 平台 | 字数上限 | 策略 |
+|------|:--:|------|
+| Boss 直聘 | 150 字 | 速读友好，一句话价值 + 一个问题结尾诱导回复 |
+| 猎聘 | 200 字 | 半正式，简要匹配 + 行动邀请 |
+| 邮件 | 300 字 | 正式商务，完整介绍 + 附简历 |
+
+### 生成规则
+
+- 禁止使用报告术语（Match Score / Confidence / Risk Funnel 等）
+- 每条消息以一个问题结尾（诱导 HR 回复）
+- 禁止大段经历陈述（首条消息不是简历摘要）
+- 不使用弱证据代替 Top1/Top2
+
+### 输出
+
+`resume-outputs/{YYYYMMDD}-{company}-{role}/07_boss_greeting.md`
+
+---
+
+## Step 8.5: Evidence Routing Engine（证据路由引擎 v1.6.2）
+
+### 目标
+
+在生成 Greeting 前先对可用证据做路由分层。解决"跨域证据被选为岗位钩子"的问题。
+
+### 路由规则
+
+| 优先级 | 规则 | 操作 |
+|:--:|------|------|
+| **Rule 1** | Distance Priority | 对 Part 4 中 Strength≥4 的证据按 D0>D1>D2>D3 排序 |
+| **Rule 2** | Role Relevance | 从 Part 2.1 Core Responsibilities 和 2.4 Ideal Candidate 提取关键词，与证据名做语义匹配。直接相关→升一级，仅间接相关→降一级 |
+| **Rule 3** | Novelty Injection | 若 Primary+Secondary 均来自同一能力域，从 D2/D3 中选 Strength 最高作为 Curiosity（仅第三位） |
+
+### 输出
+
+写入 `01_jd_match_report.md` Part 9.1 Evidence Routing。
+
+---
+
+## Step 8.6: Platform Strategy（平台策略 v1.6.2）
+
+### 目标
+
+不同平台目标不同，不只是长度不同。
+
+### 平台逻辑
+
+| 平台 | 核心目标 | 禁止事项 |
+|------|------|------|
+| **Boss 直聘** | 让 HR 回复（非介绍自己） | 不用长段经历 / 不附简历 |
+| **猎聘** | 建立专业感 | 不"一句话勾引" |
+| **邮件** | 正式投递 | 不"反问一句"结尾 |
+| **LinkedIn** | 建立关系（非求职硬推） | 不提求职 / 不附简历 / 不评估匹配度 |
+
+### Boss 直聘专属规则
+
+- 60-120 字，结构：1 句价值证明 + 1 个反问
+- 证据策略：Part 9.1 Primary 证据 1 个
+- 不以"期待您的回复"结尾 → 以诱导性问题结尾
+
+### LinkedIn 专属规则
+
+- 英文为主，80-120 字
+- 结构：自我介绍 → 关注点 → 连接邀请
+- 证据策略：Curiosity 或 Primary 中最行业相关的
+- 不附简历
+
+### 输出
+
+写入 `01_jd_match_report.md` Part 9.2。
+
+---
+
+## Step 8.8: Greeting Strategy Selection（打招呼策略选择 v1.6.3）
+
+### 目标
+
+在 Evidence Routing 和 Platform Strategy 完成之后，输出推荐 Type + 备选 Type + 结构化推荐理由。不再输出全部 Type 版本。
+
+### 推荐方案选择规则
+
+| 条件 | Recommended Type |
+|------|:--:|
+| Decision ≥ 80 + HR Low + Primary Distance ≤ D1 | Type A |
+| Decision 60-79 + HR Low-Medium | Type B |
+| Authenticity C/D 或 HR High | Type C |
+| Primary 中 Curiosity 证据 Strength=5 且与 Role 有关联 | Type D |
+
+### 备选方案选择规则
+
+| 推荐 Type | 常用备选 Type | 切换逻辑 |
+|:--:|:--:|------|
+| Type A | Type D | 主推太泛时，备选走好奇心破局 |
+| Type B | Type D | 证据够但不惊艳，备选制造意外 |
+| Type C | Type B | 转行风险高，备选先证明价值 |
+| Type D | Type B | 好奇心强但 HR 偏保守时兜底 |
+
+### 推荐理由必须结构化
+
+```yaml
+Why Recommended:
+  - Match Basis: [Decision Score + Authenticity]
+  - Evidence Basis: [Primary 证据 + Distance]
+  - Risk Basis: [HR 风险 + 是否可控]
+
+Why Alternative:
+  - Switch Condition: [何时切换]
+  - Difference: [语气/证据/策略差异]
+```
+
+---
+
+## Step 8.9: Greeting Humanization（打招呼语人味化 v1.6.3）
+
+### 目标
+
+去"模型腔"和"报告腔"，让消息更像真人。
+
+### 人味化规则
+
+| 规则 | 说明 |
+|------|------|
+| 句子更短 | Boss 60-120字，语句短于 25 个字 |
+| 不用AI连接词 | 避免"同时""此外""基于""因此""从而" |
+| 不用总结腔 | 不写成简历摘要或报告段落 |
+| 自然问句结尾 | 轻问题促回复 |
+| 不堆材料 | 1 主证据 + 至多 1 辅证据 |
+| 不用过度自夸 | 用"比较接近""之前做过"替代"主导""高度匹配" |
+| 开头不模板 | 不说"我有X年经验，在X做过X" |
+
+### 输出
+
+写入 `07_boss_greeting.md` Recommended Greeting + Alternative Greeting。
+
+---
+
+## Step 8.10: Recommended / Alternative Output（推荐/备选输出 v1.6.3）
+
+### 输出规则
+
+- 每平台仅输出 2 个版本（Recommended + Alternative）
+- 每个版本附 Why Recommended / Why Alternative
+- 附 Tone Notes + Do Not Say
+- 不输出全部 Type 版本 / 内部评分术语
+
+### 输出
+
+写入 `07_boss_greeting.md` 完整文件。
+
+---
+
 ## Step 10: Knowledge Update（知识更新）
 
 ### A. 更新 knowledge/role_snapshots/{role_name}.md（v1.4.1 增强）

@@ -1,5 +1,177 @@
 # CHANGELOG
 
+## v1.6.3 — 2026-07-27
+
+### Greeting Humanization（打招呼语人味化 + 策略决策 v1.6.3）
+
+**核心改造**：从"系统写 4 种版本文案让用户挑"升级为"系统先做策略决策 → 出推荐方案 + 备选方案 + 结构化推荐理由 → 文案更像真人"。
+
+### 新增 Step 8.8/8.9/8.10
+
+- **8.8 Greeting Strategy Selection**: 推荐 Type + 备选 Type 选择规则 + 结构化推荐理由（Match Basis / Evidence Basis / Risk Basis）
+- **8.9 Greeting Humanization**: 7 条人味化规则（句子短 / 不用AI词 / 自然问句 / 不堆材料 / 不模板开���等）
+- **8.10 Recommended/Alternative Output**: 每平台仅出 2 个版本 + Why + Tone Notes + Do Not Say
+
+### Boss Greeting 模板重组
+
+`07_boss_greeting.md` 改为双版本结构 + 决策层：
+- Greeting Strategy（推荐/备选 Type + Why + 切换条件）
+- Recommended Greeting + Alternative Greeting
+- Tone Notes（避免词/推荐词/句式规则）
+- Do Not Say（5 条禁止清单）
+
+### 联动
+
+- `01_jd_match_report.md` Part 8 新增 Greeting Recommendation Summary
+- `output_contracts.md` Boss Greeting 契��更新（双版本/禁出项）
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `assets/templates/resume-outputs/07_boss_greeting.md` | 完全重构为双版本+策略+人味化 |
+| `references/mode_d_job_application.md` | Step 8.8/8.9/8.10 新增 |
+| `references/output_contracts.md` | Boss Greeting 契约更新 |
+| `assets/templates/resume-outputs/01_jd_match_report.md` | 8.1 新增 + Part 8 重新编号 |
+
+---
+
+## v1.6.2 — 2026-07-27
+
+### Evidence Routing + Platform Strategy（证据路由 + 平台策略）
+
+**核心问题**：v1.6.1 的 Greeting 直接从 8.0 选证据 → AI 项目可能被选为 PM 岗位钩子 → HR 困惑。v1.6.2 新增 Evidence Routing Engine 做路由分层，Greeting 不再自己选证据。
+
+### 新增 Part 9: Outreach Package
+
+`01_jd_match_report.md` Part 8 之后新增：
+
+**9.1 Evidence Routing（证据路由）**：
+- Candidate Pool：从 Part 4 提取 Strength≥4 的全部证据
+- 3 条路由规则：Distance Priority / Role Relevance / Novelty Injection
+- 3 层输出：Primary（主证据）/ Secondary（辅证据）/ Curiosity（好奇证据）
+
+**9.2 Platform Variants（平台变体 v1.6.2）**：
+- 平台从"长度不同"升级为"目标不同"
+- Boss 直聘：让 HR 回复，60-120 字，Primary 单证据 + 反问
+- 猎聘：建立专业感，150-250 字，Primary+Secondary
+- 邮件：正式投递，300+ 字，附简历
+- **新增 LinkedIn**：建立关系，80-120 字，不附简历不提求职
+
+### 新增 Step 8.5/8.6
+
+- Step 8.5: Evidence Routing Engine
+- Step 8.6: Platform Strategy
+
+### 联动
+
+- `07_boss_greeting.md` Evidence Source 改为引用 Part 9.1 路由结果
+- Platform Variants 表同步更新为 v1.6.2 四平台版本
+
+```
+v1.6.1: JD → Match → Greeting（直接生成）
+v1.6.2: JD → Match → Evidence Matrix → Evidence Routing → Platform Strategy → Greeting
+```
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `assets/templates/resume-outputs/01_jd_match_report.md` | Part 9 新增（9.1+9.2） |
+| `references/mode_d_job_application.md` | Step 8.5 + 8.6 新增 |
+| `assets/templates/resume-outputs/07_boss_greeting.md` | Evidence Source + Platform Variants 更新 |
+
+---
+
+## v1.6.1 — 2026-07-27
+
+### Boss Greeting: Objective-Driven Rewrite（打招呼语升级 v1.6.1）
+
+**核心转变**：从「展示经历」到「诱导 HR 回复」。v1.6 的 3 个版本本质是 JD 摘要，v1.6.1 升级为 4 种 Objective + 3 平台变体。
+
+### 新增：Greeting Objective（打招呼目标）
+
+| 类型 | 目标 | 结尾策略 |
+|------|------|------|
+| Type A: Build Connection | 让 HR 回复 | 匹配点 + 轻量行动邀请 |
+| Type B: Prove Value | 证明值得聊 | 证据点 + 反问 JD 需求 |
+| Type C: Break Risk | 先化解顾虑 | 承认差异 + 突出迁移 |
+| Type D: Spark Curiosity | 让 HR 追问 | 悬念 + 追问对方现状 |
+
+### 新增：Evidence Selection（证据自动选择）
+
+从 8.0 Usable Evidence Summary 自动选取 Top1/Top2/安全区/好奇心诱饵，按 Objective 类型匹配。不再随机抽亮点。
+
+### 新增：Platform Variants（平台变体）
+
+| 平台 | 字数 | 策略 |
+|------|:--:|------|
+| Boss 直聘 | 150 字 | 速读，一个问题结尾 |
+| 猎聘 | 200 字 | 半正式，匹配 + 行动邀请 |
+| 邮件 | 300 字 | 正式商务，附简历 |
+
+### 联动
+
+- `01_jd_match_report.md` 8.5 Input Pack 字段升级（+Objective + Curiosity Bait + Platform Priority）
+- `mode_d_job_application.md` Step X 全量重写
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `assets/templates/resume-outputs/07_boss_greeting.md` | 完全重写 |
+| `assets/templates/resume-outputs/01_jd_match_report.md` | 8.5 字段升级 |
+| `references/mode_d_job_application.md` | Step X 全量重写 |
+
+---
+
+## v1.6 — 2026-07-27
+
+### Boss Greeting Generation（Boss 直聘打招呼语 v1.6）
+
+**核心定位**：由 v1.5.6 最终收敛结果驱动的 JD 级即时沟通产物。不新增分析维度。
+
+### 新增：07_boss_greeting.md
+
+3 个版本，全部基于 Usable Evidence Summary 和 Decision Score 生成：
+
+| 版本 | 适用场景 | 语气 |
+|------|----------|------|
+| Version A: Standard | Moderate Fit / HR 高风险 | 稳妥 |
+| Version B: Match-Driven | Match Score 较高 | 匹配点到证据 |
+| Version C: Strong | Strong Fit + HR 低风险 | 主动直接 |
+
+**生成规则**：
+- 仅引用 Strength ≥ 4 的证据（不引用弱证据）
+- 不使用报告术语（Match Score / Confidence 等）
+- 每条消息 ≤ 4 句
+- Weak Fit 不生成
+
+### 新增：Step X: Boss Greeting Generation
+
+`mode_d_job_application.md` Step 9 Resume Package 之后插入。
+
+### 联动
+
+- `01_jd_match_report.md` Part 8 新增 8.5 Boss Greeting Input Pack（推荐语气/最强匹配点/可引用证据/不建议提）
+- `output_contracts.md` 新增 07_boss_greeting.md 产物定义
+
+### 不改
+
+- `career-dna/11_online_profile.md` — 长期档案，不参与即时沟通
+- `career-dna/10_career_tracks/*.md` — 方向结构不变
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `assets/templates/resume-outputs/07_boss_greeting.md` | **新增** |
+| `references/mode_d_job_application.md` | Step X 新增 |
+| `references/output_contracts.md` | Boss Greeting 契约定义 |
+| `assets/templates/resume-outputs/01_jd_match_report.md` | 8.5 Boss Greeting Input Pack |
+
+---
+
 ## v1.5.6 — 2026-07-27
 
 ### Output Quality & Convergence（输出质量收敛 v1.5.6）

@@ -66,4 +66,16 @@ Part 3.2 Hard Requirement Detail v1.5.3 升级为 Score(0-100)+扣分来源，�
 Part 3.5 Evidence Mapping v1.5.3 新增 Coverage% 列 + Direct/Adjacent/Missing 子证据展开。
 Part 3.6 Skill Gaps v1.5.3 新增 Gap Priority Matrix（P0/P1/P2）。
 本合约中的文件编号不变（01_jd_match_report.md 始终为第一个文件）。
+
+## 07_boss_greeting.md（v1.6.3 更新）
+
+| 属性 | 值 |
+|------|-----|
+| 所属 | JD 级输出 |
+| Pack 覆盖 | Pack A/B/C（Weak Fit 不生成） |
+| 输出数量 | 每平台 2 个（Recommended + Alternative） |
+| 必须附带 | Why Recommended / Why Alternative / Tone Notes / Do Not Say |
+| 禁出 | 全部 Type 版本 / 内部评分术语 / 报告腔文案 |
+| 上游依赖 | `01_jd_match_report.md` 3.1 / 8.1 / Part 6 / Part 9.1 |
+| 与 11_online_profile.md 关系 | 独立文件 — Online Profile 是长期档案，Greeting 是即时沟通 |
 本合约中的文件编号不变（01_jd_match_report.md 始终为第一个文件）。

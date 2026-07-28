@@ -300,7 +300,17 @@ Part 8: Recommended Strategy（推荐策略）
 
 > Strength 5 → 主简历标题区 + 面试开场故事。Strength 4 → 简历主体补强。Strength 3 → Interview Pack。
 
-### 8.1 Gap Priority Matrix（缺口优先级矩阵）
+### 8.1 Greeting Recommendation Summary（打招呼策略摘要 v1.6.3）
+
+<!-- 供上游 Greeting 生成器直接消费，不回读整份报告 -->
+
+- **Recommended Type（推荐类型）**: Type [A/B/C/D]
+- **Alternative Type（备选类型）**: Type [A/B/C/D]
+- **Recommended Reason（推荐理由）**: [一句话]
+- **Alternative Reason（备选理由）**: [一句话]
+- **Suggested Tone（建议语气）**: [直接 / 稳妥 / 克制 / 好奇心]
+
+### 8.2 Gap Priority Matrix（缺口优先级矩阵）
 
 | 缺口 | Impact（影响度） | Cost（补齐成本） | Priority（优先级） | 建议行动 |
 |------|:---:|:---:|:---:|------|
@@ -319,18 +329,85 @@ Part 8: Recommended Strategy（推荐策略）
 | [能力X] | 25% | High | Low | P0 |
 | [能力Y] | 10% | Low | High | P2 |
 
-### 8.2 Narrative Mapping（叙事映射）
+### 8.3 Narrative Mapping（叙事映射）
 [一句话：用什么样的故事主线来包装这次投递]
 
-### 8.3 Key Projects & Stories（推荐项目与故事）
+### 8.4 Key Projects & Stories（推荐项目与故事）
 
 | # | 项目/故事 | 匹配理由 | 涉及能力 |
 |---|----------|----------|----------|
 | 1 | [项目A] | [理由] | [能力] |
 | 2 | [项目B] | [理由] | [能力] |
 
-### 8.4 Application Advice（投递建议）
+### 8.5 Application Advice（投递建议）
 - **Hire Probability（录用概率）**: ≈ [XX]
 - **是否建议投递**: 是 / 谨慎 / 否
 - **策略建议**:
 - **重点关注**:
+
+### 8.6 Boss Greeting Input Pack（Boss 打招呼语素材包 v1.6.1）
+
+<!-- 不做新分析，仅摘要素材给 07_boss_greeting.md 消费 -->
+
+- **Greeting Objective（打招呼目标）**: Type A / B / C / D
+- **Primary Hook（最强匹配点 — 来自 8.0 Top 1）**:
+- **Supporting Evidence（辅证据 — 来自 8.0 Top 2）**:
+- **Safe Evidence（安全区证据 — Type C 防翻车用）**:
+- **Curiosity Bait（好奇心诱饵 — Type D 专用）**:
+- **Avoid（不建议提）**:
+- **Recommended Platform Priority**: Boss > 猎聘 > 邮件
+
+---
+
+## Part 9: Outreach Package（外联沟通包 v1.6.2）
+
+<!--
+从 Evidence Matrix 到 Platform Greeting 的桥梁层。
+Part 4 分析证据 → Part 9 路由证据 → 07_boss_greeting 消费证据。
+Greeting 不再自己选证据。
+-->
+
+### 9.1 Evidence Routing（证据路由 v1.6.2）
+
+#### Candidate Pool（候选池）
+从 Part 4 Evidence Matrix 提取 Strength ≥ 4 的全部证据。
+
+#### Routing Rules（路由规则）
+
+| 优先级 | 规则 | 逻辑 |
+|:--:|------|------|
+| **Rule 1** | Distance Priority（距离优先） | D0/D1 永远排最前，D2 次之，D3 仅作备选 |
+| **Rule 2** | Role Relevance（角色相关度） | 与 JD Role 直接相关 → 升一级；仅间接相关 → 降一级 |
+| **Rule 3** | Novelty Injection（新奇注入） | 若 Top2 证据过于同质化，允许插入 1 个 D2/D3 好奇心证据 — 仅作为第三证据 |
+
+#### Routing Output（路由输出）
+
+| 层级 | 选取规则 | 用途 |
+|------|------|------|
+| **Primary（主证据）** | Rule 1+2 最高分证据，通常 D0/D1 | Greeting 核心卖点，简历主叙事 |
+| **Secondary（辅证据）** | Rule 1+2 次高分证据，D1/D2 | 补强匹配度，猎聘/邮件用 |
+| **Curiosity（好奇心证据）** | Rule 3 注入，D2/D3 但 Strength≥4 | Boss Type D / LinkedIn 开场用 |
+
+> Primary/Secondary 必须与 JD Role 直接相关。Curiosity 允许跨域，但仅在 Type D 中使用。
+
+### 9.2 Platform Variants（平台变体 v1.6.2）
+
+| 平台 | 目标 | 字数 | 结构 | 证据策略 |
+|------|------|:--:|------|------|
+| **Boss 直聘** | 让 HR 回复 | 60-120 | 一句价值 + 一个问题结尾 | Primary 证据 1 个 |
+| **猎聘** | 建立专业感 | 150-250 | 背景 + 匹配点 + 交流意愿 | Primary + Secondary |
+| **邮件** | 正式投递 | 300+ | 背景 + 项目 + 优势 + 附简历 | Primary + Secondary + 可选 Curiosity |
+| **LinkedIn** | 建立关系（非求职硬推） | 80-120 | 轻量连接 + 行业共识 + 不附简历 | Curiosity 或 Primary 中最行业相关的 |
+
+#### LinkedIn 参考结构
+
+> Hi [Name],
+>
+> I noticed you're hiring [Role] at [Company]. I spent [N] years in [Industry/Domain], and your opening caught my attention.
+>
+> Would love to connect and learn more about what you're working on.
+>
+> Best,
+> [Name]
+
+> LinkedIn 连接消息不附简历、不开口就问"有没有机会"。目标是建立联系，不是推销。

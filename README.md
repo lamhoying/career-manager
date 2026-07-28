@@ -3,7 +3,7 @@
 > 把你的 AI 助手变成私人 Career Manager：以 **Career DNA（职业基因库）** 为唯一事实源，持续建设、管理、升级你的职业资产，而不是每次看到 JD 都从零重写简历。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-v1.5.6-green.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-v1.6.3-green.svg)](CHANGELOG.md)
 [![Cross-Agent](https://img.shields.io/badge/agent-agnostic-brightgreen.svg)](#跨平台兼容性)
 
 ---
@@ -88,6 +88,11 @@ v1.3 起职责收敛为清晰的三层，彻底分离「个人资产 / 市场情
 - **市场知识库（Knowledge Layer）**：Role Snapshot / Skill Snapshot 把 JD 里的市场信号沉淀为可复用行业情报，越投越准。
 - **在线职业档案派生**：从 Career DNA 自动生成 Boss / 猎聘等平台的在线简历文案（`11_online_profile.md`）。
 - **能力迁移翻译（Capability Translation）**：把你的经历映射到目标岗位要求，区分 Direct / Adjacent / Missing 三类，禁止编造不存在的匹配。
+- **岗位沟通产物生成（Outreach / Boss Greeting Generation）**：由匹配报告驱动的 JD 级即时沟通文案，不只是简历。核心是一套**决策 + 人味化**管线——
+  - **打招呼目标（Greeting Objective）**：按岗位与匹配度选 Type A 建联 / Type B 证明价值 / Type C 化解顾虑 / Type D 激发好奇，不同目标对应不同结尾策略；
+  - **证据路由（Evidence Routing）**：从 Strength≥4 的证据池按「距离优先 / 角色相关 / 新奇注入」三条规则分层为 Primary / Secondary / Curiosity，杜绝把 AI 项目误选为 PM 岗位钩子；
+  - **平台策略（Platform Variants）**：同一匹配结论在 Boss 直聘（诱导 HR 回复，60–120 字）、猎聘（建立专业感，150–250 字）、邮件（正式投递，300+ 字附简历）、LinkedIn（建立关系，80–120 字不提求职）四平台各自生成不同目标版本；
+  - **人味化（Humanization）**：7 条规则（短句 / 不用 AI 词 / 自然问句 / 不堆材料 / 不模板开头等）让文案更像真人；每平台仅出「推荐 + 备选」两个版本，附 Why / Tone Notes / Do Not Say。
 
 ---
 
@@ -199,6 +204,7 @@ career-manager/
         ├── 04_interview_pack.md  #   面试准备包
         ├── 05_answer_cards.md    #   回答卡片库
         ├── 06_upgrade_plan.md     #   竞争力升级计划
+        ├── 07_boss_greeting.md   #   Boss 直聘 / 平台打招呼语（策略+双版本）
         ├── XX_gap_analysis.md     #   能力差距分析
         ├── XX_transition_resume_cn.md   # 转岗中文简历
         ├── XX_transition_resume_en.md   # 转岗英文简历
@@ -228,9 +234,13 @@ career-manager/
 
 ## 版本与更新
 
-完整变更记录见 [CHANGELOG.md](CHANGELOG.md)。当前版本 **v1.5.6**。近期重点：
+完整变更记录见 [CHANGELOG.md](CHANGELOG.md)。当前版本 **v1.6.3**。近期重点：
 
-- **v1.5.6**：输出质量收敛（摘要-正文值统一、匹配置信度口径收紧、决策评分因子分类、表格合并）。
+- **v1.6.3**：打招呼语人味化 + 策略决策（Greeting Strategy 推荐/备选 + 7 条人味化规则 + 每平台双版本 + Why/Tone/Do-Not-Say）。
+- **v1.6.2**：证据路由 + 平台策略（Evidence Routing 三层输出 + 四平台变体，新增 LinkedIn；Greeting 不再自己选证据）。
+- **v1.6.1**：打招呼语目标驱动重写（4 种 Objective + 证据自动选择 + 三平台变体）。
+- **v1.6**：新增 Boss 直聘打招呼语生成（07_boss_greeting.md，由匹配报告与 Decision Score 驱动）。
+- **v1.5.6**：输出质量收敛（摘要-正文值统一、匹配置信度口径收紧、决策评分因子分类）。
 - **v1.5.5**：证据强度升级（5 维度评分 + 材料投放策略）。
 - **v1.5.4**：可解释匹配引擎（4 维匹配 + 置信度拆解 + 三角验证）。
 
