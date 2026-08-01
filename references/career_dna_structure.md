@@ -462,7 +462,7 @@ knowledge/
 - **Typical Ownership**: [Owner / Lead / Support]
 ```
 
-### skill_snapshots/{domain_name}.md — 能力域快照 (v1.3 增强)
+### [Historical] skill_snapshots/{domain_name}.md — 能力域快照 (v1.3 增强)
 
 ```markdown
 # Skill Domain Snapshot: [Domain Name]
@@ -522,7 +522,7 @@ resume-outputs/{YYYYMMDD}-{company}-{role}/
 - `career_recommendation_engine/` — 职业推荐引擎
 - `career_path_prediction/` — 职业路径预测
 
-### skill_snapshots/{domain_name}.md — 能力域快照 (v1.2 Domain 模式)
+### [Historical] skill_snapshots/{domain_name}.md — 能力域快照 (v1.2 Domain 模式)
 
 v1.2 起从按单个 Skill 归档改为按 Domain 归档。一个 Domain 文件下包含多个 Skill。
 
@@ -573,7 +573,7 @@ v1.2 起按日期+公司+岗位子目录隔离每次投递：
 ```
 resume-outputs/{YYYYMMDD}-{company}-{role}/
 ├── 01_jd_match_report.md  — 岗位匹配报告
-├── 02_ats_resume.md       — ATS 优化简历
+├── 02_resume_cn.md        — 中文 ATS 简历 (v1.5.1 重命名)
 ├── 03_interview_pack.md   — 面试准备包 (v1.5 编号前移)
 ├── 04_answer_cards.md     — 回答卡片库 (v1.5 编号前移)
 └── 05_upgrade_plan.md     — 竞争力升级计划 (v1.5 编号前移)

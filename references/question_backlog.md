@@ -157,6 +157,57 @@ Evidence Gap（来自 01_jd_match_report.md Part 5.4 Evidence Risks）
 - **数据溯源**：未来 v1.5 可追踪「哪份 JD 暴露了最多的能力缺口」
 - **职业成长任务池**：将 Backlog 从"随机问题池"转化为"按 JD 需求排序的职业成长任务池"
 
+## Portfolio Gaps（作品集缺口 v2.1）
+
+### 触发条件
+
+Mode A Step 12 或 Mode B Step 4.5 发现 `12_portfolio_candidates.md` 中某项目的 Readiness < 70% 时。
+
+### 操作
+
+1. 根据缺失维度生成追问问题，标注 `[Portfolio]` 标签
+2. 问题与对应项目关联，回答后自动回写 `05_story_bank.md` 或 `03_projects.md`
+3. 回写后触发 Mode B Step 4.5 重新评估 Portfolio Readiness
+
+### 问题格式
+
+```markdown
+#### [Portfolio] [项目名] — [缺失维度]
+- **产生原因**: 该项目对应的 STAR Story 中缺少 [缺失维度] 信息
+- **关联文件**: 03_projects / 05_story_bank
+- **Priority**: High — 补全后可提升 Portfolio Readiness
+- **状态**: Open
+```
+
+### 示例
+
+```
+#### [Portfolio] [项目X] — 解决方案设计
+- **产生原因**: Story Bank 中只有行动描述，没有方案设计逻辑
+- **关联文件**: 05_story_bank
+- **Priority**: High
+- **状态**: Open
+```
+
+### Portfolio Gap Detail（v2.1.1 增强）
+
+每个 Need More Evidence 项目自动生成一条结构化 Gap 记录：
+
+```markdown
+#### [Portfolio] [项目名] — Readiness [XX]%
+
+| 缺失维度 | 缺少什么 | 来源文件需补充 | 追问问题 |
+|------|------|------|------|
+| 业务流程分析 | 有操作描述但无 As-Is 流程 | 05_story_bank | Q: 当时优化前后的流程有什么区别？ |
+| 项目成果 | 有定性评价但无量化数字 | 03_projects | Q: 有没有可补充的具体指标？ |
+| 可迁移价值 | 未标注适用方向 | 10_career_tracks | Q: 这个经验可以复制到哪些岗位方向？ |
+
+**预计补全后**: Readiness 从 [XX]% → [XX]%
+**状态**: Open
+```
+
+> 用户回答 → Mode B Step 4.5 → 重新评分 Portfolio Readiness。
+
 ## 文件位置
 
 Question Backlog 存放在 `career-dna/08_question_backlog.md`。

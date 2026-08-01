@@ -1,5 +1,185 @@
 # CHANGELOG
 
+## v2.1.2 — 2026-07-30
+
+### Quality Audit Fix（全量审计修复 v2.1.2）
+
+全量审计 40 个文件，修复 17 个问题（6 严重 + 5 中等 + 6 轻微）。
+
+**严重修复**：
+- SKILL.md: "Three-Layer" → "Four-Layer"（与"四层架构"对齐）
+- output_contracts.md: 删除不存在模板 `04_capability_translation.md` 引用
+- mode_d_job_application.md: 标题版本 v1.4 → v1.6.3 + 删除重复 Step 6
+- 08_question_backlog.md: 修复 HTML 注释块破损导致的孤立内容
+- mode_b_update.md + mode_c_review.md: `10_career_tracks.md`（单文件）→ `10_career_tracks/`（目录）4处
+
+**中等修复**：
+- SKILL.md Resources: 补齐缺失的 04_interview_pack / 05_answer_cards / 06_upgrade_plan / 07_boss_greeting
+- 01_jd_match_report.md: 删除 Part 7 底部残留旧版表
+- 07_boss_greeting.md + 12_portfolio_candidates.md: 编码损坏字符修复
+- output_contracts.md: 标题版本更新
+
+**轻微修复**：
+- SKILL.md: 目录树 `└──` 重复使用
+- mode_a_build.md: 映射表底部重复行删除
+- 02_resume_cn.md: 旧单文件路径修复
+- career_dna_structure.md: `02_ats_resume.md` → `02_resume_cn.md` + 重复 section 标记 [Historical]
+
+### 文件变更
+
+共 11 个文件修改。
+
+---
+
+## v2.1.1 — 2026-07-30
+
+### Portfolio Template Rewrite + Gap Detail + Potential Score
+
+**XX_portfolio.md 重写** — 从 STAR+ 升级为真正的 Portfolio：
+- 问题→影响结构化表
+- 业务流程分析（As-Is / To-Be 对比流程图）
+- 项目推进过程（阶段1-4 递进叙事）
+- 成果分层展示
+- ✓ 列表能力体现
+- 可迁移价值 + 使用建议
+- Portfolio vs STAR Story 对照注释
+
+**Mode A 映射表升级** — 从单列转向三列（主来源/备选来源/提取规则），对齐新模板的 8 个字段。
+
+**Portfolio Gap Detail** — question_backlog.md [Portfolio] 规则增强：缺什么→怎么补→预计提升。
+
+**Potential Score 预留** — 12_portfolio_candidates.md 新增 5 维 Potential Score 定义（v2.1.2 正式启用）。
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `assets/templates/resume-outputs/XX_portfolio.md` | 完全重写 |
+| `references/mode_a_build.md` | 映射表升级 |
+| `references/question_backlog.md` | Portfolio Gap Detail 追加 |
+| `assets/templates/career-dna/12_portfolio_candidates.md` | Potential Score 追加 |
+
+---
+
+## v2.1 — 2026-07-30
+
+### Portfolio Discovery & Output（作品集发现与生成 v2.1）
+
+**核心管线**：Career DNA → Portfolio Discovery → Validation → Output。不新增 Mode F，全链路复用 Mode A/B/D。
+
+```
+Mode A: 构建时 → 发现 + 验证 + 生成 Portfolio Case
+Mode B: 更新时 → 刷新派生资产 + Portfolio Gaps → Backlog
+Mode D: 投递时 → Portfolio Selection 推荐最佳案例
+```
+
+### 新增：12_portfolio_candidates.md
+
+- 4 项 Discovery Rules（项目/角色/行动/结果，3 项以上入围）
+- 7 维 Validation（背景/角色/问题/方案/行动/成果/能力）
+- Readiness ≥ 70% Ready / < 70% Need More Evidence
+
+### 新增：XX_portfolio.md
+
+- 8 字段 Portfolio Case 模板（概览/背景/角色/问题/方案/行动/成果/能力体现）
+- 每字段严格从 DNA 映射，不自由发挥
+
+### Mode A 新增 Step 12
+
+- Portfolio Discovery → Validation → Output → Gap to Backlog
+
+### Mode B 联动
+
+- Step 4.5 派生资产刷新扩展（+ Portfolio Candidates + Portfolio Case）
+- Step 5 反馈新增 Portfolio 候选池更新情况
+
+### Mode D 联动
+
+- Resume Package 新增 Portfolio Selection（从 Ready 项目推荐与本 JD 最匹配的 Top 3）
+
+### Question Backlog 扩展
+
+- 新增 [Portfolio] 分类规则：缺口项目自动生成追问，回写后触发重新评分
+
+### 文件变更
+
+| 文件 | 类型 |
+|------|------|
+| `assets/templates/career-dna/12_portfolio_candidates.md` | **新增** |
+| `assets/templates/resume-outputs/XX_portfolio.md` | **新增** |
+| `references/mode_a_build.md` | Step 12 追加 |
+| `references/mode_b_update.md` | Step 4.5/5 扩展 |
+| `references/question_backlog.md` | [Portfolio] 分类规则 |
+| `references/mode_d_job_application.md` | Portfolio Selection |
+| `SKILL.md` | 目录 + Mode 概述 + Resources |
+
+---
+
+## v2.0.1 — 2026-07-28
+
+### SKILL.md 架构集成补全
+
+v2.0 新增了 Mode E 和 application-tracker/，但 SKILL.md 中 3 处遗漏：
+
+- **frontmatter description**: "四大工作模式" → "五大工作模式"（+投递追踪）
+- **架构图**: 三层架构 → 四层架构（+Application Tracker Layer）
+- **Mode Routing 表**: 新增 Mode E 触发规则行
+- **代码块**: 修复 `application-tracker/` 目录树缺少开口 ` ``` ` 的 stray fence bug
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `SKILL.md` | frontmatter + 架构 + 路由表 + 目录树修复 |
+
+---
+
+## v2.0 — 2026-07-28
+
+### Application Tracker（投递追踪系统 · MVP）
+
+**核心转变**：v1.x 解决"我应该怎么投"，v2.0 解决"我投了以后发生了什么"。
+
+```
+v1.x: Career Decision Engine（分析 + 决策）
+v2.0: Application CRM（记录 + 追踪）
+```
+
+### 新增：application-tracker/ 目录
+
+| 文件 | 用途 |
+|------|------|
+| `01_application_index.md` | 全量投递主表（一次性浏览所有投递状态） |
+| `02_status_definitions.md` | 统一状态定义（Stage 0: Planned → Stage 7: Offer / Stage 8: Rejected） |
+| `archives/{Company}_{Role}.md` | 案例档案（按需建档：进入 HR 面 / 收到拒绝反馈 / 用户标记） |
+
+### 新增：Mode E — Application Tracker
+
+4 个子操作：
+- **E1 Add Application** — 新投递录入 Index
+- **E2 Update Status** — 状态流转更新
+- **E3 Add Feedback** — 面试反馈/拒绝原因登记到 archives/
+- **E4 Dashboard** — 投递统计面板（转化率 / Offer率 / 待关注）
+
+### 明确排除（v2.1+ 再做）
+
+- 不自动根据投递结果优化简历
+- 不分析哪种 Greeting 转化率高
+- 不自动推荐赛道
+- 不反向修改 Career DNA / Match Score / Track Confidence
+
+### 文件变更
+
+| 文件 | 类型 |
+|------|------|
+| `assets/templates/application-tracker/01_application_index.md` | **新增** |
+| `assets/templates/application-tracker/02_status_definitions.md` | **新增** |
+| `assets/templates/application-tracker/archives/README.md` | **新增** |
+| `references/mode_e_application_tracker.md` | **新增** |
+| `SKILL.md` | 目录 + Mode E + Resources |
+
+---
+
 ## v1.6.3 — 2026-07-27
 
 ### Greeting Humanization（打招呼语人味化 + 策略决策 v1.6.3）

@@ -1,6 +1,6 @@
 ---
 name: career-manager
-description: "AI Career Manager (AI职业经理人) - 帮助用户持续建设、管理、升级职业资产（Career Assets）的完整系统。围绕 Career DNA（职业基因库）展开，支持四大工作模式：职业基因库构建、职业资产更新、职业发展分析、岗位投递。当用户要求梳理经历、盘点能力、分析职业方向、匹配岗位JD、生成简历、准备面试时触发此技能。不限于单次简历修改，而是建立持续成长的职业资产体系。"
+description: "AI Career Manager (AI职业经理人) - 帮助用户持续建设、管理、升级职业资产（Career Assets）的完整系统。围绕 Career DNA（职业基因库）展开，支持五大工作模式：职业基因库构建、职业资产更新、职业发展分析、岗位投递、投递追踪。当用户要求梳理经历、盘点能力、分析职业方向、匹配岗位JD、生成简历、准备面试时触发此技能。不限于单次简历修改，而是建立持续成长的职业资产体系。"
 ---
 
 # Career Manager - AI 职业经理人
@@ -9,14 +9,15 @@ description: "AI Career Manager (AI职业经理人) - 帮助用户持续建设�
 
 本技能让 AI 助手扮演一名 AI Career Manager（AI职业经理人），以 Career DNA（职业基因库）为核心，帮助用户持续建设、管理、升级职业资产。Career DNA 是用户职业经历、能力、项目、故事和成长轨迹的唯一事实源（Single Source of Truth）。简历只是 Career DNA 的一种输出形式。
 
-## Three-Layer Architecture（三层架构）
+## Four-Layer Architecture（四层架构 v2.0）
 
-v1.3 职责收敛：消除 job-tracks 与 role_snapshots 的职责重叠，建立清晰的个人/市场分离。
+v2.0 新增 Application Tracker 层，记录真实市场反馈。
 
 ```
-Career DNA   （职业基因库）= 个人职业资产库 → 你做过什么、为什么适合某个方向
-Knowledge    （市场知识库）= 职业市场知识库 → 市场需要什么、趋势是什么
-Resume Output（投递产物）= 单次JD投递产物库 → 这次JD你准备了什么
+Career DNA         （职业基因库）= 个人职业资产库 → 你做过什么、为什么适合某个方向
+Knowledge          （市场知识库）= 职业市场知识库 → 市场需要什么、趋势是什么
+Resume Output      （投递产物）= 单次JD投递产物库 → 这次JD你准备了什么
+Application Tracker（投递追踪）= 投递反馈记录库 → 你投了以后发生了什么
 ```
 
 **v1.3 核心变化**：
@@ -29,11 +30,12 @@ Resume Output（投递产物）= 单次JD投递产物库 → 这次JD你准备�
 | Career DNA Layer（个人资产层） | 用户唯一事实源 | 经历、能力、项目、故事、Career Track | 用户提供 | `career-dna/` |
 | Knowledge Layer（市场知识层） | 外部市场情报 | Role Snapshot、Skill Domain Snapshot | JD 分析积累 | `knowledge/` |
 | Resume Outputs（投递产物层） | 单次JD临时产物 | 匹配报告、JD原文、简历、面试包 | 每次JD生成 | `resume-outputs/{date}-{company}-{role}/` |
+| Application Tracker（投递追踪层 v2.0） | 投递反馈记录 | 投递主表、状态定义、Case 档案 | 用户手动录入 | `application-tracker/` |
 
 **规则**：
-- Career DNA 是个人资产，Knowledge 是市场资产，Resume Outputs 是临时产物
+- Career DNA 是个人资产，Knowledge 是市场资产，Resume Outputs 是临时产物，Application Tracker 是真实反馈
 - Career Track 回答"你适合什么"；Role Snapshot 回答"市场要什么"——不再重叠
-- Resume Outputs 每次 JD 单建子目录，不覆盖历史投递记录
+- Resume Outputs 每次 JD 单建子目录；Application Tracker 按需建档，不覆盖历史
 
 ## Core Principles（核心原则）
 
@@ -56,6 +58,7 @@ Resume Output（投递产物）= 单次JD投递产物库 → 这次JD你准备�
 | 用户补充新经历 / 新项目 / 管理经验 / 新技能 / 回答 Backlog 问题 | **Mode B: Update Mode（职业资产更新模式）** |
 | 用户询问适合什么岗位 / 是否该转型 / 职业发展方向 / 竞争力在哪 / 缺什么能力 | **Mode C: Review Mode（职业发展分析模式）** |
 | 用户提供 JD / 职位描述 / 招聘链接 / 岗位要求 | **Mode D: Job Application Mode（岗位投递模式）** |
+| 用户记录投递 / 更新面试状态 / 记录反馈 / 查看投递统计 | **Mode E: Application Tracker（投递追踪模式 v2.0）** |
 
 进入具体模式前，加载对应的参考文件获取详细工作流指引。
 
@@ -79,7 +82,8 @@ career-dna/                    # 个人职业资产库（Personal Assets · Sing
     ├── project_manager.md     #   项目经理赛道
     ├── implementation_consultant.md  # 实施顾问赛道
     └── ...                    #   更多赛道文件
-└── 11_online_profile.md      # 在线职业档案 (Online Career Profile v1.5) — 派生资产
+├── 11_online_profile.md      # 在线职业档案 (Online Career Profile v1.5) — 派生资产
+└── 12_portfolio_candidates.md  # 作品集候选池 (Portfolio Candidates v2.1) — 派生资产
 
 knowledge/                     # 职业市场知识库（Market Intelligence · 跨JD累积）
 ├── role_snapshots/            # 岗位快照 (Role Snapshot) — 按 Role 归档的 JD 提炼
@@ -92,6 +96,7 @@ resume-outputs/                # 单次JD投递产物库（Per-JD Output v1.5.1 
     ├── 01_jd_match_report.md  # 岗位匹配报告 + Capability Translation
     ├── 02_resume_cn.md        # 中文ATS简历 (v1.5.1)
     ├── 03_resume_en.md        # 英文ATS简历 (v1.5.1)
+    ├── XX_portfolio.md          # 作品集案例 (Portfolio Case v2.1)
     ├── XX_interview_pack.md   # 面试准备包
     ├── XX_answer_cards.md     # 回答卡片库
     ├── XX_upgrade_plan.md     # 竞争力升级计划
@@ -102,6 +107,14 @@ resume-outputs/                # 单次JD投递产物库（Per-JD Output v1.5.1 
     └── XX_learning_roadmap.md # 学习路线图 (Weak Fit)
 ```
 
+```
+application-tracker/           # 投递追踪库（Application CRM v2.0 · 按需建档）
+├── 01_application_index.md    #   全量投递主表
+├── 02_status_definitions.md   #   状态定义（Stage 0-9）
+└── archives/                  #   案例档案（满足条件时按需创建）
+    └── {Company}_{Role}.md    #     单次投递详细记录
+```
+
 详细文件结构与字段定义见 `references/career_dna_structure.md`。
 
 ## Mode A: Career DNA Build Mode（职业基因库构建模式）
@@ -110,7 +123,7 @@ resume-outputs/                # 单次JD投递产物库（Per-JD Output v1.5.1 
 
 **工作流**：初始化目录 → 解析简历 → 提取职业轨迹 → 提取项目经历 → 构建能力图谱 → 构建故事库（含失败案例）→ 构建职业身份 → **发现职业方向并生成 Career Track 文件**（为每个识别到的 Track 生成完整 `{track}.md`） → 生成完整度报告 + Backlog（Backlog 问题关联 Track/Gap/Skill/Impact）
 
-**产物**：`career-dna/` 下 10 个文件 + `10_career_tracks/` 目录（含 README.md + 每个 Track 的 `{track}.md`）+ `11_online_profile.md`（派生资产）
+**产物**：`career-dna/` 下 10 个文件 + `10_career_tracks/` 目录（含 README.md + 每个 Track 的 `{track}.md`）+ `11_online_profile.md`（派生资产）+ `12_portfolio_candidates.md` + `XX_portfolio.md`（v2.1 新增）
 
 详细工作流指引见 `references/mode_a_build.md`。
 
@@ -118,7 +131,7 @@ resume-outputs/                # 单次JD投递产物库（Per-JD Output v1.5.1 
 
 **目标**：将用户补充的新经历、新项目、新技能回写到 Career DNA。
 
-**工作流**：读取现有 Career DNA → 更新 Projects/Skill Graph/Story Bank/Career Identity/Career Tracks → 重新计算 Completeness → 更新 Question Backlog
+**工作流**：读取现有 Career DNA → 更新 Projects/Skill Graph/Story Bank/Career Identity/Career Tracks → 重新计算 Completeness → 更新 Question Backlog → 刷新派生资产（含 Online Profile + Portfolio Candidates + Portfolio Case v2.1）
 
 **产物**：更新对应的 `career-dna/` 文件
 
@@ -151,10 +164,24 @@ Step 5.5: Capability Translation（Direct / Adjacent / Missing）
 Step 6: Targeted Discovery（定向证据发现）
 Step 7: Application Strategy Decision（求职策略决策 ★ v1.5.1）
         → Strong Fit / Moderate Fit / Stretch Fit / Weak Fit → Pack A/B/C/D
-Step 8-10: Career DNA Update → Resume Package → Knowledge Update
+Step 8-10: Career DNA Update → Resume Package（含 Portfolio Selection v2.1） → Knowledge Update
 ```
 
 详细工作流指引见 `references/mode_d_job_application.md`。产出合约见 `references/output_contracts.md`。
+
+## Mode E: Application Tracker（投递追踪模式 v2.0）
+
+**前置条件**：`application-tracker/01_application_index.md` 必须存在。如不存在，从模板初始化。
+
+**目标**：记录真实市场反馈。**不自动学习、不自动优化、不反向修改 Career DNA。**
+
+执行以下任一操作：
+- **E1 Add Application** — 记录新投递到 Index
+- **E2 Update Status** — 更新投递状态（Applied → Viewed → ... → Offer/Rejected）
+- **E3 Add Feedback** — 进入面试或收到拒绝反馈时，在 archives/ 创建 Case 文件
+- **E4 Dashboard** — 投递统计面板（投递数/转化率/Offer率/待关注）
+
+详细工作流指引见 `references/mode_e_application_tracker.md`。
 
 ## Question Backlog Rules（待补充问题库规则）
 
@@ -240,6 +267,7 @@ Build → Review → Apply → Discover → Update → Review → Apply → ...
 - `mode_b_update.md` — Mode B 详细工作流：增量更新策略、回写规则、完整度重算。
 - `mode_c_review.md` — Mode C 详细工作流：分析框架、Gap Analysis 方法、输出格式。
 - `mode_d_job_application.md` — Mode D 详细工作流：Career Track Match → JD Match Report → Targeted Discovery → Career DNA Update → Resume Package → Knowledge Update。
+- `mode_e_application_tracker.md` — Mode E 详细工作流（v2.0 新增）：Application CRM，记录真实市场反馈。
 - `targeted_discovery.md` — Targeted Discovery 规则。
 - `question_backlog.md` — Question Backlog 管理规则。
 
@@ -247,14 +275,22 @@ Build → Review → Apply → Discover → Update → Review → Apply → ...
 
 - `career-dna/01_profile.md` ~ `09_completeness_report.md` — 9 个 Career DNA 文件模板。
 - `career-dna/11_online_profile.md` — Online Career Profile（在线职业档案 v1.5）。
+- `career-dna/12_portfolio_candidates.md` — 作品集候选池 (v2.1 新增)。
 - `career_track.md` — Career Track 赛道模板。
 - `knowledge/role_snapshot.md` — Role Snapshot 模板。
 - `knowledge/skill_snapshot.md` — Skill Domain Snapshot 模板。
 - `resume-outputs/01_jd_match_report.md` — JD Match Report 模板。
+- `resume-outputs/XX_portfolio.md` — 作品集案例模板 (v2.1 新增)。
 - `resume-outputs/02_resume_cn.md` — 中文 ATS 简历模板 (v1.5.1)。
 - `resume-outputs/03_resume_en.md` — 英文 ATS 简历模板 (v1.5.1 新增)。
+- `resume-outputs/04_interview_pack.md` — 面试准备包模板 (v1.5.1)。
+- `resume-outputs/05_answer_cards.md` — 回答卡片库模板 (v1.5.1)。
+- `resume-outputs/06_upgrade_plan.md` — 竞争力升级计划模板 (v1.5.1)。
+- `resume-outputs/07_boss_greeting.md` — Boss 打招呼语模板 (v1.6 新增)。
 - `resume-outputs/XX_gap_analysis.md` — 能力差距分析模板 (v1.5.1 新增)。
 - `resume-outputs/XX_transition_resume_cn.md` — 转岗中文简历模板 (v1.5.1 新增)。
 - `resume-outputs/XX_transition_resume_en.md` — 转岗英文简历模板 (v1.5.1 新增)。
 - `resume-outputs/XX_transition_feasibility.md` — 转岗可行性评估模板 (v1.5.1 新增)。
+- `application-tracker/01_application_index.md` — 投递追踪主表模板 (v2.0 新增)。
+- `application-tracker/02_status_definitions.md` — 状态定义 (v2.0 新增)。
 - `resume-outputs/XX_learning_roadmap.md` — 学习路线图模板 (v1.5.1 新增)。

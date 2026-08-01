@@ -26,7 +26,7 @@
 - `career-dna/04_skill_graph.md` — 现有能力图谱
 - `career-dna/05_story_bank.md` — 现有故事库
 - `career-dna/07_career_identity.md` — 现有职业身份
-- `career-dna/10_career_tracks.md` — 现有职业方向
+- `career-dna/10_career_tracks/` — 现有职业方向
 - `career-dna/08_question_backlog.md` — 待回答问题列表
 
 ### Step 2: 解析用户补充信息
@@ -65,7 +65,7 @@
 - 更新职业标签、核心竞争力、差异化优势
 
 **Career Tracks（职业方向）**：
-- 如新能力/经历影响了职业方向匹配度，更新 `10_career_tracks.md`
+- 如新能力/经历影响了职业方向匹配度，更新 `10_career_tracks/{track}.md`
 - 重新评估各方向匹配度
 
 **Question Backlog（待补充问题库）**：
@@ -87,13 +87,16 @@ python3 scripts/completeness_checker.py [career-dna目录路径]
 - 更新建议补充项
 - 更新生成时间
 
-### Step 4.5: 刷新派生资产（Derived Asset Refresh v1.5）
+### Step 4.5: 刷新派生资产（Derived Asset Refresh v1.5 + v2.1）
 
-如果本次更新涉及以下任一文件：`01_profile` / `02_timeline` / `03_projects` / `04_skill_graph` / `07_career_identity` / `10_career_tracks`：
+如果本次更新涉及以下任一文件，自动刷新对应派生资产：
 
-- 自动重新推导 `career-dna/11_online_profile.md`
-- 派生资产不需要用户手动维护
-- 如果 `11_online_profile.md` 尚未创建，则自动初始化
+| DNA 文件变更 | 触发刷新 |
+|-------------|------|
+| `01_profile` / `02_timeline` / `03_projects` / `04_skill_graph` / `07_career_identity` / `10_career_tracks/` | `11_online_profile.md` |
+| `03_projects` / `05_story_bank` / `04_skill_graph` | `12_portfolio_candidates.md` + Ready 项目的 `XX_portfolio.md` |
+
+派生资产不需要用户手动维护。如果目标文件尚未创建，则自动初始化。
 
 ### Step 5: 向用户反馈
 
@@ -101,7 +104,8 @@ python3 scripts/completeness_checker.py [career-dna目录路径]
 1. 本次更新了哪些文件
 2. 当前完整度评分（对比上次如有提升，标注提升幅度）
 3. Backlog 中仍待回答的问题（按优先级排序，最多展示 5 个）
-4. 建议的下一步行动
+4. Portfolio 候选池更新情况（Ready 项目数 / Need Evidence 项目数）
+5. 建议的下一步行动
 
 ## Important Rules（重要规则）
 

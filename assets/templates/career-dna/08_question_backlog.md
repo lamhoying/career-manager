@@ -31,14 +31,6 @@ v1.4.2 新增: Triggered By JD / Triggered By Role / Triggered By Company / Trig
 -->
 
 （暂无待确认问题）
-- **潜在影响 (Potential Impact)**：High / Medium / Low
-- **优先级**：High / Medium / Low
-- **来源模式**：Build / Update / Review / Job Application
-- **来源上下文**：
-- **状态**：Open
--->
-
-（暂无待确认问题）
 
 ## Answered（已回答）
 

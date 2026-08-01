@@ -19,7 +19,7 @@
 
 读取以下核心文件：
 - `career-dna/07_career_identity.md` — 职业身份
-- `career-dna/10_career_tracks.md` — 职业方向
+- `career-dna/10_career_tracks/` — 职业方向
 - `career-dna/04_skill_graph.md` — 能力图谱
 - `career-dna/02_timeline.md` — 职业轨迹
 - `career-dna/03_projects.md` — 项目资产（用于证据引用）
@@ -34,7 +34,7 @@
 
 ### Step 3: 分析职业方向（Career Track Analysis）
 
-对 `10_career_tracks.md` 中的每个方向进行深度分析：
+对 `10_career_tracks/` 中的每个方向进行深度分析：
 - **匹配度评估**：重新计算匹配度，考虑最新能力图谱
 - **优势分析**：用户在这个方向有哪些优势能力
 - **差距分析**：用户缺少哪些关键能力

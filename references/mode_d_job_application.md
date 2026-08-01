@@ -1,4 +1,4 @@
-# Mode D: Job Application Mode（岗位投递模式 v1.4）
+# Mode D: Job Application Mode（岗位投递模式 v1.6.3）
 
 ## Trigger（触发条件）
 
@@ -447,12 +447,6 @@ Coverage = (D0子证据数×100 + D1×85 + D2×65 + D3×40 + D4×0) / 总子证�
 
 **目的**：基于 Evidence Expectation 的 Evidence Risks 和 DNA Match 的 Gaps，定向追问。
 
-**规则**：---
-
-## Step 6: Targeted Discovery（定向证据发现）
-
-**目的**：基于 Evidence Expectation 的 Evidence Risks 和 DNA Match 的 Gaps，定向追问。
-
 **规则**：
 - 只追问 3-10 个高价值问题
 - 优先追问 Critical Evidence 覆盖缺失
@@ -550,6 +544,26 @@ Package（生成包）: Pack A / B / C / D
 | 4 | `04_learning_roadmap.md` | 学习路线图 |
 
 > Pack D 不生成简历和面试包，避免硬包装。
+
+### Portfolio Selection（作品集推荐 v2.1）
+
+在生成 Interview Pack 之前，从 `12_portfolio_candidates.md` 中推荐与本 JD 最匹配的 Ready 项目。
+
+#### 匹配规则
+
+1. 取 Ready 项目（Readiness ≥ 70%）
+2. 与 Part 4 Evidence Matrix 的能力条目做交集比对
+3. 取与 Primary Evidence 同项目且 Readiness 最高的前 3 个
+
+#### 输出
+
+写入 `01_jd_match_report.md` Part 8 新增 Portfolio Selection 表。
+
+| 优先级 | 推荐项目 | Readiness | 匹配理由 | 展示方式 |
+|:--:|------|:--:|------|------|
+| Top 1 | [项目A] | 91% | 与 JD 核心能力直接对应 | 面试开场深度案例 |
+| Top 2 | [项目B] | 86% | 补强 JD 次要能力 | 聊到相关话题时引出 |
+| Backup | [项目C] | 71% | 展示交叉能力 | 面试尾声补充 |
 
 ---
 

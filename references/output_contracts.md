@@ -1,4 +1,4 @@
-# Output Contracts（产出合约 v1.5.1）
+# Output Contracts（产出合约 v2.1.2）
 
 ## 概念
 
@@ -36,8 +36,7 @@ Output Contracts 定义每个求职策略（Pack A/B/C/D）对应的文件产出
 | 1 | `01_jd_match_report.md` | 标准模板 | + 完整 Capability Translation |
 | 2 | `02_transition_resume_cn.md` | `XX_transition_resume_cn.md` | Adjacent Match 项目 + 迁移推理 |
 | 3 | `03_transition_resume_en.md` | `XX_transition_resume_en.md` | 同上 (English) |
-| 4 | `04_capability_translation.md` | 独立提取 Part 6.5 | Capability Translation 完整报告 |
-| 5 | `05_gap_analysis.md` | `XX_gap_analysis.md` | Missing + Skill Weight |
+| 4 | `04_gap_analysis.md` | `XX_gap_analysis.md` | Missing + Skill Weight |
 | 6 | `06_interview_pack.md` | 标准模板 | + 转岗高频问题 |
 | 7 | `07_upgrade_plan.md` | 标准模板 | + 转岗专属升级 |
 

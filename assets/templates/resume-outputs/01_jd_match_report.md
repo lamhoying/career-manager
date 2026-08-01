@@ -267,11 +267,6 @@ Part 8: Recommended Strategy（推荐策略）
 
 > 公式：Decision = 0.5×Match + 0.25×HireProb + Location + Language + Industry
 > 计算结果 → 填入 3.1 摘要。
-| **Match Score（匹配度）** | 50% | Part 3.2 | [X] |
-| **Hire Probability（录用概率）** | 25% | Part 5 | [X] |
-| **Location Advantage（城市优势）** | 10% | JD 城市 = 用户城市→10pt | [X] |
-| **Language Advantage（语言优势）** | 10% | 外语能力→10pt | [X] |
-| **Industry Advantage（行业优势）** | 5% | 同行业→5pt | [X] |
 
 ### Decision Score（对比）
 

@@ -238,3 +238,50 @@ python3 scripts/completeness_checker.py [career-dna目录路径]
 5. **Track 文件必须生成**。Step 9 必须为每个识别的 Track 生成完整的 `{track}.md` 文件，而不是只写摘要。
 6. **Backlog 问题必须关联 Track**。Step 9 产生的 Known Gaps 转化为 Backlog 问题时，必须标注 Track / Gap / Skill / Impact 关联字段。
 7. **完成后向用户展示完整度报告和 Track 总览**，并告知 Backlog 中有哪些待补充问题，鼓励用户在 Mode B 中逐步补充。
+
+### Step 12: Portfolio Discovery & Output（作品集发现与生成 v2.1）
+
+**目标**：从已完成的 Career DNA 自动发现可生成作品集的项目，验证完整度，输出 Portfolio Case。
+
+#### 12.1 Portfolio Discovery（发现候选）
+
+1. 扫描 `03_projects.md` 全部项目
+2. 对每个项目检查 4 项 Discovery Rules（有项目/有角色/有行动/有结果）
+3. 满足 3 项以上 → 进入 Portfolio Candidate Pool
+
+#### 12.2 Portfolio Validation（验证）
+
+1. 对每个 Candidate 逐项打 7 维评分（项目背景/角色/问题/方案/行动/成果/能力）
+2. Readiness = ✓ 项数 / 7
+3. ≥ 70% → Ready / < 70% → Need More Evidence
+
+评分基于 DNA 中**已存在的信息**。缺失即 ✗，不推测补充。
+成果维度：仅有定性认可 → △；有具体数字 → ✓。
+能力维度：Skill Graph 中有对应条目 → ✓。
+
+#### 12.3 Portfolio Output（生成作品集）
+
+1. 对 Ready 项目逐个按 `XX_portfolio.md` 模板生成
+2. 每字段严格从 DNA 提取，不推测补充：
+
+| Portfolio 字段 | 主来源 | 备选来源 | 提取规则 |
+|-----------|------|------|------|
+| 项目概览 | 03_projects.项目背景 | 03_projects.基本信息 | 取首句 + 项目名 + 时间 |
+| 项目背景 | 03_projects.项目背景 | 05_story_bank.Situation | 取全文限 3 句，并提取问题→影响表 |
+| 我的角色 | 03_projects.角色/岗位 | — | 取角色 + 汇报关系 + 职责列表 |
+| 业务流程分析 | 05_story_bank.Situation + Task | 03_projects.项目背景 | 从 Situation 提取 As-Is / 从 Task 提取痛点，推导 To-Be |
+| 项目推进过程 | 05_story_bank.Action | — | 按阶段拆分（调研→设计→实施→优化），每阶段 2-3 行动 |
+| 项目成果 | 03_projects.成果 | 05_story_bank.Result | 先取量化再取定性，按层级分类展示 |
+| 能力体现 | 04_skill_graph | — | Confidence ≥ 70 且本项目 Evidence 引用的能力，✓ 列表形式 |
+| 可迁移价值 | 10_career_tracks | 03_projects.标签 | 取 Track 归属 + 跨行业判断 |
+
+> 不补充 DNA 中不存在的信息。缺字段标注 `[待补充]`。
+
+#### 12.4 Portfolio Gap → Backlog
+
+Need More Evidence 项目向 `08_question_backlog.md` 追加 `[Portfolio]` 标签问题。
+
+#### 产物
+
+- `career-dna/12_portfolio_candidates.md`
+- `resume-outputs/XX_portfolio_{项目名}.md`

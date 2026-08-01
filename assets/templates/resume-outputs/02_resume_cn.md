@@ -6,7 +6,7 @@
 2. 格式简洁：无复杂排版，纯文本友好
 3. 结果导向：每条经历用"动词 + 量化结果"格式
 4. 匹配优先：优先展示与 JD 匹配的项目和能力
-5. Track定位：引用 career-dna/10_career_tracks.md 的 Positioning 优化职业定位
+5. Track定位：引用 career-dna/10_career_tracks/{track}.md 的 Positioning 优化职业定位
 6. 长度控制：1-2 页
 -->
 
