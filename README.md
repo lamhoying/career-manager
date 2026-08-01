@@ -3,7 +3,7 @@
 > 把你的 AI 助手变成私人 Career Manager：以 **Career DNA（职业基因库）** 为唯一事实源，持续建设、管理、升级你的职业资产，而不是每次看到 JD 都从零重写简历。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-v1.6.3-green.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-v2.1.2-green.svg)](CHANGELOG.md)
 [![Cross-Agent](https://img.shields.io/badge/agent-agnostic-brightgreen.svg)](#跨平台兼容性)
 
 ---
@@ -40,17 +40,18 @@ Career Manager 是一个 **AI 助手技能包（Skill）**，可运行于 WorkBu
 
 ---
 
-## 三层架构
+## 四层架构
 
-v1.3 起职责收敛为清晰的三层，彻底分离「个人资产 / 市场情报 / 单次产物」：
+v1.3 起职责收敛，v2.0 进一步扩展为清晰的四层，彻底分离「个人资产 / 市场情报 / 单次产物 / 投递追踪」：
 
 | 层 | 定位 | 回答的问题 | 内容 | 更新来源 |
 |----|------|-----------|------|----------|
 | **Career DNA**（个人资产层） | 你的唯一事实源 | 我做过什么、为什么适合某方向 | 经历 / 能力 / 项目 / 故事 / Career Track | 你提供 |
 | **Knowledge**（市场知识层） | 外部市场情报 | 市场需要什么、趋势是什么 | Role Snapshot、Skill Domain Snapshot | JD 分析累积 |
 | **Resume Outputs**（投递产物层） | 单次 JD 临时产物 | 这次 JD 我准备了什么 | 匹配报告 / 简历 / 面试包 | 每次 JD 生成 |
+| **Application Tracker**（投递追踪层） | 投递反馈记录 | 我投了以后发生了什么 | 投递主表 / 状态定义 / Case 档案 | 用户手动录入 |
 
-关键规则：Career DNA 是**个人资产**，Knowledge 是**市场资产**，Resume Outputs 是**临时产物**；Career Track 回答「你适合什么」，Role Snapshot 回答「市场要什么」——两者不再重叠。每次投递单建子目录（`{日期}-{公司}-{岗位}/`），不覆盖历史记录。
+关键规则：Career DNA 是**个人资产**，Knowledge 是**市场资产**，Resume Outputs 是**临时产物**，Application Tracker 是**反馈记录**；Career Track 回答「你适合什么」，Role Snapshot 回答「市场要什么」——两者不再重叠。每次投递单建子目录（`{日期}-{公司}-{岗位}/`），不覆盖历史记录。
 
 ---
 
@@ -65,7 +66,7 @@ v1.3 起职责收敛为清晰的三层，彻底分离「个人资产 / 市场情
 
 ---
 
-## 四大工作模式
+## 五大工作模式
 
 技能根据用户目标自动路由（先检查当前目录是否存在 `career-dna/`，再决定模式）：
 
@@ -75,6 +76,7 @@ v1.3 起职责收敛为清晰的三层，彻底分离「个人资产 / 市场情
 | **B** | **职业资产更新** | 补充新项目 / 新能力 / 回答 Backlog 问题 | DNA 增量更新，不重复建设 |
 | **C** | **职业发展分析** | 我适合什么岗位 / 该不该转型 / 竞争力在哪 / 缺什么 | 能力盘点、成长路径、转型可行性 |
 | **D** | **岗位投递** | 粘贴 JD / 招聘链接 / 岗位要求 | 匹配报告、中英简历、面试包、缺口分析与补强路线 |
+| **E** | **投递追踪** | 录入投递 / 更新面试状态 / 记录反馈 / 看统计 | 投递主表、状态流转、Case 档案、转化看板 |
 
 ---
 
@@ -93,6 +95,10 @@ v1.3 起职责收敛为清晰的三层，彻底分离「个人资产 / 市场情
   - **证据路由（Evidence Routing）**：从 Strength≥4 的证据池按「距离优先 / 角色相关 / 新奇注入」三条规则分层为 Primary / Secondary / Curiosity，杜绝把 AI 项目误选为 PM 岗位钩子；
   - **平台策略（Platform Variants）**：同一匹配结论在 Boss 直聘（诱导 HR 回复，60–120 字）、猎聘（建立专业感，150–250 字）、邮件（正式投递，300+ 字附简历）、LinkedIn（建立关系，80–120 字不提求职）四平台各自生成不同目标版本；
   - **人味化（Humanization）**：7 条规则（短句 / 不用 AI 词 / 自然问句 / 不堆材料 / 不模板开头等）让文案更像真人；每平台仅出「推荐 + 备选」两个版本，附 Why / Tone Notes / Do Not Say。
+- **作品集发现与生成（Portfolio Discovery & Output，v2.1）**：从 Career DNA 自动发现、验证并生成作品集案例——不再只写简历，而是把「最值得讲的项目」沉淀为结构化 Portfolio Case。
+  - **候选池（Portfolio Candidates）**：4 项 Discovery Rules 筛选项目，7 维 Validation（背景 / 角色 / 问题 / 方案 / 行动 / 成果 / 能力）判定 Readiness ≥ 70% Ready / < 70% Need More Evidence；5 维 Potential Score 排序。
+  - **案例模板（Portfolio Case）**：8 字段结构化（概览 / 背景 / 角色 / 问题 / 方案 / 行动 / 成果 / 能力体现），从 DNA 严格映射、不自由发挥；Mode A 构建 / Mode B 更新 / Mode D 投递时自动联动（投递时按 JD 推荐 Top 3 最佳案例）。
+- **投递追踪系统（Application Tracker，v2.0）**：v1.x 解决「我该怎么投」，v2.0 解决「我投了以后发生了什么」。录入投递（Index）、更新状态（Stage 0 Planned → Stage 7 Offer / Stage 8 Rejected）、登记面试反馈 / 拒绝原因（archives/）、查看转化与 Offer 率看板——形成「分析 → 决策 → 投递 → 反馈」的完整闭环。
 
 ---
 
@@ -178,11 +184,12 @@ career-manager/
 │   ├── mode_b_update.md          # 模式 B 流程
 │   ├── mode_c_review.md          # 模式 C 流程
 │   ├── mode_d_job_application.md # 模式 D 流程
+│   ├── mode_e_application_tracker.md # 模式 E 流程（投递追踪）
 │   ├── output_contracts.md       # 产物格式契约
 │   ├── question_backlog.md       # 待澄清问题库
 │   └── targeted_discovery.md     # 定向挖掘提问库
 └── assets/templates/             # 输出用模板（不进 context）
-    ├── career-dna/               # DNA 各模块模板（01~11）
+    ├── career-dna/               # DNA 各模块模板（01~12）
     │   ├── 01_profile.md         #   个人职业档案
     │   ├── 02_timeline.md        #   职业发展轨迹
     │   ├── 03_projects.md        #   项目资产库
@@ -193,10 +200,15 @@ career-manager/
     │   ├── 08_question_backlog.md#   待补充问题库
     │   ├── 09_completeness_report.md # 完整度报告
     │   ├── 10_career_tracks/     #   职业赛道库（每赛道一文件）
-    │   └── 11_online_profile.md  #   在线职业档案（派生资产）
+    │   ├── 11_online_profile.md  #   在线职业档案（派生资产）
+    │   └── 12_portfolio_candidates.md # 作品集候选池（v2.1 派生资产）
     ├── knowledge/                # 市场知识库模板
     │   ├── role_snapshot.md      #   岗位快照
     │   └── skill_snapshot.md     #   能力域快照
+    ├── application-tracker/      # 投递追踪库模板（v2.0）
+    │   ├── 01_application_index.md   # 全量投递主表
+    │   ├── 02_status_definitions.md  # 统一状态定义
+    │   └── archives/README.md        # Case 档案（按需建档）
     └── resume-outputs/           # 投递产物模板
         ├── 01_jd_match_report.md #   岗位匹配报告
         ├── 02_resume_cn.md       #   中文 ATS 简历
@@ -208,7 +220,8 @@ career-manager/
         ├── XX_gap_analysis.md     #   能力差距分析
         ├── XX_transition_resume_cn.md   # 转岗中文简历
         ├── XX_transition_resume_en.md   # 转岗英文简历
-        └── XX_transition_feasibility.md # 转岗可行性评估
+        ├── XX_transition_feasibility.md # 转岗可行性评估
+        └── XX_portfolio.md        #   作品集案例（v2.1 派生资产）
 ```
 
 > **隐私说明**：本技能只包含「指令 + 空白模板 + 脚本」，不含任何个人职业数据。你的真实 Career DNA、Knowledge、Resume Outputs 会在你本地工作区生成，不会随技能包外泄。
@@ -234,8 +247,12 @@ career-manager/
 
 ## 版本与更新
 
-完整变更记录见 [CHANGELOG.md](CHANGELOG.md)。当前版本 **v1.6.3**。近期重点：
+完整变更记录见 [CHANGELOG.md](CHANGELOG.md)。当前版本 **v2.1.2**。近期重点：
 
+- **v2.1.2**：全量质量审计（40 文件，修复 17 处问题：架构命名、破损模板引用、编码损坏）。
+- **v2.1.1**：作品集模板重写（STAR+ → 真 Portfolio，As-Is/To-Be 流程）+ Potential Score 5 维排序。
+- **v2.1**：作品集发现与生成（Portfolio Discovery & Output）——新增 `12_portfolio_candidates.md` + `XX_portfolio.md`，Mode A/B/D 全链路联动。
+- **v2.0**：投递追踪系统（Application Tracker）——新增 `application-tracker/` 层与 **Mode E**，记录真实市场反馈，形成「分析→决策→投递→反馈」闭环。
 - **v1.6.3**：打招呼语人味化 + 策略决策（Greeting Strategy 推荐/备选 + 7 条人味化规则 + 每平台双版本 + Why/Tone/Do-Not-Say）。
 - **v1.6.2**：证据路由 + 平台策略（Evidence Routing 三层输出 + 四平台变体，新增 LinkedIn；Greeting 不再自己选证据）。
 - **v1.6.1**：打招呼语目标驱动重写（4 种 Objective + 证据自动选择 + 三平台变体）。
