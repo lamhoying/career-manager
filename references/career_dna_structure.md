@@ -160,6 +160,23 @@ Career DNA 是用户职业经历的唯一事实源，由 10 个文件组成，�
 
 ---
 
+## 04b_transferable_capabilities.md — 可迁移能力映射 (v2.3)
+
+将 Skill Graph 的能力条目转换为各目标 Track 的岗位语言。不是新的能力库，是 Skill Graph → 岗位语言的解释器。
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| Capability Map | 列表（TC001-TC[n]） | 每条一个能力 → 岗位语言的完整映射 |
+| Source Capability | 引用 Skill Graph | 来源能力名称 / Domain / Confidence / Evidence |
+| Core Abstraction | 文本（1 句） | 去岗位标签化的底层能力抽象 |
+| Transferable Keywords | 按 Track 分组 | 每个目标 Track 的 2-3 个关键词 + 示例表达 |
+| Forbidden Translation | 列表 | 该能力不应出现的错误表达方式 |
+| Evidence Strength | 表 | Skill Graph Confidence / Transfer Confidence / JD Verified |
+
+**派生资产**：Skill Graph 变更时 Mode B Step 4.5 自动刷新。
+
+---
+
 ## 05_story_bank.md — 面试故事库
 
 每个故事按 STAR 结构记录：
@@ -220,33 +237,17 @@ Career DNA 是用户职业经历的唯一事实源，由 10 个文件组成，�
 
 ---
 
-## 07_career_identity.md — 职业身份库
+## 07_career_identity.md — 职业身份定义 (v2.5 重构)
 
-```markdown
-# 职业身份库 (Career Identity)
+定义用户的职业人格与市场定位。不是简历摘要，而是强制覆盖经历的「身份定义层」。5 层结构：
 
-## 我是谁
-（一段话总结职业身份，如"5年项目管理经验的交付型PM，擅长跨部门协调和复杂项目交付"）
-
-## 职业标签
-- [标签1]（如：项目管理）
-- [标签2]（如：跨部门协作）
-- [标签3]（如：敏捷交付）
-- ...
-
-## 核心竞争力
-1. **[竞争力1]**：证据 → [项目/案例]
-2. **[竞争力2]**：证据 → [项目/案例]
-3. **[竞争力3]**：证据 → [项目/案例]
-
-## 差异化优势
-（相比同级别竞争者，独特优势是什么）
-
-## 职业价值观
-- [工作方式偏好]
-- [团队风格偏好]
-- [行业偏好]
-```
+| 层 | 说明 |
+|------|------|
+| Professional Identity | 第一人称身份陈述（起点经历是路径，不是身份） |
+| Career Positioning | Primary/Secondary/Emerging 市场定位 |
+| Career Narrative | 核心职业问题 + 解决方式 + 价值主张 |
+| Capability Priority | 04b 的 Tier A/B/C 权重标注（Online Profile 排序依据） |
+| Non-Positioning Statement | 声明经历来源 ≠ 职业定位（Online Profile 必须遵守） |
 
 ---
 
@@ -325,7 +326,7 @@ career-dna/10_career_tracks/
 ├── README.md                    # 赛道总览：列出所有 Track 及其 Confidence
 ├── project_manager.md           # 项目经理赛道
 ├── implementation_consultant.md # 实施顾问赛道
-├── qa_manager.md                # QA Manager 赛道
+├── [track_name].md                # [Track名称] 赛道
 └── ...                          # 更多赛道文件
 ```
 
@@ -336,8 +337,8 @@ career-dna/10_career_tracks/
 
 | Track | Confidence | Target Roles | Last Updated |
 |-------|------------|-------------|--------------|
-| Project Manager | 85 | 游戏研发PM, PMO, IT项目经理 | 2026-07 |
-| Implementation Consultant | 70 | 实施顾问, 交付经理 | 2026-07 |
+| [Track A] | [XX] | [目标岗位A], [目标岗位B], [目标岗位C] | [YYYY-MM] |
+| [Track B] | [XX] | [目标岗位D], [目标岗位E] | [YYYY-MM] |
 ```
 
 ### {track}.md — 单个 Career Track 文件
@@ -379,8 +380,8 @@ Online Profile 是 Career DNA 的派生资产（Derived Asset），不直接维�
 
 | 来源文件 | 推导内容 |
 |----------|----------|
-| `07_career_identity.md` | Part 1 Personal Branding（Headline / Tags / Core Competencies 简介） |
-| `01_profile.md` + `02_timeline.md` + `07_career_identity.md` | Part 2 Career Summary（300-500 字） |
+| `07_career_identity.md` | Pipeline Step 2 Personal Positioning（Primary Positioning + Non-Positioning 约束） |
+| `01_profile.md` + `02_timeline.md` | Timeline 提取（年限/公司/岗位序列） |
 | `04_skill_graph.md` | Part 3 Core Competencies（Confidence ≥ 60 的能力） |
 | `03_projects.md` + `10_career_tracks/` | Part 4 Highlight Projects |
 | `10_career_tracks/` | Part 5 Target Tracks（Primary/Secondary/Supporting） |

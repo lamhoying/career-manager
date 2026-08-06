@@ -36,6 +36,17 @@ Aliases 示例：
 - **Typical Results（典型成果）**: [该能力的典型成果量化方式]
 - **Typical Ownership（典型责任级别）**: Owner / Lead / Support
 
+#### Market Language（市场语言 v2.3）
+
+<!-- 该能力域在市场上如何被描述。Skill Name 是内部术语，Market Language 是外部招聘语言。 -->
+
+| 能力 | 市场表达 | 常见岗位要求 | 来源 Role |
+|------|------|------|------|
+| [能力A] | [市场上如何称呼] | [JD 中常见表述] | [Role1], [Role2] |
+| [能力B] | [市场上如何称呼] | [JD 中常见表述] | [Role1] |
+
+> Market Language 用于 Transferable Capability 关键词校准。
+
 #### 观察记录 (Observations)
 - **Recent Observations（近期观察）**: [YYYY-MM Company Role]
 - **Trend Notes（趋势备注）**: [趋势判断]

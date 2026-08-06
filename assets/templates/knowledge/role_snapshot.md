@@ -16,6 +16,19 @@ v1.4: Common Hiring Intent / Talent Persona / Typical Evidence / Career Backgrou
 - **Tools（工具）**: [常见工具/平台/系统]
 - **Industries（行业）**: [该岗位出现的行业]
 
+## Role Capability Model（岗位能力模型 v2.3）
+
+<!-- 该岗位在市场上的核心能力要求。用于 Transferable Capability 的 Target Keywords 映射。 -->
+
+| 核心能力 | 市场权重 | 典型市场表达 | 来源 JD 数 |
+|------|:--:|------|:--:|
+| [能力1] | High | [市场中常见的表达] | [N] |
+| [能力2] | High | [市场中常见的表达] | [N] |
+| [能力3] | Medium | [市场中常见的表达] | [N] |
+| [能力4] | Medium | [市场中常见的表达] | [N] |
+
+> Role Capability Model 是 Transferable Capability Mapping 的目标语言来源。
+
 ## Hiring Intelligence（招聘情报 v1.4）
 
 - **Common Hiring Intent（常见招聘意图）**: [从多次 JD 分析积累的典型招聘意图]
@@ -76,10 +89,10 @@ v1.4: Common Hiring Intent / Talent Persona / Typical Evidence / Career Backgrou
 
 | 来源背景 | 常迁移能力 | 观察次数 | 置信度 |
 |----------|-----------|----------|--------|
-| QA Lead | Project Delivery（项目交付） | [N] | High |
-| QA Lead | Stakeholder Management（干系人管理） | [N] | High |
-| Test Manager | QA Process（质控流程） | [N] | High |
-| Implementation Consultant | Requirement Analysis（需求分析） | [N] | Medium |
+| [来源岗位A] | [可迁移能力A]（[能力说明]） | [N] | High |
+| [来源岗位B] | [可迁移能力B]（[能力说明]） | [N] | High |
+| [来源岗位C] | [可迁移能力C]（[能力说明]） | [N] | High |
+| [来源岗位D] | [可迁移能力D]（[能力说明]） | [N] | Medium |
 
 > 注意：此表记录市场规律，不绑定任何用户数据。Confidence ≥ High 的可在 Adjacent Match 中作为加分参考。
 

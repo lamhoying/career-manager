@@ -29,12 +29,13 @@ Confidence 字段用于：
 - Role Snapshot vs Skill Graph 交叉比对：快速定位证据薄弱的能力
 - Skill Domain Snapshot 同步：Confidence + Evidence Count 反映个人在该 Domain 的积累深度
 - v1.4.2 Score Explainability：回答"为什么这个能力是85分"（Count + Quality + Recency + Consistency）
+- v2.3 Transferable Ref（可迁移引用）：指向 04b_transferable_capabilities.md 中的 TC 编号。无 Transferable → 留空（Mode A Step 9.5 自动生成）。一个能力可对应多个 TC。
 -->
 
 ## 核心能力 (Core Skills)
 
-| Skill（能力） | Domain（域） | Level（等级） | Evidence（证据来源） | Evidence Count（证据数） | Evidence Quality（证据质量） | Evidence Consistency（证据一致性） | Evidence Recency（证据时效） | Confidence（置信度） | Last Verified（最近验证） | Related Skills（关联能力） |
-|---------------|-------------|--------------|---------------------|----------------|------------------|---------------------|------------------|------------|---------------|--------------------------|
+| Skill（能力） | Domain（域） | Level（等级） | Evidence（证据来源） | Evidence Count（证据数） | Evidence Quality（证据质量） | Evidence Consistency（证据一致性） | Evidence Recency（证据时效） | Confidence（置信度） | Last Verified（最近验证） | Related Skills（关联能力） | Transferable Ref（可迁移引用 v2.3） |
+|---------------|-------------|--------------|---------------------|----------------|------------------|---------------------|------------------|------------|---------------|--------------------------|---------------------------|
 
 ### 能力等级定义 (Level Definition)
 - **Expert（专家）**：能独立主导，能教导他人，有多次成功实践
@@ -72,12 +73,12 @@ Confidence = Evidence Count Quality + Evidence Quality + Recency + Consistency B
 ## 能力分类 (Skill Categories)
 
 ### 硬技能 (Hard Skills)
-| Skill（能力） | Domain（域） | Level（等级） | Evidence（证据） | Evidence Count（证据数） | Confidence（置信度） | Last Verified（最近验证） | Related Skills（关联能力） |
-|-------|--------|-------|----------|----------------|------------|---------------|----------------|
+| Skill（能力） | Domain（域） | Level（等级） | Evidence（证据） | Evidence Count（证据数） | Confidence（置信度） | Last Verified（最近验证） | Related Skills（关联能力） | Transferable Ref |
+|-------|--------|-------|----------|----------------|------------|---------------|----------------|-------------------|
 
 ### 软技能 / 管理能力 (Soft Skills / Management)
-| Skill（能力） | Domain（域） | Level（等级） | Evidence（证据） | Evidence Count（证据数） | Confidence（置信度） | Last Verified（最近验证） | Related Skills（关联能力） |
-|-------|--------|-------|----------|----------------|------------|---------------|----------------|
+| Skill（能力） | Domain（域） | Level（等级） | Evidence（证据） | Evidence Count（证据数） | Confidence（置信度） | Last Verified（最近验证） | Related Skills（关联能力） | Transferable Ref |
+|-------|--------|-------|----------|----------------|------------|---------------|----------------|-------------------|
 
 ### 领域知识 (Domain Knowledge)
 | Domain（域） | Depth（深度） | Evidence（证据） | Evidence Count（证据数） | Confidence（置信度） | Last Verified（最近验证） |

@@ -1,7 +1,7 @@
 # JD Match Report: [公司名] - [岗位名]
 
 <!--
-岗位匹配报告 (JD Match Report v1.5.4)
+岗位匹配报告 (JD Match Report v1.6.2)
 Career Decision Engine — 从"能力匹配"升级为"求职决策"。
 
 Part 1: JD 原文归档
@@ -141,7 +141,7 @@ Part 8: Recommended Strategy（推荐策略）
 | 级别 | 等级含义 | 定义 | 示例 |
 |------|------|------|------|
 | **D0** | Strong Direct（强力直接证据） | 完全同岗位 | Delivery Lead → Delivery Lead |
-| **D1** | Functional Equivalent（职能等同） | 同职责 / 不同岗位 | Senor Analyst → Sprint 管理 |
+| **D1** | Functional Equivalent（职能等同） | 同职责 / 不同岗位 | Senior Analyst → Sprint 管理 |
 | **D2** | Transferable Evidence（可转移证据） | 同能力域 / 不同场景 | 制造业流程建设 → 敏捷教练 |
 | **D3** | Inferential Evidence（推理证据） | 需解释的映射 | 数据分析 → 数据方案落地 |
 | **D4** | No Evidence（无证据） | 无可信映射 | ERP 系统 → CRM 项目 |
@@ -186,7 +186,7 @@ Part 8: Recommended Strategy（推荐策略）
 | 等级 | 定义 | 示例 | 分数区间 |
 |------|------|------|----------|
 | **Level A** | 真实角色 — JD 与简历头衔一致 | Delivery Lead → Delivery Lead | 90+ |
-| **Level B** | 相邻角色 — 同域不同岗 | Senor Analyst / PM / Tech Lead | 70-89 |
+| **Level B** | 相邻角色 — 同域不同岗 | [岗位A] / [岗位B] / [岗位C] | 70-89 |
 | **Level C** | 能力相似 — 跨域可迁移 | 运营经理 / 制造业经理 | 40-69 |
 | **Level D** | 跨赛道 — 需要转行 | 销售 / 客服 | 0-39 |
 
@@ -276,7 +276,7 @@ Part 8: Recommended Strategy（推荐策略）
 | [Role B] | 36 | 14 | 10 | 10 | 3 | **73** |
 | [Role C] | 35 | 9 | 10 | 5 | 0 | **59** |
 
-> Decision Score ≠ 匹配度。回答的是"综合条件下值不值得现在投"。
+> Decision Score ≠ 匹配度。回答的是"综合条件下值不值得现在投"。表中数值为加权后的贡献值（原始分 × 权重百分比），非原始分数。
 
 ---
 

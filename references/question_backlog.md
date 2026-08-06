@@ -24,7 +24,7 @@ Question Backlog 的问题来自所有模式：
 
 - **产生原因**：为什么会产生这个问题
 - **关联能力/文件**：与哪个能力或 Career DNA 文件相关
-- **关联 Track**：该问题影响哪个 Career Track（如 Project Manager, QA Manager）
+- **关联 Track**：该问题影响哪个 Career Track（如 [Track A], [Track B]）
 - **关联 Gap**：该问题对应 Track 中的哪个 Known Gap（如 CI/CD Integration）
 - **关联 Skill**：该问题直接关联的能力名称（如 Test Automation）
 - **关联 Hiring Intent**（v1.4）：该问题关联哪类招聘意图（如 Knowledge Transfer / 项目交付）
@@ -40,7 +40,7 @@ Question Backlog 的问题来自所有模式：
 
 | 字段 | 版本 | 用途 | 示例 |
 |------|------|------|------|
-| Track（关联赛道） | v1.3 | 回答此问题对哪个 Career Track 有帮助 | QA Manager |
+| Track（关联赛道） | v1.3 | 回答此问题对哪个 Career Track 有帮助 | [Track名称] |
 | Related Gap（关联缺口） | v1.3 | 对应 Track 中哪个 Known Gap | CI/CD Integration |
 | Related Skill（关联能力） | v1.3 | 直接关联的能力名称 | CI/CD Pipeline |
 | Potential Impact（潜在影响） | v1.3 | 回答后对 Track Confidence 的提升预估 | High（Evidence Count 0→1，Confidence +15） |
@@ -146,10 +146,10 @@ Evidence Gap（来自 01_jd_match_report.md Part 5.4 Evidence Risks）
 
 | 字段 | 来源 | 示例 |
 |------|------|------|
-| Triggered By JD（触发JD） | 当前 `resume-outputs/{YYYYMMDD}-{company}-{role}/` 目录名 | 20260720-Tencent-pm |
-| Triggered By Role（触发岗位） | JD Match Report Part 2 Role 字段 | Implementation Consultant |
-| Triggered By Company（触发公司） | JD Match Report Part 2 Company 字段 | Tencent |
-| Triggered By Track（触发赛道） | JD Match Report Part 2 Track 字段 | Consultant |
+| Triggered By JD（触发JD） | 当前 `resume-outputs/{YYYYMMDD}-{company}-{role}/` 目录名 | 20260720-[某公司]-[role] |
+| Triggered By Role（触发岗位） | JD Match Report Part 2 Role 字段 | [某岗位名称] |
+| Triggered By Company（触发公司） | JD Match Report Part 2 Company 字段 | [某公司] |
+| Triggered By Track（触发赛道） | JD Match Report Part 2 Track 字段 | [某Track名称] |
 
 **作用**：
 - **同 Track 聚合**：Backlog 展示时按 Track 分组 → 用户可一次性回答同一方向的问题

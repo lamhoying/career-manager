@@ -95,13 +95,17 @@ python3 scripts/init_career_dna.py [目标目录]
 
 **注意**：失败案例需要用户主动提供，不强制追问。如用户无准备，记入 Backlog 等待补充。
 
-### Step 8: 构建职业身份（Career Identity）
+### Step 8: 构建职业身份定义（Career Identity v2.5）
 
-填写 `career-dna/07_career_identity.md`：
-- 基于 Step 3-7 的信息综合提炼
-- 回答三个核心问题：我是谁、我的职业标签是什么、我的核心竞争力是什么
-- 提炼差异化优势
-- 记录职业价值观
+填写 `career-dna/07_career_identity.md`，5 层结构：
+
+| 层 | 内容 | 回答 |
+|------|------|------|
+| Professional Identity | 第一人称身份陈述（起点经历是路径，不是身份） | 我是什么类型的人才 |
+| Career Positioning | 主/次/成长市场定位 | 市场怎么认识我 |
+| Career Narrative | 核心职业故事 + 价值主张 | 我靠什么创造价值 |
+| Capability Priority | 04b 的 Tier A/B/C 权重标注 | 哪些能力写进个人优势 |
+| Non-Positioning Statement | 经历来源 ≠ 职业定位 | 我不是什么 |
 
 ### Step 9: 发现职业方向并生成 Career Track 文件（Career Track Discovery）
 
@@ -115,7 +119,7 @@ python3 scripts/init_career_dna.py [目标目录]
 - 从 Career Identity 的职业标签匹配对应的 Track
 - 结合行业常识补充可能的转型方向
 
-输出候选 Track 列表（如 Project Manager / QA Manager / Implementation Consultant）。
+输出候选 Track 列表（如 [Track A] / [Track B] / [Track C]）。
 
 #### 9.2 为每个 Track 评估 Confidence（v1.4.2 升级）
 
@@ -159,16 +163,16 @@ Track Confidence 不再是一个静态数值，而是三分量加权计算：
 **示例输出**：
 
 ```
-career-dna/10_career_tracks/qa_manager.md
+career-dna/10_career_tracks/[track_name].md
 
-Track: QA Manager
-Confidence: 85
-Positioning: "5年QA经验，从手工测试到自动化测试体系搭建..."
-Career Narrative: "从测试工程师起步，经历..."
-Evidence: Test Automation (C90) | QA Process (C85) | ...
-Core Strengths: 1. 测试自动化体系建设...
-Known Gaps: CI/CD Integration（完全缺失, High）| ...
-Target Roles: QA Manager, Test Lead, Quality Assurance Manager
+Track: [Track名称]
+Confidence: [XX]
+Positioning: "[N]年[领域]经验，从[原始职能]到[目标能力]..."
+Career Narrative: "从[原始岗位]起步，经历..."
+Evidence: [能力A] (C[XX]) | [能力B] (C[XX]) | ...
+Core Strengths: 1. [核心能力描述]...
+Known Gaps: [缺失能力]（完全缺失, High）| ...
+Target Roles: [岗位A], [岗位B], [岗位C]
 ```
 
 **缺失信息处理**：如果某字段因信息不足无法填写（如没有失败案例支撑 Career Narrative），标注 `[待补充]` 并记入 Question Backlog。不阻塞 Track 文件生成。
@@ -180,9 +184,9 @@ Target Roles: QA Manager, Test Lead, Quality Assurance Manager
 ```markdown
 | Track | Confidence | Target Roles | Last Updated |
 |-------|------------|-------------|--------------|
-| QA Manager | 85 | QA Manager, Test Lead | 2026-07 |
-| Project Manager | 72 | 研发PM, PMO | 2026-07 |
-| Implementation Consultant | 60 | 实施顾问, 交付经理 | 2026-07 |
+| [Track A] | [XX] | [岗位A], [岗位B] | [YYYY-MM] |
+| [Track B] | [XX] | [岗位C], [岗位D] | [YYYY-MM] |
+| [Track C] | [XX] | [岗位E], [岗位F] | [YYYY-MM] |
 ```
 
 #### 9.5 关联 Question Backlog
@@ -190,13 +194,27 @@ Target Roles: QA Manager, Test Lead, Quality Assurance Manager
 将每个 Track 的 Known Gaps 中无法自动填补的项转化为 Backlog 问题。每个问题必须关联到对应 Track：
 
 ```markdown
-### Q[N]: QA Manager 方向缺少 CI/CD 集成的实践证据，你是否有相关经验？
+### Q[N]: [Track名称] 方向缺少 [缺失能力] 的实践证据，你是否有相关经验？
 
-- **关联 Track**：QA Manager
-- **关联 Gap**：CI/CD Integration
-- **关联 Skill**：CI/CD Pipeline
+- **关联 Track**：[Track名称]
+- **关联 Gap**：[缺失能力]
+- **关联 Skill**：[对应 Skill Graph 条目]
 - **潜在影响**：High（Evidence Count 0→1，Confidence 预计 +15）
 ```
+
+### Step 9.5: Transferable Capability Discovery（可迁移能力发现 v2.3）
+
+**目标**：从 Skill Graph 自动推导 `career-dna/04b_transferable_capabilities.md`。
+
+**流程**（详见 `references/transferable_capability_generation.md` Source A）：
+1. 对 Skill Graph 中 Confidence ≥ 50 的能力，按 Domain 分组
+2. 每组推导 Core Abstraction（去岗位标签化）
+3. 对照 `10_career_tracks/` 的 Core Skills + `knowledge/role_snapshots/` 的 Role Capability Model
+4. 生成每个 Track 的 Transferable Keywords
+5. 标注 Forbidden Translation + Evidence Strength
+6. 初始 Transfer Confidence = Medium（待 Mode D JD 验证）
+
+**产物**：`career-dna/04b_transferable_capabilities.md`
 
 ### Step 10: 生成完整度报告和待补充问题库
 
@@ -210,24 +228,33 @@ python3 scripts/completeness_checker.py [career-dna目录路径]
 - `career-dna/09_completeness_report.md`：完整度评分、各模块完整度、信息缺口、建议补充项
 - `career-dna/08_question_backlog.md`：所有在上述步骤中积累的待确认问题（含 Step 9 产生的 Track/Gap 关联问题）
 
-### Step 11: 生成 Online Career Profile（在线职业档案 v1.5）
+### Step 11: 生成 Online Career Profile（在线职业档案 v2.2）
 
-**目标**：自动推导 `career-dna/11_online_profile.md`，不直接填写新内容。
+**目标**：自动推导 `career-dna/11_online_profile.md` 为可直接填写 Boss 直聘的在线简历。
 
-**数据来源**（全部来自已完成填写的 DNA 文件）：
+**推理链**：Career DNA → Profile Positioning Engine → Universal Strengths → Online Career Profile
 
-| 区块 | 数据来源 |
-|------|----------|
-| Part 1: Personal Branding | `07_career_identity.md` → Branding Keywords / Headline |
-| Part 2: Career Summary | `01_profile.md` + `02_timeline.md` + `07_career_identity.md` → Career Summary |
-| Part 3: Core Competencies | `04_skill_graph.md` → Confidence ≥ 60 的能力 |
-| Part 4: Highlight Projects | `03_projects.md` + `10_career_tracks/` Recommended Projects |
-| Part 5: Target Tracks | `10_career_tracks/` → 按 Confidence 排序取 Top 3 |
+**Online Profile Generation Pipeline**（v2.5.4，R01-R04 强制规则 + Identity Resolution + Experience Reframing）：
+
+| 步骤 | 操作 | 输入 | 输出 |
+|------|------|------|------|
+| 0 | Identity Resolution | `07_career_identity` Layer 1,2,5 | 职业身份 + 禁止表达 + 锚点来源 |
+| 0.5 | Experience Reframing | Step 0 + `03_projects` TC 映射 + `04b_transferable_capabilities` | Reframed Experience（能力视角） |
+| 1 | Identity Anchor | Step 0 + Step 0.5 + `07_career_identity` Layer 3 | 身份锚点 + 市场定位 + 价值主张 |
+| 2 | Capability Priority | `07_career_identity` Layer 4 + `04b_transferable_capabilities` | Tier A/B/C 排序后的 TC |
+| 3 | TC Selection | Step 2 输出 | Tier A TCs（优先） |
+| 4 | Evidence Filtering | Step 3 输出 + `03_projects`（含 TC 映射） | 筛选后的案例列表 |
+| 5 | 生成个人优势 | Step 0 + 0.5 + 1 + 3 + 4 + R01-R04 规则 | ≤300 字 Capability Summary |
+| 6 | 展开工作经历/项目经历/Track Coverage | Step 0.5 + Step 4 输出 + `02_timeline` + `12_portfolio_candidates` | 完整 Online Profile |
 
 **规则**：
-- Online Profile 是派生资产（Derived Asset），不直接填写新内容
-- 如果来源文件某字段未填 → Online Profile 对应区块标记 `[待补充：来源 xxx.md 未完成]`
-- 不阻塞生成
+- Identity Resolution（Step 0）：职业身份唯一来源是 07。任何从工作经历推导的身份 → 丢弃。
+- Experience Reframing（Step 0.5）：经历角色名 = 能力视角角色。工作内容 = 能力形成过程。禁止操作级动词作句首。
+- R01 → Step 0+1 执行：07 是唯一身份来源。禁止统计岗位频次作为职业身份。
+- R02 → Step 5 检查：经历仅作为证据，不得作为身份定义。
+- R03 → Step 5 检查：主语来自 Career Positioning，不得来自原始岗位名。
+- R04 → Step 0.5+5+6 执行：经历角色名和工作内容重构为能力形成视角。
+- R03 → Step 5 检查：主语来自 Career Positioning，不得来自原始岗位名。
 
 ## Important Rules（重要规则）
 

@@ -11,7 +11,7 @@
 -->
 
 ## 职业定位 (Professional Positioning)
-<!-- 引用 career-dna/10_career_tracks.md 的 Positioning 字段 -->
+<!-- 引用 career-dna/10_career_tracks/{track}.md 的 Positioning 字段 -->
 [一句话职业定位]
 
 ## 基本信息

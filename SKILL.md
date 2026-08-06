@@ -72,17 +72,18 @@ career-dna/                    # 个人职业资产库（Personal Assets · Sing
 ├── 02_timeline.md             # 职业发展轨迹 (Career Timeline)
 ├── 03_projects.md             # 项目资产库 (Project Asset Library)
 ├── 04_skill_graph.md          # 能力图谱 (Skill Graph) — 含 Domain/Confidence/Evidence 字段
+├── 04b_transferable_capabilities.md  # 可迁移能力映射 (Transferable Capability v2.3) — 派生资产
 ├── 05_story_bank.md           # 面试故事库 (Story Bank)
 ├── 06_failure_story.md        # 失败案例库 (Failure Story Library)
-├── 07_career_identity.md      # 职业身份库 (Career Identity)
+├── 07_career_identity.md      # 职业身份定义 (Career Identity v2.5) — 5 层结构
 ├── 08_question_backlog.md     # 待补充问题库 (Question Backlog)
 ├── 09_completeness_report.md  # 完整度报告 (Completeness Report)
-└── 10_career_tracks/          # 职业赛道库 (Career Tracks) — v1.3 目录模式
+├── 10_career_tracks/          # 职业赛道库 (Career Tracks) — v1.3 目录模式
     ├── README.md              #   赛道总览 (Tracks Overview)
     ├── project_manager.md     #   项目经理赛道
     ├── implementation_consultant.md  # 实施顾问赛道
     └── ...                    #   更多赛道文件
-├── 11_online_profile.md      # 在线职业档案 (Online Career Profile v1.5) — 派生资产
+├── 11_online_profile.md      # Online Career Profile（Boss在线简历 v2.2）— 派生资产
 └── 12_portfolio_candidates.md  # 作品集候选池 (Portfolio Candidates v2.1) — 派生资产
 
 knowledge/                     # 职业市场知识库（Market Intelligence · 跨JD累积）
@@ -123,7 +124,7 @@ application-tracker/           # 投递追踪库（Application CRM v2.0 · 按�
 
 **工作流**：初始化目录 → 解析简历 → 提取职业轨迹 → 提取项目经历 → 构建能力图谱 → 构建故事库（含失败案例）→ 构建职业身份 → **发现职业方向并生成 Career Track 文件**（为每个识别到的 Track 生成完整 `{track}.md`） → 生成完整度报告 + Backlog（Backlog 问题关联 Track/Gap/Skill/Impact）
 
-**产物**：`career-dna/` 下 10 个文件 + `10_career_tracks/` 目录（含 README.md + 每个 Track 的 `{track}.md`）+ `11_online_profile.md`（派生资产）+ `12_portfolio_candidates.md` + `XX_portfolio.md`（v2.1 新增）
+**产物**：`career-dna/` 下 10 个文件 + `04b_transferable_capabilities.md`（v2.3） + `10_career_tracks/` 目录 + `11_online_profile.md`（Boss 在线简历 v2.2）+ `12_portfolio_candidates.md` + `XX_portfolio.md`（v2.1）
 
 详细工作流指引见 `references/mode_a_build.md`。
 
@@ -269,13 +270,16 @@ Build → Review → Apply → Discover → Update → Review → Apply → ...
 - `mode_d_job_application.md` — Mode D 详细工作流：Career Track Match → JD Match Report → Targeted Discovery → Career DNA Update → Resume Package → Knowledge Update。
 - `mode_e_application_tracker.md` — Mode E 详细工作流（v2.0 新增）：Application CRM，记录真实市场反馈。
 - `targeted_discovery.md` — Targeted Discovery 规则。
+- `online_profile_generation.md` — Online Career Profile 生成规则（v2.2 新增）。
+- `transferable_capability_generation.md` — 可迁移能力生成规则（v2.3 新增）。
 - `question_backlog.md` — Question Backlog 管理规则。
 
 ### assets/templates/
 
 - `career-dna/01_profile.md` ~ `09_completeness_report.md` — 9 个 Career DNA 文件模板。
-- `career-dna/11_online_profile.md` — Online Career Profile（在线职业档案 v1.5）。
+- `career-dna/11_online_profile.md` — Online Career Profile（Boss在线简历 v2.2 重构）。
 - `career-dna/12_portfolio_candidates.md` — 作品集候选池 (v2.1 新增)。
+- `career-dna/04b_transferable_capabilities.md` — 可迁移能力映射 (v2.3 新增)。
 - `career_track.md` — Career Track 赛道模板。
 - `knowledge/role_snapshot.md` — Role Snapshot 模板。
 - `knowledge/skill_snapshot.md` — Skill Domain Snapshot 模板。

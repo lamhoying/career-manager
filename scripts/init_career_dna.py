@@ -26,7 +26,9 @@ CAREER_DNA_FILES = [
     ("07_career_identity.md", "职业身份库"),
     ("08_question_backlog.md", "待补充问题库"),
     ("09_completeness_report.md", "完整度报告"),
-    ("11_online_profile.md", "在线职业档案（派生资产 v1.5）"),
+    ("04b_transferable_capabilities.md", "可迁移能力映射（派生资产 v2.3）"),
+    ("11_online_profile.md", "在线职业档案（派生资产 v2.5）"),
+    ("12_portfolio_candidates.md", "作品集候选池（派生资产 v2.1）"),
 ]
 
 # Also create output directories

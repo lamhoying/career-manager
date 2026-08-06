@@ -36,9 +36,9 @@ Output Contracts 定义每个求职策略（Pack A/B/C/D）对应的文件产出
 | 1 | `01_jd_match_report.md` | 标准模板 | + 完整 Capability Translation |
 | 2 | `02_transition_resume_cn.md` | `XX_transition_resume_cn.md` | Adjacent Match 项目 + 迁移推理 |
 | 3 | `03_transition_resume_en.md` | `XX_transition_resume_en.md` | 同上 (English) |
-| 4 | `04_gap_analysis.md` | `XX_gap_analysis.md` | Missing + Skill Weight |
+| 4 | `XX_transition_feasibility.md` | `XX_transition_feasibility.md` | Capability Translation 能力迁移分析 |
+| 5 | `XX_learning_roadmap.md` | `XX_learning_roadmap.md` | Missing + Skill Weight |
 | 6 | `06_interview_pack.md` | 标准模板 | + 转岗高频问题 |
-| 7 | `07_upgrade_plan.md` | 标准模板 | + 转岗专属升级 |
 
 ### Pack D: Weak Fit（弱匹配 — Match < 40）
 
@@ -77,4 +77,3 @@ Part 3.6 Skill Gaps v1.5.3 新增 Gap Priority Matrix（P0/P1/P2）。
 | 禁出 | 全部 Type 版本 / 内部评分术语 / 报告腔文案 |
 | 上游依赖 | `01_jd_match_report.md` 3.1 / 8.1 / Part 6 / Part 9.1 |
 | 与 11_online_profile.md 关系 | 独立文件 — Online Profile 是长期档案，Greeting 是即时沟通 |
-本合约中的文件编号不变（01_jd_match_report.md 始终为第一个文件）。

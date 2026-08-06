@@ -24,15 +24,17 @@ from datetime import datetime
 # v1.5: 11_online_profile is a derived asset, low weight
 MODULE_CONFIG = {
     "01_profile.md": {"name": "Profile", "weight": 10},
-    "02_timeline.md": {"name": "Timeline", "weight": 14},
-    "03_projects.md": {"name": "Projects", "weight": 20},
-    "04_skill_graph.md": {"name": "Skill Graph", "weight": 20},
-    "05_story_bank.md": {"name": "Story Bank", "weight": 9},
-    "06_failure_story.md": {"name": "Failure Story", "weight": 5},
-    "07_career_identity.md": {"name": "Career Identity", "weight": 9},
-    "08_question_backlog.md": {"name": "Question Backlog", "weight": 5},
-    "10_career_tracks": {"name": "Career Tracks", "weight": 5, "is_dir": True},
-    "11_online_profile.md": {"name": "Online Profile", "weight": 3},
+    "02_timeline.md": {"name": "Timeline", "weight": 12},
+    "03_projects.md": {"name": "Projects", "weight": 18},
+    "04_skill_graph.md": {"name": "Skill Graph", "weight": 16},
+    "04b_transferable_capabilities.md": {"name": "Transferable Capabilities", "weight": 4},
+    "05_story_bank.md": {"name": "Story Bank", "weight": 8},
+    "06_failure_story.md": {"name": "Failure Story", "weight": 4},
+    "07_career_identity.md": {"name": "Career Identity", "weight": 8},
+    "08_question_backlog.md": {"name": "Question Backlog", "weight": 4},
+    "10_career_tracks": {"name": "Career Tracks", "weight": 4, "is_dir": True},
+    "11_online_profile.md": {"name": "Online Profile", "weight": 6},
+    "12_portfolio_candidates.md": {"name": "Portfolio Candidates", "weight": 6},
 }
 
 # Placeholders that indicate unfilled content

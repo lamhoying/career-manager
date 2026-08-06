@@ -93,7 +93,8 @@ python3 scripts/completeness_checker.py [career-dna目录路径]
 
 | DNA 文件变更 | 触发刷新 |
 |-------------|------|
-| `01_profile` / `02_timeline` / `03_projects` / `04_skill_graph` / `07_career_identity` / `10_career_tracks/` | `11_online_profile.md` |
+| `01_profile` / `02_timeline` / `03_projects` / `04_skill_graph` / `07_career_identity` / `10_career_tracks/` / `12_portfolio_candidates` | `11_online_profile.md`（Online Career Profile v2.2） |
+| `04_skill_graph` | `04b_transferable_capabilities.md`（Transferable Capability v2.3） |
 | `03_projects` / `05_story_bank` / `04_skill_graph` | `12_portfolio_candidates.md` + Ready 项目的 `XX_portfolio.md` |
 
 派生资产不需要用户手动维护。如果目标文件尚未创建，则自动初始化。

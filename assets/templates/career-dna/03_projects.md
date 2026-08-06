@@ -30,6 +30,12 @@
 - **案例**：
 - **推荐人**：（可选）
 
+### TC 映射（Transferable Capability Mapping v2.3.4）
+<!-- 本项目体现的可迁移能力，引用 04b_transferable_capabilities.md 的 TC 编号 -->
+
+- **TC001**: [Capability Identity 名称] — [本项目如何体现]
+- **TC002**: [Capability Identity 名称] — [本项目如何体现]
+
 ### 标签
 - **涉及能力**：[能力1, 能力2, ...]
 - **项目类型**：[交付/管理/转型/创新/...]

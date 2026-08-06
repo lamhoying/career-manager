@@ -16,7 +16,7 @@
 
 从 JD 关键词提取升级为 Talent Persona Inference（人才画像推理）。不仅分析 JD"要什么技能"，更要推理"要什么样的人、为什么招、怎样证明匹配"。
 
-## Talent Intelligence Pipeline（人才智能分析管线 v1.4）
+## Talent Intelligence Pipeline（人才智能分析管线 v1.6.3）
 
 ```
 JD
@@ -232,6 +232,23 @@ Evidence Risks:
 **Evidence Scoring Rule（证据评分规则）**：
 - Ownership (Owner=3, Lead=2, Support=1) + Scope (Global=3, Dept=2, Team=1) + Impact (Revenue=3, Efficiency=2, Delivery=2, Quality=1) = Evidence Score
 - ≥7pt = Strong Evidence / 4-6pt = Moderate / ≤3pt = Weak
+
+---
+
+## Step 4.5: Transferable Capability Mapping（可迁移能力映射 v2.3）
+
+**目标**：将 JD 要求的岗位语言映射到用户的实际能力。
+
+**流程**：
+1. 提取 Step 2 Role Decomposition 中 JD 要求的核心能力
+2. 查询 `knowledge/role_snapshots/{role}.md` 的 Role Capability Model
+3. 调用 `career-dna/04b_transferable_capabilities.md` 查找匹配项
+4. 对每个 JD 能力输出匹配结论：
+   - Direct：用户有此能力的直接 Transferable Keywords
+   - Adjacent：用户能力通过 Transferable 可转换，记录转换路径
+   - Missing：用户无此能力且无相邻能力可转
+
+**输出**：写入 JD Match Report Part 4 Evidence Matrix 的 Capability Match 列。
 
 ---
 
@@ -529,10 +546,9 @@ Package（生成包）: Pack A / B / C / D
 | 1 | `01_jd_match_report.md` | 完整 JD 分析 |
 | 2 | `02_transition_resume_cn.md` | **转岗中文简历** — 突出 Adjacent Match 可迁移能力 |
 | 3 | `03_transition_resume_en.md` | **转岗英文简历** |
-| 4 | `04_capability_translation.md` | 能力迁移分析报告（基于 Part 6.5） |
-| 5 | `05_gap_analysis.md` | 能力差距分析 |
-| 6 | `06_interview_pack.md` | 面试准备包（含转岗高频问题） |
-| 7 | `07_upgrade_plan.md` | 升级计划 |
+| 4 | `XX_transition_feasibility.md` | 转岗可行性评估（含 Capability Translation 能力迁移分析） |
+| 5 | `XX_gap_analysis.md` | 能力差距分析 |
+| 6 | `XX_learning_roadmap.md` | 学习路线图 |
 
 ### Pack D: Weak Fit — 学习路线包（Match < 40）
 

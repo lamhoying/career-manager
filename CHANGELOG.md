@@ -1,5 +1,579 @@
 # CHANGELOG
 
+## v2.5.5 — 2026-08-05
+
+### 全量 PII 脱敏 + 拼写修复（v2.5.5）
+
+修复文件中残留的具体岗位名称、公司名、领域术语和拼写错误。
+
+**PII 脱敏**：
+- `mode_a_build.md`：3 个代码块中的完整模拟职业数据（qa_manager / QA Manager / 5年QA经验 / 测试工程师 / 自动化测试 / 研发PM / PMO / 实施顾问 / 交付经理）→ 全部替换为 `[XX]` 占位符
+- `question_backlog.md`：QA Manager / Consultant / PM / 实施顾问 → `[Track名称]` / `[某Track名称]` / `[Track A]`
+- `career_dna_structure.md`：qa_manager.md / 游戏研发PM / PMO / IT项目经理 / Implementation Consultant / 实施顾问 → 占位符
+- `08_question_backlog.md`：QA Manager / Project Manager → `[Track A] / [Track B]`
+- `transferable_capability_generation.md`：Scrum / Jira / Python / QA / PM / 实施顾问 / Sprint执行 / 缺陷追踪 → 占位符
+- `role_snapshot.md`：QA Lead / Test Manager / Implementation Consultant → 占位符
+- `01_jd_match_report.md`：PM / Tech Lead → 占位符
+
+**拼写修复**：
+- `01_jd_match_report.md`：`Senor Analyst` → `Senior Analyst`（2 处）
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `references/mode_a_build.md` | 3 个代码块脱敏 + Step 9 示例脱敏 |
+| `references/question_backlog.md` | 3 处具体岗位名称脱敏 |
+| `references/career_dna_structure.md` | 文件名 + README 表脱敏 |
+| `assets/templates/career-dna/08_question_backlog.md` | 关联 Track 示例脱敏 |
+| `references/transferable_capability_generation.md` | 3 处工具/岗位名脱敏 |
+| `assets/templates/knowledge/role_snapshot.md` | Common Capability Transitions 表脱敏 |
+| `assets/templates/resume-outputs/01_jd_match_report.md` | Role Authenticity 表脱敏 + 拼写修复 |
+
+---
+
+## v2.5.4 — 2026-08-05
+
+### R04 Experience Reframing + Pipeline Step 0.5（v2.5.4）
+
+v2.5.3 解决了「职业身份来源」，但未解决「经历如何重写为能力证据」— 导致个人优势是 PM 语言而工作经历仍是原始岗位复述。
+
+### 核心变化
+
+- **R04 Experience Reframing**：经历角色名重构（原始岗位 → 能力视角角色）+ 工作内容重构（操作动词升级 → 能力形成视角）+ 动词升级映射
+- **Pipeline Step 0.5**：Experience Reframing 插在 Identity Resolution 之后、Profile Summary 之前。工作经历使用 Reframed Experience 作为输入
+- 全部重构表使用 `[XX]` 占位符，适配任何领域背景
+
+### 重构规则
+
+| 原始 | 重构为 |
+|------|------|
+| [原始岗位] | [XX 能力方向 负责人]（能力视角角色名） |
+| 参与 [某技术/工具] [某操作] | 建立 [某能力] 的 [体系/机制/流程] |
+| 负责 [某场景] [某操作] | 制定 [某方向] 的 [策略/方案/标准] |
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `references/online_profile_generation.md` | R04 + Step 0.5 + Work Experience 规则重构 |
+| `references/mode_a_build.md` | Pipeline 表追加 Step 0.5 |
+| `assets/templates/career-dna/11_online_profile.md` | 注释追加 |
+
+### 未改
+
+07 / 04b / 03 — 已定型
+
+---
+
+## v2.5.3 — 2026-08-05
+
+### Identity Resolution + R01-R03 推理强约束（v2.5.3）
+
+v2.5.1 已有 P01-P03，但生成器仍可能从工作经历反推身份——因为 P01 是「禁止推断」而非「唯一来源」。本版新增硬约束「职业身份唯一来源 = 07」。
+
+### 核心变化
+
+- **Identity Resolution**：Pipeline 之前先完成身份解析（读 07 Layer 1,2,5），锁定职业身份。后续步骤不得修改。
+- **P01→R01 强化**：从「优先读 07」升级为「07 是唯一来源，禁止从经历统计频次推断身份」
+- **R02（新增）**：Experience is Evidence Only — 经历仅作证据，不作身份定义
+- **R03（新增）**：Subject from Positioning — Profile 主语必须来自 Career Positioning，禁止来自原始岗位名
+
+### Pipeline
+
+```
+Step 0: Identity Resolution → Step 1-6（原有 Pipeline）
+```
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `references/online_profile_generation.md` | Identity Resolution + R01-R03 + Pipeline Step 0 |
+| `references/mode_a_build.md` | Step 11 表追加 Step 0 + 规则更新 |
+| `assets/templates/career-dna/11_online_profile.md` | 注释/标题更新 |
+
+### 未改
+
+- 07 — 用户确认 v2.5 已定型
+- 04b — 不变
+- 03 — 不变
+
+---
+
+## v2.5.2 — 2026-08-04
+
+### 全量质量审计修复（v2.5.2）
+
+修复全文件审计中发现的 18 个问题中的 15 个（6 严重 + 6 中等 + 3 轻微）。
+
+**严重修复**：
+- transferable_capability_generation.md：删除多余 ` ``` ` 破坏代码块的闭合（#5）
+- mode_d_job_application.md：删除引用不存在模板 `04_capability_translation.md`（#1）；版本标签 v1.4→v1.6.3（#6）
+- output_contracts.md：Pack C 补回缺失 #4 和 #5 行（#2）
+- init_career_dna.py：补回 `04b` 和 `12` 文件（#3）
+- completeness_checker.py：MODULE_CONFIG 新增 `04b` 和 `12` 模块（#4）
+
+**中等修复**：
+- CHANGELOG.md：mojibake `工作内容��加` → `工作内容增加`（#7）
+- output_contracts.md：删除重复行（#8）
+- 02_resume_cn.md：过时路径 `10_career_tracks.md` → `10_career_tracks/{track}.md`（#9）
+- 01_jd_match_report.md：版本 v1.5.4→v1.6.2（#10）；Decision Score 表增加加权计算说明（#17）
+- mode_a_build.md：P01-P03 增加执行步骤标注（#12）
+
+**轻微修复（PII 脱敏）**：
+- 08_question_backlog.md + question_backlog.md：`Tencent` → `[某公司]`，`pm` → `[role]`，`Implementation Consultant` → `[某岗位名称]`（#13-#15）
+- SKILL.md：目录树 `└──` → `├──`（#16）
+
+### 未修复
+
+3 项为文档细节（#11 历史块重组 / #18 旧编号标注），不阻塞功能，留到下个维护窗口。
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `references/transferable_capability_generation.md` | 删除多余代码围栏 |
+| `references/mode_d_job_application.md` | 删除不存在模板引用 + 版本标签 |
+| `references/output_contracts.md` | Pack C 补行 + 删除重复行 |
+| `scripts/init_career_dna.py` | 补回 04b + 12 文件 |
+| `scripts/completeness_checker.py` | 新增 04b + 12 模块 |
+| `CHANGELOG.md` | mojibake 修复 |
+| `assets/templates/resume-outputs/02_resume_cn.md` | 过时路径 |
+| `assets/templates/resume-outputs/01_jd_match_report.md` | 版本 + 表格注释 |
+| `assets/templates/career-dna/08_question_backlog.md` | PII 脱敏 |
+| `references/question_backlog.md` | PII 脱敏 |
+| `references/mode_a_build.md` | P01-P03 执行步骤标注 |
+| `SKILL.md` | 目录树修复 |
+
+---
+
+## v2.5.1 — 2026-08-04
+
+### Pipeline 推理优先级修正 + P01-P03 强制规则（v2.5.1）
+
+07 已升级但 Pipeline 未正确消费——07 是「参考材料」而非「决策源」。本版修正推理优先级并新增 3 条强制性生成规则。
+
+### 核心变化
+
+- **Pipeline 重排序**：Step 1 从读 04b 改为读 07（Identity Anchor 优先）
+- **P01 Professional Identity First**：生成器必须优先读 07，禁止从经历自动推断身份
+- **P02 Capability Before Experience**：Personal Advantage 必须能力先于经历
+- **P03 Non-Positioning Enforcement**：07 Layer 5 的 [原始岗位] 不得出现在 Headline/第一段中
+
+### 新 Pipeline（6 步）
+
+```
+Identity Anchor → Capability Priority → TC Selection → Evidence Filtering → Personal Advantage → Expansion
+```
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `assets/templates/career-dna/07_career_identity.md` | Layer 1 措辞升级 |
+| `references/online_profile_generation.md` | P01-P03 新增 + Pipeline 重排序 |
+| `references/mode_a_build.md` | Step 11 步骤表重排 |
+
+---
+
+## v2.5 — 2026-08-04
+
+### 07 Career Identity 重构（v2.5）
+
+从「简历摘要」升级为「职业身份定义」。建立强制覆盖经历的「身份定义层」。
+
+```
+旧：我是谁／职业标签／核心竞争力／差异化优势（Experience-First）
+新：5 层 Identity-First 结构，起点经历是路径，不是身份
+```
+
+### 5 层结构
+
+| 层 | 内容 |
+|------|------|
+| Professional Identity | 第一人称身份（起点经历是能力形成路径，非身份） |
+| Career Positioning | Primary/Secondary/Emerging 市场定位 |
+| Career Narrative | 核心职业故事 + 价值主张 |
+| Capability Priority | 04b 的 Tier A/B/C 权重标注 |
+| Non-Positioning Statement | 声明经历来源 ≠ 职业定位 |
+
+### 核心规则
+
+Online Profile 生成器必须遵守 Non-Positioning Statement：原始岗位属于经历来源，不作为未来职业身份表达。
+
+### 联动
+
+- online_profile_generation.md：Pipeline Step 1 排序改为 07 Capability Priority；Step 2 改为 07 Career Positioning
+- mode_a：Step 8 重写为 5 层结构引导
+- career_dna_structure：07 字段说明更新 + Online Profile 映射表更新
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `assets/templates/career-dna/07_career_identity.md` | 完全重写（5 层 Identity-First 结构） |
+| `references/online_profile_generation.md` | Step 1-2 输入更新 |
+| `references/mode_a_build.md` | Step 8 重写 |
+| `references/career_dna_structure.md` | 07 字段说明 + Online Profile 映射表更新 |
+| `SKILL.md` | 目录描述更新 |
+
+---
+
+## v2.3.5 — 2026-08-04
+
+### Capability-First Online Profile Generator（v2.3.5）
+
+生成管线从 Experience-First 升级为 Capability-First。叙事结构从「我是XX岗位」变为「我是XX能力型人才」。
+
+```
+旧：经历 → 技能 → 总结
+新：04b → Capability Ranking → Personal Positioning → Experience Evidence → Project Showcase
+```
+
+### 核心变化
+
+- **个人优势**：从「行业年限+岗位经历」改为「Top Capability + Personal Positioning + Evidence」，禁止岗位标签开头
+- **工作经历**：新增 Capability Tag（每条经历标注 TC 编号）
+- **项目经历**：从「覆盖 Track」改为「Capability Showcase」（标注展示 TC 编号）
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `references/online_profile_generation.md` | Pipeline 从 Experience-First 重构为 Capability-First |
+| `assets/templates/career-dna/11_online_profile.md` | 三区块模板/注释重构 |
+| `references/mode_a_build.md` | Step 11 步骤改为 Capability-First 顺序 |
+| `references/transferable_capability_generation.md` | Online Profile 集成章节更新 |
+
+### 未改
+
+- 04b — v2.3.3 已定型
+- 03_projects — TC 映射不变
+
+---
+
+## v2.3.4 — 2026-08-03
+
+### Online Profile 接入 Transferable Capability（v2.3.4）
+
+Online Profile 生成从「直接读 Skill Graph」升级为三段式管线：
+
+```
+Career DNA → Raw Career Identity → TC Capability Abstraction → Online Profile Expression
+```
+
+### 核心变化
+
+- **online_profile_generation.md**：Profile Positioning Engine 替换为三段 Pipeline（Raw Identity → TC Abstraction → Profile Expression）
+- **03_projects.md**：新增 TC 映射字段（项目级 TC 引用）
+- **11_online_profile.md**：技能标签分层（Capability Skills + Technical Skills）+ 注释更新
+- **mode_a Step 11**：步骤表从 6 步改为 Pipeline 三阶段 + 6 子步骤
+- **transferable_capability_generation.md**：新增 Online Profile 集成章节
+
+### 技能标签分层（v2.3.4）
+
+```
+Capability Skills（TC Components 出力） → 项目交付管理、跨部门协调、质量保障
+Technical Skills（Skill Graph 工具/技术） → Jira、Scrum、[工具名]
+```
+
+> ATS 兼容：两层合计不超过 8 个标签。
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `references/online_profile_generation.md` | Pipeline 重构（Raw Identity → TC Abstraction → Profile Expression） |
+| `assets/templates/career-dna/03_projects.md` | 新增 TC 映射字段 |
+| `assets/templates/career-dna/11_online_profile.md` | 技能标签分层 + 注释更新 |
+| `references/mode_a_build.md` | Step 11 步骤表改为 Pipeline 三阶段 |
+| `references/transferable_capability_generation.md` | 新增 Online Profile 集成章节 |
+
+---
+
+## v2.3.3 — 2026-08-03
+
+### Expression Intent + Position Constraint（v2.3.3）
+
+**Expression Rules → Expression Intent**：不再存储完整句子，改为存储意图描述（如 ownership / coordination）。生成器根据意图自行造句，避免不同岗位互相污染。
+
+**新增 Position Constraint**：明确每个能力在目标岗位中的定位层级：
+
+- 核心能力 → 正文展开
+- 背景经历 → 一句话提及
+- 加分项 → 末尾附加
+
+与 Transfer Boundary 的区别：
+
+- Transfer Boundary：能不能迁移？
+- Position Constraint：在岗位上怎么定位？
+
+### 联动
+
+- transferable_capability_generation.md：Source A/B 追加 Position Constraint 步骤
+- online_profile_generation.md：Universal Strengths 更新为三要素推导（Identity + Intent + Constraint）
+- 04b 模板全面中英双语（中文主体 + 英文括号标注）
+
+### 文件变更
+
+4 个文件。
+
+| 文件 | 变更 |
+|------|------|
+| `assets/templates/career-dna/04b_transferable_capabilities.md` | Expression Rules→Expression Intent + 新增 Position Constraint |
+| `references/transferable_capability_generation.md` | Source A/B 追加 Position Constraint |
+| `references/online_profile_generation.md` | Universal Strengths 三要素推导更新 |
+| `assets/templates/career-dna/11_online_profile.md` | 注释更新 |
+
+---
+
+## v2.3.2 — 2026-08-03
+
+### 04b 格式简化为参考型（v2.3.2）
+
+TC 条目从学术型长表格式压缩为 6 个精简字段：
+
+```
+Capability Identity / Evidence / Components / Transfer Potential / Transfer Boundary / Expression Rules
+```
+
+**删除**：Source Capability 表、Transferable Keywords 表、Target Role Interpretation 表、Expression Transformation 表、Evidence Strength 表。  
+**替代为**：Transfer Boundary（适合/不代表）+ Expression Rules（推荐强调/避免强调）。
+
+### 联动
+
+- transferable_capability_generation.md：Source A 步骤对齐新格式
+- online_profile_generation.md：Expression Rules 替代 Preferred Expression 引用
+- 11_online_profile.md：注释更新
+
+### 文件变更
+
+4 个文件，净删约 10 行。
+
+| 文件 | 变更 |
+|------|------|
+| `assets/templates/career-dna/04b_transferable_capabilities.md` | Capability Map 格式从 8 区块压缩到 6 字段 |
+| `references/transferable_capability_generation.md` | Source A 步骤对齐新格式 |
+| `references/online_profile_generation.md` | Expression Rules 替代 Preferred Expression 引用 |
+| `assets/templates/career-dna/11_online_profile.md` | 注释更新 |
+
+---
+
+## v2.3.1 — 2026-08-03
+
+### Transferable Capability 粒度升级 + 角色解释 + 输出转换（v2.3.1）
+
+**三个问题修正**：
+
+1. **Capability Identity 抽象化**：从 Skill Graph 直接引用升级为工具无关/岗位无关的能力本质。多个 Skill Graph 条目可合并为一个 Identity。
+2. **Target Role Interpretation**：新增中间层，同一个能力在不同目标角色中输出不同的 Core Need + Preferred Expression。
+3. **Expression Transformation**：新增输出转换规则（Raw → Professional → Forbidden），明确告诉生成模块「应该写什么、不应该写什么」。
+
+### 联动
+
+- online_profile_generation.md：Universal Strengths 改为从 Transferable 的 Preferred Expression 直接取值
+- 11_online_profile.md：规则追加「禁止在个人优势中使用 Skill Graph 原始名称/工具名/岗位标签」
+- transferable_capability_generation.md：新增 Capability Identity 推导规则（去工具化/去角色化/合并）
+
+### 文件变更
+
+| 文件                                                             | 变更                       |
+| -------------------------------------------------------------- | ------------------------ |
+| `assets/templates/career-dna/04b_transferable_capabilities.md` | 三区块新增                    |
+| `references/transferable_capability_generation.md`             | Capability Identity 推导规则 |
+| `references/online_profile_generation.md`                      | Universal Strengths 规则更新 |
+| `assets/templates/career-dna/11_online_profile.md`             | 表达规则追加                   |
+
+---
+
+## v2.3 — 2026-08-03
+
+### Transferable Capability Mapping（可迁移能力映射层 v2.3）
+
+**核心新增**：在 Skill Graph 和 Role Snapshot 之间插入能力转换层，解决「同一个能力在不同岗位中应不同表达」的问题。
+
+```
+Skill Graph         → 我拥有什么能力（Capability Inventory）
+Transferable        → 这些能力如何迁移表达（Capability Translation Engine）★ 新增
+Role Snapshot       → 市场需要什么能力
+Online Profile      → 最终营销表达
+```
+
+### 新增 04b_transferable_capabilities.md
+
+- Capability Map（TC001-TC[n]）：Source → Core Abstraction → Transferable Keywords → Forbidden Translation → Evidence Strength
+- Transfer Confidence + JD 验证状态
+
+### 新增 transferable_capability_generation.md
+
+- Source A：Career DNA 自发现（初始化时从 Skill Graph + Career Tracks + Role Snapshot 自动推导）
+- Source B：JD 反馈增强（Mode D 中匹配命中提升 Confidence，未命中生成 Pending 候选）
+
+### 联动修改
+
+| Mode                       | 变更                                                             |
+| -------------------------- | -------------------------------------------------------------- |
+| Mode A                     | Step 9.5 Transferable Capability Discovery 新增                  |
+| Mode B                     | Step 4.5 派生资产刷新扩展（04_skill_graph → 04b）                        |
+| Mode D                     | Step 4.5 Transferable Capability Mapping（JD 能力→用户能力转换）         |
+| Profile Positioning Engine | 输入新增 04b，Universal Strengths 从 Transferable + Skill Graph 共同推导 |
+
+### 模板增强
+
+- 04_skill_graph：新增 Transferable Ref 列
+- role_snapshot：新增 Role Capability Model
+- skill_snapshot：新增 Market Language
+
+### 文件变更
+
+共 12 个文件（2 新增 + 10 修改）
+
+| 文件 | 类型 | 变更 |
+|------|------|------|
+| `assets/templates/career-dna/04b_transferable_capabilities.md` | **新增** | Capability Map 模板（TC001-TC[n]） |
+| `references/transferable_capability_generation.md` | **新增** | 生成规则（Source A/B + Core Abstraction + 同步规则） |
+| `assets/templates/career-dna/04_skill_graph.md` | 修改 | 表头新增 Transferable Ref 列 + 注释 |
+| `assets/templates/knowledge/role_snapshot.md` | 修改 | 新增 Role Capability Model |
+| `assets/templates/knowledge/skill_snapshot.md` | 修改 | 新增 Market Language |
+| `references/mode_a_build.md` | 修改 | 新增 Step 9.5 Transferable Capability Discovery |
+| `references/mode_b_update.md` | 修改 | Step 4.5 触发条件扩展 |
+| `references/online_profile_generation.md` | 修改 | Profile Positioning Engine 输入新增 04b |
+| `assets/templates/career-dna/11_online_profile.md` | 修改 | 注释追加 Transferable Capability 来源 |
+| `references/mode_d_job_application.md` | 修改 | Step 4.5 Transferable Capability Mapping 新增 |
+| `SKILL.md` | 修改 | 目录/架构/Mode A/Resources 追加 04b + 生成规则 |
+| `references/career_dna_structure.md` | 修改 | 新增 04b 字段说明 |
+
+---
+
+## v2.2.4 — 2026-08-01
+
+### 工作内容列表化（v2.2.4）
+
+v2.2.3 的工作内容仅为纯小结文本。v2.2.4 增加有序/无序列表模板（3-5 条），每条为长期职责，与项目经历严格去重。
+
+### 文件变更
+
+| 文件                                                 | 变更           |
+| -------------------------------------------------- | ------------ |
+| `assets/templates/career-dna/11_online_profile.md` | 工作内容增加列表模板 |
+| `references/online_profile_generation.md`          | 工作内容规则补充格式说明 |
+
+---
+
+## v2.2.3 — 2026-08-01
+
+### Online Profile 三区块职责分离（v2.2.3）
+
+**核心升级**：工作经历与项目经历严格分离，不再重复。
+
+```
+个人优势 → ≤300 字纯文本钩子（我是谁，5 秒抓住 HR）
+工作经历 → 长期持续职责 + 量化业绩（Role 层）
+项目经历 → 固定 Top 3 案例（Evidence 层，覆盖 Primary/Secondary/Adjacent Track）
+```
+
+### 具体变化
+
+- **个人优势**：从分段叙事压缩为 ≤300 字纯文本，前 100 字必须含角色+关键词+量化亮点
+- **工作内容**：从 3-5 条行动清单升级为"2-3 句职责小结"，严格区分长期职责 vs 一次性项目
+- **项目经历**：固定 3 案例 + Track 选案规则（Coverage × Evidence × Quantification），删除旧的无序输出
+- **全局去重**：工作经历 vs 项目经历交集扫描，重叠→仅保留在项目经历
+
+### 联动
+
+- online_profile_generation.md 三处规则收紧
+- mode_a 步骤 3/5 描述更新
+
+### 文件变更
+
+| 文件                                                 | 变更           |
+| -------------------------------------------------- | ------------ |
+| `assets/templates/career-dna/11_online_profile.md` | 三区块重构        |
+| `references/online_profile_generation.md`          | 规则收紧 + 编码修复  |
+| `references/mode_a_build.md`                       | Step 11 步骤更新 |
+
+---
+
+## v2.2.2 — 2026-08-01
+
+### 编码修复 + 列表上限统一
+
+- 全量扫描修复 5 处编码乱码（CHANGELOG ×4 + online_profile_generation.md ×1）
+- 11_online_profile.md 工作内容上限 4→5 条，项目关键行动上限 3→5 条
+- online_profile_generation.md 项目描述规则同步更新"最多 5 条"
+
+### 文件变更
+
+| 文件                                                 | 变更             |
+| -------------------------------------------------- | -------------- |
+| `CHANGELOG.md`                                     | 4 处编码修复        |
+| `assets/templates/career-dna/11_online_profile.md` | 列表扩展           |
+| `references/online_profile_generation.md`          | 1 处编码修复 + 规则更新 |
+
+---
+
+## v2.2.1 — 2026-08-01
+
+### Online Profile 内容格式优化（v2.2.1）
+
+v2.2 的 3 个核心区块从"2-3 句纯文本"升级为结构化列表：
+
+- **个人优势**：分段 + 分点（核心定位 / 核心能力×3 / 代表性成果×2）
+- **工作内容**：列表化（3-5 条，动词开头，支持有序/无序列表）
+- **项目描述**：拆分背景（1 句）+ 关键行动（2-3 条列表）
+
+同步更新 `online_profile_generation.md` 中 3 处生成规则约束。
+
+### 文件变更
+
+| 文件                                                 | 变更       |
+| -------------------------------------------------- | -------- |
+| `assets/templates/career-dna/11_online_profile.md` | 3 区块格式升级 |
+| `references/online_profile_generation.md`          | 3 处规则更新  |
+
+---
+
+## v2.2 — 2026-08-01
+
+### Online Profile 重构（从 Career DNA 摘要到 Boss 在线简历 v2.2）
+
+**核心转变**：`11_online_profile.md` 从自由格式的职业档案升级为严格映射 Boss 直聘字段的在线简历。
+
+```
+旧：Part 1-5 自由叙述（品牌/简介/能力/项目/赛道）→ 无法直接填写Boss
+新：个人优势/工作经历/项目经历/Multi-Track Coverage → 可直接复制粘贴
+```
+
+### 11_online_profile.md 完全重写
+
+- **个人优势**：Profile Positioning Engine 驱动，200-300 字以能力为主线串联（行业年限+定位+2-3项能力展开+证据）
+- **工作经历**：公司/岗位/工作内容/业绩/技能标签，禁止"负责...负责...负责"
+- **项目经历**：来源优先级 Portfolio Ready > Projects > Story Bank，禁止输出 Portfolio Case 长内容
+- **Multi-Track Coverage**：Primary ≥ 60% / Secondary ≥ 25% / Adjacent ≥ 15%
+
+### 新增 online_profile_generation.md
+
+- Profile Positioning Engine（Primary/Secondary/Adjacent Track + Universal Strengths）
+- Personal Advantage / Work Experience / Project Experience / Multi-Track Coverage 四类生成规则
+
+### 联动
+
+- Mode A Step 11 升级为 6 步推理链（Track 分层 → Universal Strengths → 个人优势 → 工作经历 → 项目经历 → Coverage 校验）
+- Mode B Step 4.5 触发条件扩展（portfolio_candidates 变更也刷新 online_profile）
+
+### 文件变更
+
+| 文件                                                 | 变更                          |
+| -------------------------------------------------- | --------------------------- |
+| `assets/templates/career-dna/11_online_profile.md` | 完全重写                        |
+| `references/online_profile_generation.md`          | **新增**                      |
+| `references/mode_a_build.md`                       | Step 11 升级                  |
+| `references/mode_b_update.md`                      | Step 4.5 触发扩展               |
+| `SKILL.md`                                         | 目录 + References + Mode A 产物 |
+
+---
+
 ## v2.1.2 — 2026-07-30
 
 ### Quality Audit Fix（全量审计修复 v2.1.2）
@@ -7,6 +581,7 @@
 全量审计 40 个文件，修复 17 个问题（6 严重 + 5 中等 + 6 轻微）。
 
 **严重修复**：
+
 - SKILL.md: "Three-Layer" → "Four-Layer"（与"四层架构"对齐）
 - output_contracts.md: 删除不存在模板 `04_capability_translation.md` 引用
 - mode_d_job_application.md: 标题版本 v1.4 → v1.6.3 + 删除重复 Step 6
@@ -14,12 +589,14 @@
 - mode_b_update.md + mode_c_review.md: `10_career_tracks.md`（单文件）→ `10_career_tracks/`（目录）4处
 
 **中等修复**：
+
 - SKILL.md Resources: 补齐缺失的 04_interview_pack / 05_answer_cards / 06_upgrade_plan / 07_boss_greeting
 - 01_jd_match_report.md: 删除 Part 7 底部残留旧版表
 - 07_boss_greeting.md + 12_portfolio_candidates.md: 编码损坏字符修复
 - output_contracts.md: 标题版本更新
 
 **轻微修复**：
+
 - SKILL.md: 目录树 `└──` 重复使用
 - mode_a_build.md: 映射表底部重复行删除
 - 02_resume_cn.md: 旧单文件路径修复
@@ -36,6 +613,7 @@
 ### Portfolio Template Rewrite + Gap Detail + Potential Score
 
 **XX_portfolio.md 重写** — 从 STAR+ 升级为真正的 Portfolio：
+
 - 问题→影响结构化表
 - 业务流程分析（As-Is / To-Be 对比流程图）
 - 项目推进过程（阶段1-4 递进叙事）
@@ -52,12 +630,12 @@
 
 ### 文件变更
 
-| 文件 | 变更 |
-|------|------|
-| `assets/templates/resume-outputs/XX_portfolio.md` | 完全重写 |
-| `references/mode_a_build.md` | 映射表升级 |
-| `references/question_backlog.md` | Portfolio Gap Detail 追加 |
-| `assets/templates/career-dna/12_portfolio_candidates.md` | Potential Score 追加 |
+| 文件                                                       | 变更                      |
+| -------------------------------------------------------- | ----------------------- |
+| `assets/templates/resume-outputs/XX_portfolio.md`        | 完全重写                    |
+| `references/mode_a_build.md`                             | 映射表升级                   |
+| `references/question_backlog.md`                         | Portfolio Gap Detail 追加 |
+| `assets/templates/career-dna/12_portfolio_candidates.md` | Potential Score 追加      |
 
 ---
 
@@ -103,15 +681,15 @@ Mode D: 投递时 → Portfolio Selection 推荐最佳案例
 
 ### 文件变更
 
-| 文件 | 类型 |
-|------|------|
-| `assets/templates/career-dna/12_portfolio_candidates.md` | **新增** |
-| `assets/templates/resume-outputs/XX_portfolio.md` | **新增** |
-| `references/mode_a_build.md` | Step 12 追加 |
-| `references/mode_b_update.md` | Step 4.5/5 扩展 |
-| `references/question_backlog.md` | [Portfolio] 分类规则 |
-| `references/mode_d_job_application.md` | Portfolio Selection |
-| `SKILL.md` | 目录 + Mode 概述 + Resources |
+| 文件                                                       | 类型                       |
+| -------------------------------------------------------- | ------------------------ |
+| `assets/templates/career-dna/12_portfolio_candidates.md` | **新增**                   |
+| `assets/templates/resume-outputs/XX_portfolio.md`        | **新增**                   |
+| `references/mode_a_build.md`                             | Step 12 追加               |
+| `references/mode_b_update.md`                            | Step 4.5/5 扩展            |
+| `references/question_backlog.md`                         | [Portfolio] 分类规则         |
+| `references/mode_d_job_application.md`                   | Portfolio Selection      |
+| `SKILL.md`                                               | 目录 + Mode 概述 + Resources |
 
 ---
 
@@ -128,8 +706,8 @@ v2.0 新增了 Mode E 和 application-tracker/，但 SKILL.md 中 3 处遗漏：
 
 ### 文件变更
 
-| 文件 | 变更 |
-|------|------|
+| 文件         | 变更                             |
+| ---------- | ------------------------------ |
 | `SKILL.md` | frontmatter + 架构 + 路由表 + 目录树修复 |
 
 ---
@@ -147,15 +725,16 @@ v2.0: Application CRM（记录 + 追踪）
 
 ### 新增：application-tracker/ 目录
 
-| 文件 | 用途 |
-|------|------|
-| `01_application_index.md` | 全量投递主表（一次性浏览所有投递状态） |
-| `02_status_definitions.md` | 统一状态定义（Stage 0: Planned → Stage 7: Offer / Stage 8: Rejected） |
-| `archives/{Company}_{Role}.md` | 案例档案（按需建档：进入 HR 面 / 收到拒绝反馈 / 用户标记） |
+| 文件                             | 用途                                                            |
+| ------------------------------ | ------------------------------------------------------------- |
+| `01_application_index.md`      | 全量投递主表（一次性浏览所有投递状态）                                           |
+| `02_status_definitions.md`     | 统一状态定义（Stage 0: Planned → Stage 7: Offer / Stage 8: Rejected） |
+| `archives/{Company}_{Role}.md` | 案例档案（按需建档：进入 HR 面 / 收到拒绝反馈 / 用户标记）                            |
 
 ### 新增：Mode E — Application Tracker
 
 4 个子操作：
+
 - **E1 Add Application** — 新投递录入 Index
 - **E2 Update Status** — 状态流转更新
 - **E3 Add Feedback** — 面试反馈/拒绝原因登记到 archives/
@@ -170,13 +749,13 @@ v2.0: Application CRM（记录 + 追踪）
 
 ### 文件变更
 
-| 文件 | 类型 |
-|------|------|
-| `assets/templates/application-tracker/01_application_index.md` | **新增** |
-| `assets/templates/application-tracker/02_status_definitions.md` | **新增** |
-| `assets/templates/application-tracker/archives/README.md` | **新增** |
-| `references/mode_e_application_tracker.md` | **新增** |
-| `SKILL.md` | 目录 + Mode E + Resources |
+| 文件                                                              | 类型                      |
+| --------------------------------------------------------------- | ----------------------- |
+| `assets/templates/application-tracker/01_application_index.md`  | **新增**                  |
+| `assets/templates/application-tracker/02_status_definitions.md` | **新增**                  |
+| `assets/templates/application-tracker/archives/README.md`       | **新增**                  |
+| `references/mode_e_application_tracker.md`                      | **新增**                  |
+| `SKILL.md`                                                      | 目录 + Mode E + Resources |
 
 ---
 
@@ -189,12 +768,13 @@ v2.0: Application CRM（记录 + 追踪）
 ### 新增 Step 8.8/8.9/8.10
 
 - **8.8 Greeting Strategy Selection**: 推荐 Type + 备选 Type 选择规则 + 结构化推荐理由（Match Basis / Evidence Basis / Risk Basis）
-- **8.9 Greeting Humanization**: 7 条人味化规则（句子短 / 不用AI词 / 自然问句 / 不堆材料 / 不模板开���等）
+- **8.9 Greeting Humanization**: 7 条人味化规则（句子短 / 不用AI词 / 自然问句 / 不堆材料 / 不模板开头等）
 - **8.10 Recommended/Alternative Output**: 每平台仅出 2 个版本 + Why + Tone Notes + Do Not Say
 
 ### Boss Greeting 模板重组
 
 `07_boss_greeting.md` 改为双版本结构 + 决策层：
+
 - Greeting Strategy（推荐/备选 Type + Why + 切换条件）
 - Recommended Greeting + Alternative Greeting
 - Tone Notes（避免词/推荐词/句式规则）
@@ -203,15 +783,15 @@ v2.0: Application CRM（记录 + 追踪）
 ### 联动
 
 - `01_jd_match_report.md` Part 8 新增 Greeting Recommendation Summary
-- `output_contracts.md` Boss Greeting 契��更新（双版本/禁出项）
+- `output_contracts.md` Boss Greeting 契约更新（双版本/禁出项）
 
 ### 文件变更
 
-| 文件 | 变更 |
-|------|------|
-| `assets/templates/resume-outputs/07_boss_greeting.md` | 完全重构为双版本+策略+人味化 |
-| `references/mode_d_job_application.md` | Step 8.8/8.9/8.10 新增 |
-| `references/output_contracts.md` | Boss Greeting 契约更新 |
+| 文件                                                      | 变更                   |
+| ------------------------------------------------------- | -------------------- |
+| `assets/templates/resume-outputs/07_boss_greeting.md`   | 完全重构为双版本+策略+人味化      |
+| `references/mode_d_job_application.md`                  | Step 8.8/8.9/8.10 新增 |
+| `references/output_contracts.md`                        | Boss Greeting 契约更新   |
 | `assets/templates/resume-outputs/01_jd_match_report.md` | 8.1 新增 + Part 8 重新编号 |
 
 ---
@@ -227,11 +807,13 @@ v2.0: Application CRM（记录 + 追踪）
 `01_jd_match_report.md` Part 8 之后新增：
 
 **9.1 Evidence Routing（证据路由）**：
+
 - Candidate Pool：从 Part 4 提取 Strength≥4 的全部证据
 - 3 条路由规则：Distance Priority / Role Relevance / Novelty Injection
 - 3 层输出：Primary（主证据）/ Secondary（辅证据）/ Curiosity（好奇证据）
 
 **9.2 Platform Variants（平台变体 v1.6.2）**：
+
 - 平台从"长度不同"升级为"目标不同"
 - Boss 直聘：让 HR 回复，60-120 字，Primary 单证据 + 反问
 - 猎聘：建立专业感，150-250 字，Primary+Secondary
@@ -255,11 +837,11 @@ v1.6.2: JD → Match → Evidence Matrix → Evidence Routing → Platform Strat
 
 ### 文件变更
 
-| 文件 | 变更 |
-|------|------|
-| `assets/templates/resume-outputs/01_jd_match_report.md` | Part 9 新增（9.1+9.2） |
-| `references/mode_d_job_application.md` | Step 8.5 + 8.6 新增 |
-| `assets/templates/resume-outputs/07_boss_greeting.md` | Evidence Source + Platform Variants 更新 |
+| 文件                                                      | 变更                                     |
+| ------------------------------------------------------- | -------------------------------------- |
+| `assets/templates/resume-outputs/01_jd_match_report.md` | Part 9 新增（9.1+9.2）                     |
+| `references/mode_d_job_application.md`                  | Step 8.5 + 8.6 新增                      |
+| `assets/templates/resume-outputs/07_boss_greeting.md`   | Evidence Source + Platform Variants 更新 |
 
 ---
 
@@ -271,12 +853,12 @@ v1.6.2: JD → Match → Evidence Matrix → Evidence Routing → Platform Strat
 
 ### 新增：Greeting Objective（打招呼目标）
 
-| 类型 | 目标 | 结尾策略 |
-|------|------|------|
-| Type A: Build Connection | 让 HR 回复 | 匹配点 + 轻量行动邀请 |
-| Type B: Prove Value | 证明值得聊 | 证据点 + 反问 JD 需求 |
-| Type C: Break Risk | 先化解顾虑 | 承认差异 + 突出迁移 |
-| Type D: Spark Curiosity | 让 HR 追问 | 悬念 + 追问对方现状 |
+| 类型                       | 目标      | 结尾策略           |
+| ------------------------ | ------- | -------------- |
+| Type A: Build Connection | 让 HR 回复 | 匹配点 + 轻量行动邀请   |
+| Type B: Prove Value      | 证明值得聊   | 证据点 + 反问 JD 需求 |
+| Type C: Break Risk       | 先化解顾虑   | 承认差异 + 突出迁移    |
+| Type D: Spark Curiosity  | 让 HR 追问 | 悬念 + 追问对方现状    |
 
 ### 新增：Evidence Selection（证据自动选择）
 
@@ -284,11 +866,11 @@ v1.6.2: JD → Match → Evidence Matrix → Evidence Routing → Platform Strat
 
 ### 新增：Platform Variants（平台变体）
 
-| 平台 | 字数 | 策略 |
-|------|:--:|------|
-| Boss 直聘 | 150 字 | 速读，一个问题结尾 |
-| 猎聘 | 200 字 | 半正式，匹配 + 行动邀请 |
-| 邮件 | 300 字 | 正式商务，附简历 |
+| 平台      |   字数  | 策略            |
+| ------- | :---: | ------------- |
+| Boss 直聘 | 150 字 | 速读，一个问题结尾     |
+| 猎聘      | 200 字 | 半正式，匹配 + 行动邀请 |
+| 邮件      | 300 字 | 正式商务，附简历      |
 
 ### 联动
 
@@ -297,11 +879,11 @@ v1.6.2: JD → Match → Evidence Matrix → Evidence Routing → Platform Strat
 
 ### 文件变更
 
-| 文件 | 变更 |
-|------|------|
-| `assets/templates/resume-outputs/07_boss_greeting.md` | 完全重写 |
-| `assets/templates/resume-outputs/01_jd_match_report.md` | 8.5 字段升级 |
-| `references/mode_d_job_application.md` | Step X 全量重写 |
+| 文件                                                      | 变更          |
+| ------------------------------------------------------- | ----------- |
+| `assets/templates/resume-outputs/07_boss_greeting.md`   | 完全重写        |
+| `assets/templates/resume-outputs/01_jd_match_report.md` | 8.5 字段升级    |
+| `references/mode_d_job_application.md`                  | Step X 全量重写 |
 
 ---
 
@@ -315,13 +897,14 @@ v1.6.2: JD → Match → Evidence Matrix → Evidence Routing → Platform Strat
 
 3 个版本，全部基于 Usable Evidence Summary 和 Decision Score 生成：
 
-| 版本 | 适用场景 | 语气 |
-|------|----------|------|
-| Version A: Standard | Moderate Fit / HR 高风险 | 稳妥 |
-| Version B: Match-Driven | Match Score 较高 | 匹配点到证据 |
-| Version C: Strong | Strong Fit + HR 低风险 | 主动直接 |
+| 版本                      | 适用场景                  | 语气     |
+| ----------------------- | --------------------- | ------ |
+| Version A: Standard     | Moderate Fit / HR 高风险 | 稳妥     |
+| Version B: Match-Driven | Match Score 较高        | 匹配点到证据 |
+| Version C: Strong       | Strong Fit + HR 低风险   | 主动直接   |
 
 **生成规则**：
+
 - 仅引用 Strength ≥ 4 的证据（不引用弱证据）
 - 不使用报告术语（Match Score / Confidence 等）
 - 每条消息 ≤ 4 句
@@ -343,11 +926,11 @@ v1.6.2: JD → Match → Evidence Matrix → Evidence Routing → Platform Strat
 
 ### 文件变更
 
-| 文件 | 变更 |
-|------|------|
-| `assets/templates/resume-outputs/07_boss_greeting.md` | **新增** |
-| `references/mode_d_job_application.md` | Step X 新增 |
-| `references/output_contracts.md` | Boss Greeting 契约定义 |
+| 文件                                                      | 变更                           |
+| ------------------------------------------------------- | ---------------------------- |
+| `assets/templates/resume-outputs/07_boss_greeting.md`   | **新增**                       |
+| `references/mode_d_job_application.md`                  | Step X 新增                    |
+| `references/output_contracts.md`                        | Boss Greeting 契约定义           |
 | `assets/templates/resume-outputs/01_jd_match_report.md` | 8.5 Boss Greeting Input Pack |
 
 ---
@@ -359,29 +942,33 @@ v1.6.2: JD → Match → Evidence Matrix → Evidence Routing → Platform Strat
 v1.5.5 报告存在摘要值与正文值不一致、Confidence 计算口径偏宽、Part 4/4.5 表格重复等问题。v1.5.6 做一个纯粹的质量收敛，不新增分析维度。
 
 **修复 1：摘要-正文值统一来源**
+
 - 3.1 Match Summary 改为引用型（值 → 来源列），不独立填值
 - 3.2/3.3/Part 7 底部增加收敛线，标注"计算值 → 填入 3.1"
 
 **修复 2：Match Confidence 计算口径收紧**
+
 - 3.3 新增 Scoring Reference（评分因子参考表）：每个分量明确公式 + 扣分条件
 - 3.3 Breakdown 表从宽松占位符改为具体示例（原始分/扣分/最终分三列）
 - mode_d Step 5 Confidence 同步扣分条件
 
 **修复 3：Decision Score 因子分类**
+
 - Part 7 新增 Factor Types（Core/Multiplier/Additive 三类）
 - 明确公式构成和每项因子的类型标签
 
 **修复 4：Part 4 / Part 4.5 表格合并**
+
 - Part 4 改为 Evidence Matrix 合并表（Distance + Strength 同表）
 - Part 4.5 删除独立映射表，仅保留 Strength Rules
 - Part 8 新增 8.0 Usable Evidence Summary（可用证据 Top3 / Secondary）
 
 ### 文件变更
 
-| 文件 | 变更 |
-|------|------|
+| 文件                                                      | 变更                                                                                             |
+| ------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
 | `assets/templates/resume-outputs/01_jd_match_report.md` | 3.1 来源化 / 3.2/3.3 收敛线 / 3.3 评分因子+扣分表 / Part 4 合并矩阵 / Part 4.5 缩小 / Part 7 因子分类 / Part 8 可用证据汇总 |
-| `references/mode_d_job_application.md` | Step 5 Confidence 扣分条件同步 |
+| `references/mode_d_job_application.md`                  | Step 5 Confidence 扣分条件同步                                                                       |
 
 ---
 
@@ -396,6 +983,7 @@ v1.5.5 报告存在摘要值与正文值不一致、Confidence 计算口径偏�
 `01_jd_match_report.md` 新增独立章节：
 
 **5 维度评分**（0-2 分/维度，总分 0-10 → Strength 0-5）：
+
 - Ownership（主导程度）: 主导=2 / 参与=1 / 无=0
 - Scope（覆盖范围）: 跨团队=2 / 单团队=1 / 单人=0
 - Impact（结果影响）: 有量化=2 / 有过程=1 / 无=0
@@ -403,7 +991,8 @@ v1.5.5 报告存在摘要值与正文值不一致、Confidence 计算口径偏�
 - Relevance（相关性）: 直接=2 / 间接=1 / 不相关=0
 
 **Strength 使用规则**：
-- Strength 5 �� 主简历标题区 + 面试开场故事
+
+- Strength 5 → 主简历标题区 + 面试开场故事
 - Strength 4 → 简历主体，适合补强
 - Strength 3 → Interview Pack / Answer Cards
 - Strength ≤ 2 → 仅内部参考，不写进外部材料
@@ -422,13 +1011,13 @@ v1.5.5 报告存在摘要值与正文值不一致、Confidence 计算口径偏�
 
 ### 文件变更
 
-| 文件 | 变更 |
-|------|------|
-| `assets/templates/resume-outputs/01_jd_match_report.md` | Part 4.5 新增 |
-| `assets/templates/career-dna/03_projects.md` | 项目追加 Strength 字段 |
-| `assets/templates/career-dna/05_story_bank.md` | 故事追加 Strength 字段 |
-| `assets/templates/career-dna/09_completeness_report.md` | 新增 Strength Coverage |
-| `references/mode_d_job_application.md` | Step 5.5 末尾追加 Strength 判定 |
+| 文件                                                      | 变更                        |
+| ------------------------------------------------------- | ------------------------- |
+| `assets/templates/resume-outputs/01_jd_match_report.md` | Part 4.5 新增               |
+| `assets/templates/career-dna/03_projects.md`            | 项目追加 Strength 字段          |
+| `assets/templates/career-dna/05_story_bank.md`          | 故事追加 Strength 字段          |
+| `assets/templates/career-dna/09_completeness_report.md` | 新增 Strength Coverage      |
+| `references/mode_d_job_application.md`                  | Step 5.5 末尾追加 Strength 判定 |
 
 ---
 
@@ -470,10 +1059,10 @@ v1.5.4: 能不能拿面试 / 招聘方信不信 / 卡在哪一关 / 包装后成
 
 ### 文件变更
 
-| 文件 | 变更 |
-|------|------|
-| `assets/templates/resume-outputs/01_jd_match_report.md` | 完全重写（3 Parts→8 Parts） |
-| `references/mode_d_job_application.md` | Step 5 Conf+公式 + Step 5.5 D0-D4 + Step 5.6/5.7/5.8 新增 |
+| 文件                                                      | 变更                                                    |
+| ------------------------------------------------------- | ----------------------------------------------------- |
+| `assets/templates/resume-outputs/01_jd_match_report.md` | 完全重写（3 Parts→8 Parts）                                 |
+| `references/mode_d_job_application.md`                  | Step 5 Conf+公式 + Step 5.5 D0-D4 + Step 5.6/5.7/5.8 新增 |
 
 ---
 
@@ -486,26 +1075,31 @@ v1.5.2 完成了 Explainable Match Engine 结构重构，v1.5.3 进一步细化�
 ### 优化 1：Hard Requirement Scoring 颗粒化
 
 **`01_jd_match_report.md` Part 3.2 Hard Requirement Detail**：
+
 - 从 `✓/△/✗` 三值判定升级为 `Score(0-100) + 扣分来源` 四列
 - 每项附扣分原因（头衔不匹配-25 / 年限不足-25 / 证书缺失-10）
 - Hard Requirement Match = 各项 Score 均值，而非三值均值
 
 **`mode_d_job_application.md` Step 5**：
+
 - 新增 Hard Requirement 评分逻辑（扣分规则：头衔/年限/证书/完全缺失 4 类）
 
 ### 优化 2：Evidence Mapping Coverage %
 
 **`01_jd_match_report.md` Part 3.5 Evidence Mapping**：
+
 - 新增 Coverage（覆盖率）列：`(Direct×100 + Adjacent×60) / 总子证据数`
 - 每个 JD 能力拆分为子证据项，分 Direct/Adjacent/Missing 三列并列展示
 - Resume Builder 可根据 Missing 列自动判定需补充什么
 
 **`mode_d_job_application.md` Step 5.5**：
+
 - 新增 Evidence Coverage 计算逻辑（子证据拆解 + 汇总公式）
 
 ### 优化 3：Skill Gap Priority Matrix
 
 **`01_jd_match_report.md` Part 3.6 Skill Gaps**：
+
 - 新增 Gap Priority Matrix（P0/P1/P2 三级）
 - Priority = f(Impact, Cost)
   - P0: High Impact + Low Cost → 立刻做
@@ -515,11 +1109,11 @@ v1.5.2 完成了 Explainable Match Engine 结构重构，v1.5.3 进一步细化�
 
 ### 文件变更
 
-| 文件 | 变更 |
-|------|------|
+| 文件                                                      | 变更                                                        |
+| ------------------------------------------------------- | --------------------------------------------------------- |
 | `assets/templates/resume-outputs/01_jd_match_report.md` | 3.2 Hard Req + 3.5 Evidence Mapping + 3.6 Skill Gaps 三处升级 |
-| `references/mode_d_job_application.md` | Step 5 评分逻辑 + Step 5.5 Coverage 逻辑 |
-| `references/output_contracts.md` | v1.5.3 说明更新 |
+| `references/mode_d_job_application.md`                  | Step 5 评分逻辑 + Step 5.5 Coverage 逻辑                        |
+| `references/output_contracts.md`                        | v1.5.3 说明更新                                               |
 
 ---
 
@@ -531,14 +1125,15 @@ v1.5.2 完成了 Explainable Match Engine 结构重构，v1.5.3 进一步细化�
 
 ### 重构：JD Match Report 从 6 Parts → 3 Parts
 
-| 旧 | 新 | 操作 |
-|----|-----|------|
-| Part 1: JD Original | Part 1: JD Original | 保留 |
-| Part 2+3+4+4.5 | Part 2: Role Analysis | 压缩为 4 个子模块 |
-| Part 5: Evidence Expectation | ❌ 删除 | 与 Evidence Mapping 重复 |
-| Part 6: DNA Match Analysis | Part 3: DNA Match Analysis | 重构为 7 个子模块 |
+| 旧                            | 新                          | 操作                    |
+| ---------------------------- | -------------------------- | --------------------- |
+| Part 1: JD Original          | Part 1: JD Original        | 保留                    |
+| Part 2+3+4+4.5               | Part 2: Role Analysis      | 压缩为 4 个子模块            |
+| Part 5: Evidence Expectation | ❌ 删除                       | 与 Evidence Mapping 重复 |
+| Part 6: DNA Match Analysis   | Part 3: DNA Match Analysis | 重构为 7 个子模块            |
 
 **Part 2 Role Analysis 保留字段**：
+
 - 2.1 Core Responsibilities + Ownership + Scope
 - 2.2 Hiring Intent（Explicit/Implicit/Business Context/Pain Point）
 - 2.3 Skill Weight Analysis（能力权重表）
@@ -546,12 +1141,12 @@ v1.5.2 完成了 Explainable Match Engine 结构重构，v1.5.3 进一步细化�
 
 ### 新增：Match Score Breakdown（4 维度替代旧 3 维度）
 
-| 维度 | 权重 | 说明 |
-|------|------|------|
-| Hard Requirement Match（硬性要求匹配） | 40% | 学历/语言/证书/年限逐项判定（附明细表 ✓△✗） |
-| Experience Match（经验匹配） | 30% | 行业/场景/角色重叠度 |
-| Capability Match（能力迁移匹配） | 20% | Direct+Adjacent+Missing（同 v1.4.4） |
-| Industry Match（行业匹配） | 10% | 同行业/同客户群 |
+| 维度                             | 权重  | 说明                                |
+| ------------------------------ | --- | --------------------------------- |
+| Hard Requirement Match（硬性要求匹配） | 40% | 学历/语言/证书/年限逐项判定（附明细表 ✓△✗）         |
+| Experience Match（经验匹配）         | 30% | 行业/场景/角色重叠度                       |
+| Capability Match（能力迁移匹配）       | 20% | Direct+Adjacent+Missing（同 v1.4.4） |
+| Industry Match（行业匹配）           | 10% | 同行业/同客户群                          |
 
 ### 新增：Match Confidence Breakdown
 
@@ -583,11 +1178,11 @@ v1.5.2 完成了 Explainable Match Engine 结构重构，v1.5.3 进一步细化�
 
 ### 文件变更
 
-| 文件 | 变更 |
-|------|------|
-| `assets/templates/resume-outputs/01_jd_match_report.md` | 完全重写（238→145 行，净减 39%） |
-| `references/mode_d_job_application.md` | Step 4 内部化 + Step 5 4维度 + Confidence + Track Validation |
-| `references/output_contracts.md` | v1.5.2 结构说明追加 |
+| 文件                                                      | 变更                                                      |
+| ------------------------------------------------------- | ------------------------------------------------------- |
+| `assets/templates/resume-outputs/01_jd_match_report.md` | 完全重写（238→145 行，净减 39%）                                  |
+| `references/mode_d_job_application.md`                  | Step 4 内部化 + Step 5 4维度 + Confidence + Track Validation |
+| `references/output_contracts.md`                        | v1.5.2 结构说明追加                                           |
 
 ---
 
@@ -608,12 +1203,12 @@ Career Manager 从"简历生成器"→"职业决策系统"。
 
 `mode_d_job_application.md` Step 6 Targeted Discovery 之后插入：
 
-| Strategy | Match Score | Package | 说明 |
-|----------|-------------|---------|------|
-| Strong Fit（强匹配） | ≥ 80 | Pack A | 投递包（6文件） |
-| Moderate Fit（中等匹配） | 60-79 | Pack B | 投递+补强包（7文件，含Gap Analysis） |
-| Stretch Fit（拉伸匹配） | 40-59 | Pack C | 转岗包（7文件，含Transition Resume） |
-| Weak Fit（弱匹配） | < 40 | Pack D | 学习路线包（4文件，不生成简历） |
+| Strategy           | Match Score | Package | 说明                          |
+| ------------------ | ----------- | ------- | --------------------------- |
+| Strong Fit（强匹配）    | ≥ 80        | Pack A  | 投递包（6文件）                    |
+| Moderate Fit（中等匹配） | 60-79       | Pack B  | 投递+补强包（7文件，含Gap Analysis）   |
+| Stretch Fit（拉伸匹配）  | 40-59       | Pack C  | 转岗包（7文件，含Transition Resume） |
+| Weak Fit（弱匹配）      | < 40        | Pack D  | 学习路线包（4文件，不生成简历）            |
 
 边界规则：Adjacent占比>60% + ≥40分 → 升为Stretch；Missing中含Critical(>30%) → 降一档；用户指定方向→不降档。
 
@@ -624,14 +1219,14 @@ Career Manager 从"简历生成器"→"职业决策系统"。
 
 ### 新增：7 个模板文件
 
-| 文件 | 用途 | 适用 Pack |
-|------|------|:--:|
-| `03_resume_en.md` | 英文 ATS 简历 | A, B |
-| `XX_gap_analysis.md` | 能力差距分析（Gap+补齐预估+影响评估） | B, C, D |
-| `XX_transition_resume_cn.md` | 转岗中文简历（突出 Adjacent Match） | C |
-| `XX_transition_resume_en.md` | 转岗英文简历 | C |
-| `XX_transition_feasibility.md` | 转岗可行性评估（三维度评分+推荐路径） | D |
-| `XX_learning_roadmap.md` | 学习路线图（3阶段+里程碑+资源推荐） | D |
+| 文件                             | 用途                        | 适用 Pack |
+| ------------------------------ | ------------------------- | :-----: |
+| `03_resume_en.md`              | 英文 ATS 简历                 |   A, B  |
+| `XX_gap_analysis.md`           | 能力差距分析（Gap+补齐预估+影响评估）     | B, C, D |
+| `XX_transition_resume_cn.md`   | 转岗中文简历（突出 Adjacent Match） |    C    |
+| `XX_transition_resume_en.md`   | 转岗英文简历                    |    C    |
+| `XX_transition_feasibility.md` | 转岗可行性评估（三维度评分+推荐路径）       |    D    |
+| `XX_learning_roadmap.md`       | 学习路线图（3阶段+里程碑+资源推荐）       |    D    |
 
 ### 新增：output_contracts.md（产出合约）
 
@@ -645,19 +1240,19 @@ Career Manager 从"简历生成器"→"职业决策系统"。
 
 ### 文件变更
 
-| 文件 | 类型 |
-|------|------|
-| `assets/templates/resume-outputs/02_ats_resume.md` | **重命名为 02_resume_cn.md** |
-| `assets/templates/resume-outputs/03_resume_en.md` | **新增** |
-| `assets/templates/resume-outputs/XX_gap_analysis.md` | **新增** |
-| `assets/templates/resume-outputs/XX_transition_resume_cn.md` | **新增** |
-| `assets/templates/resume-outputs/XX_transition_resume_en.md` | **新增** |
-| `assets/templates/resume-outputs/XX_transition_feasibility.md` | **新增** |
-| `assets/templates/resume-outputs/XX_learning_roadmap.md` | **新增** |
-| `references/output_contracts.md` | **新增** |
-| `references/mode_d_job_application.md` | 修改 |
-| `SKILL.md` | 修改 |
-| `references/career_dna_structure.md` | 修改 |
+| 文件                                                             | 类型                       |
+| -------------------------------------------------------------- | ------------------------ |
+| `assets/templates/resume-outputs/02_ats_resume.md`             | **重命名为 02_resume_cn.md** |
+| `assets/templates/resume-outputs/03_resume_en.md`              | **新增**                   |
+| `assets/templates/resume-outputs/XX_gap_analysis.md`           | **新增**                   |
+| `assets/templates/resume-outputs/XX_transition_resume_cn.md`   | **新增**                   |
+| `assets/templates/resume-outputs/XX_transition_resume_en.md`   | **新增**                   |
+| `assets/templates/resume-outputs/XX_transition_feasibility.md` | **新增**                   |
+| `assets/templates/resume-outputs/XX_learning_roadmap.md`       | **新增**                   |
+| `references/output_contracts.md`                               | **新增**                   |
+| `references/mode_d_job_application.md`                         | 修改                       |
+| `SKILL.md`                                                     | 修改                       |
+| `references/career_dna_structure.md`                           | 修改                       |
 
 ---
 
@@ -676,13 +1271,13 @@ v1.5: Boss 简历 → career-dna/11_online_profile.md（DNA 更新时自动同�
 
 Career DNA 的派生资产，5 部分结构：
 
-| Part | 内容 | 数据来源 |
-|------|------|----------|
-| Part 1: Personal Branding | Headline + 职业标签 + 核心竞争力 | `07_career_identity.md` |
-| Part 2: Career Summary | 300-500 字职业简介 | `01` + `02` + `07` |
-| Part 3: Core Competencies | 能力标签（Confidence ≥ 60） | `04_skill_graph.md` |
-| Part 4: Highlight Projects | 代表项目 | `03_projects.md` + `10_career_tracks/` |
-| Part 5: Target Tracks | Primary/Secondary/Supporting 分级 | `10_career_tracks/` |
+| Part                       | 内容                              | 数据来源                                   |
+| -------------------------- | ------------------------------- | -------------------------------------- |
+| Part 1: Personal Branding  | Headline + 职业标签 + 核心竞争力         | `07_career_identity.md`                |
+| Part 2: Career Summary     | 300-500 字职业简介                   | `01` + `02` + `07`                     |
+| Part 3: Core Competencies  | 能力标签（Confidence ≥ 60）           | `04_skill_graph.md`                    |
+| Part 4: Highlight Projects | 代表项目                            | `03_projects.md` + `10_career_tracks/` |
+| Part 5: Target Tracks      | Primary/Secondary/Supporting 分级 | `10_career_tracks/`                    |
 
 **派生规则**：来源 DNA 文件更新 → 自动重新生成 Online Profile，避免双维护。
 
@@ -693,6 +1288,7 @@ Career DNA 的派生资产，5 部分结构：
 ### 修改：07_career_identity.md
 
 新增 3 个字段为 Online Profile 提供元数据：
+
 - Branding Keywords（品牌关键词）
 - Personal Headline（个人一句话定位）
 - Career Summary（职业简介 300-500 字）
@@ -708,30 +1304,30 @@ Career DNA 的派生资产，5 部分结构：
 
 ### 修改：架构位置
 
-| 改动 | 文件 |
-|------|------|
-| 目录结构 | `SKILL.md` |
-| 结构定义 | `references/career_dna_structure.md` |
-| Mode D Resume Package | 去 boss_resume 行，编号前移 |
-| Resources 模板列表 | `SKILL.md` |
-| init 脚本 | `scripts/init_career_dna.py`（+11_online_profile） |
-| 完整度检查 | `scripts/completeness_checker.py`（+11, 权重 3） |
+| 改动                    | 文件                                               |
+| --------------------- | ------------------------------------------------ |
+| 目录结构                  | `SKILL.md`                                       |
+| 结构定义                  | `references/career_dna_structure.md`             |
+| Mode D Resume Package | 去 boss_resume 行，编号前移                             |
+| Resources 模板列表        | `SKILL.md`                                       |
+| init 脚本               | `scripts/init_career_dna.py`（+11_online_profile） |
+| 完整度检查                 | `scripts/completeness_checker.py`（+11, 权重 3）     |
 
 ### 文件变更清单
 
-| 文件 | 类型 |
-|------|------|
-| `assets/templates/career-dna/11_online_profile.md` | **新增** |
-| `assets/templates/career-dna/07_career_identity.md` | 修改 |
-| `assets/templates/career_track.md` | 修改 |
+| 文件                                                  | 类型     |
+| --------------------------------------------------- | ------ |
+| `assets/templates/career-dna/11_online_profile.md`  | **新增** |
+| `assets/templates/career-dna/07_career_identity.md` | 修改     |
+| `assets/templates/career_track.md`                  | 修改     |
 | `assets/templates/resume-outputs/03_boss_resume.md` | **删除** |
-| `SKILL.md` | 修改 |
-| `references/career_dna_structure.md` | 修改 |
-| `references/mode_a_build.md` | 修改 |
-| `references/mode_b_update.md` | 修改 |
-| `references/mode_d_job_application.md` | 修改 |
-| `scripts/init_career_dna.py` | 修改 |
-| `scripts/completeness_checker.py` | 修改 |
+| `SKILL.md`                                          | 修改     |
+| `references/career_dna_structure.md`                | 修改     |
+| `references/mode_a_build.md`                        | 修改     |
+| `references/mode_b_update.md`                       | 修改     |
+| `references/mode_d_job_application.md`              | 修改     |
+| `scripts/init_career_dna.py`                        | 修改     |
+| `scripts/completeness_checker.py`                   | 修改     |
 
 ---
 
@@ -760,6 +1356,7 @@ v1.4.4: Capability Match = Direct(100%) + Adjacent(60%) + Missing(0%) 加权计�
 `mode_d_job_application.md` Step 5 和 Step 6 之间插入，定义完整推理规则：
 
 **Adjacent Match 判定规则（4条）**：
+
 1. 同一 Domain（域内迁移）→ Confidence 70-85
 2. Related Skills（关联能力）→ Confidence 60-75
 3. 业务场景交叉（工作交叉）→ Confidence 50-65
@@ -770,6 +1367,7 @@ v1.4.4: Capability Match = Direct(100%) + Adjacent(60%) + Missing(0%) 加权计�
 ### 修改：Match Score 计算
 
 `Skill Match(30%)` 改为 `Capability Match(30%)`，计算公式：
+
 ```
 Capability Score = (Direct数量×100 + Adjacent数量×60 + Missing数量×0) / 总JD能力数
 ```
@@ -777,6 +1375,7 @@ Capability Score = (Direct数量×100 + Adjacent数量×60 + Missing数量×0) /
 ### 新增：Common Capability Transitions（常见能力迁移路径 P1）
 
 `role_snapshot.md` 新增市场观察模块，基于多次 JD 分析积累的常见迁移路径：
+
 - QA Lead → Project Delivery / Stakeholder Management
 - Implementation Consultant → Requirement Analysis
 - 附观察次数 + 置信度，用于 Adjacent Match 加分参考
@@ -789,11 +1388,11 @@ Capability Score = (Direct数量×100 + Adjacent数量×60 + Missing数量×0) /
 
 ### 文件变更
 
-| 文件 | 变更 |
-|------|------|
-| `assets/templates/resume-outputs/01_jd_match_report.md` | Skill→Capability + Part 6.5 新增 |
-| `references/mode_d_job_application.md` | 匹配维度改 + Step 5.5 新增 + 管线图更新 |
-| `assets/templates/knowledge/role_snapshot.md` | Common Capability Transitions（P1） |
+| 文件                                                      | 变更                                |
+| ------------------------------------------------------- | --------------------------------- |
+| `assets/templates/resume-outputs/01_jd_match_report.md` | Skill→Capability + Part 6.5 新增    |
+| `references/mode_d_job_application.md`                  | 匹配维度改 + Step 5.5 新增 + 管线图更新       |
+| `assets/templates/knowledge/role_snapshot.md`           | Common Capability Transitions（P1） |
 
 ---
 
@@ -814,18 +1413,18 @@ Capability Score = (Direct数量×100 + Adjacent数量×60 + Missing数量×0) /
 
 **修改文件**（11个）：
 
-| 文件 | 改动类型 |
-|------|----------|
-| `SKILL.md` | 标题 + 字段列表 |
-| `references/mode_d_job_application.md` | 行内注释 + 概念引用 |
-| `references/career_dna_structure.md` | 文档标题 + Part 名称 + 字段列表 |
-| `references/question_backlog.md` | 表格列标题 + 字段列表 |
-| `CHANGELOG.md` | 概念列表 + 章节标题 |
-| `assets/templates/career-dna/04_skill_graph.md` | 表格列标题 (12+列) |
-| `assets/templates/resume-outputs/01_jd_match_report.md` | 表格列标题 + 枚举值 |
-| `assets/templates/career_track.md` | 模板标题 + 枚举值 + 列标题 |
-| `assets/templates/knowledge/role_snapshot.md` | 模板标题 + 字段名 (9个) |
-| `assets/templates/knowledge/skill_snapshot.md` | 模板标题 + 字段名 (12+个) |
+| 文件                                                      | 改动类型                  |
+| ------------------------------------------------------- | --------------------- |
+| `SKILL.md`                                              | 标题 + 字段列表             |
+| `references/mode_d_job_application.md`                  | 行内注释 + 概念引用           |
+| `references/career_dna_structure.md`                    | 文档标题 + Part 名称 + 字段列表 |
+| `references/question_backlog.md`                        | 表格列标题 + 字段列表          |
+| `CHANGELOG.md`                                          | 概念列表 + 章节标题           |
+| `assets/templates/career-dna/04_skill_graph.md`         | 表格列标题 (12+列)          |
+| `assets/templates/resume-outputs/01_jd_match_report.md` | 表格列标题 + 枚举值           |
+| `assets/templates/career_track.md`                      | 模板标题 + 枚举值 + 列标题      |
+| `assets/templates/knowledge/role_snapshot.md`           | 模板标题 + 字段名 (9个)       |
+| `assets/templates/knowledge/skill_snapshot.md`          | 模板标题 + 字段名 (12+个)     |
 
 **不受影响**：架构、工作流、推理逻辑、目录结构、脚本 — 全部不变。
 
@@ -840,16 +1439,19 @@ Capability Score = (Direct数量×100 + Adjacent数量×60 + Missing数量×0) /
 ### P0: Score Explainability Layer（评分可解释层）
 
 **04_skill_graph.md 重构 Confidence 计算逻辑**：
+
 - 从单维 `Evidence Count × Recency` 升级为 `Evidence Count Quality(40pt) + Evidence Quality(30pt) + Recency(30pt) + Consistency Bonus(+5pt)` 四维分解
 - 新增 Evidence Quality（证据质量: 角色/量化/认可）、Evidence Consistency（证据一致性: 多项目持续展现）、Evidence Recency（证据时效性）
 - 新增 Confidence 计算逻辑说明和评分标准表
 
 **career_track.md 新增 Track Confidence Breakdown（赛道置信度分解）**：
+
 - Track Confidence = Evidence Strength(40%) + Role Snapshot Validation(35%) + Market Demand(25%) 三分量
 - 每个分量附计算方式和评分解读
 - Market Intelligence（市场情报）新增 Validation Status（验证状态） / Recent JD Coverage（近期JD覆盖率） / Market Signal（市场信号）
 
 **01_jd_match_report.md 新增 Score Breakdown（评分分解） + Evidence Basis（证据基础）**：
+
 - Score Breakdown 表格：Persona/Evidence/Skill 三匹配的得分×权重×加权得分完整展开
 - 新增 Score Confidence（评分置信度）和 Evidence Basis（证据数量/质量/缺失项）
 - 缺失证据按 Skill Weight 排序，权重越高的缺失影响越大
@@ -857,20 +1459,24 @@ Capability Score = (Direct数量×100 + Adjacent数量×60 + Missing数量×0) /
 ### P0: Question Backlog JD Binding（问题库 JD 上下文绑定）
 
 **08_question_backlog.md 新增 Triggered By 字段**：
+
 - Triggered By JD / Role / Company / Track 四个 JD 上下文绑定
 - 实现溯源：每个 Backlog 问题可追溯至触发它的具体 JD
 
 **references/question_backlog.md 新增规则 7**：
+
 - JD 绑定生成链路：Evidence Gap → Backlog Question → 自动绑定 JD 上下文
 - 作用：同 Track 聚合展示、公司优先级排序、数据溯源、职业成长任务池
 
 ### P1: Career Track Market Validation Engine（市场验证引擎）
 
 **mode_a_build.md Step 9.2 升级**：
+
 - Track Confidence 从单数字升级为三分量加权计算（Evidence × 40% + Role Validation × 35% + Market Demand × 25%）
 - 新增 Market Demand 分级（≥10JD=90pt / 5-9=70pt / <5=50pt）
 
 **mode_d_job_application.md Knowledge Update C 增强**：
+
 - 新增 Track Confidence Breakdown 重新计算
 - 新增 Validation Status 更新（Validated / Emerging / Uncertain）
 - 新增 Recent JD Coverage / Market Signal
@@ -878,6 +1484,7 @@ Capability Score = (Direct数量×100 + Adjacent数量×60 + Missing数量×0) /
 ### P1: Persona Statistics（画像统计层）
 
 **role_snapshot.md 新增 Persona Statistics 区块**：
+
 - Experience Frequency（典型经历频率: 含趋势 ↑↓→）
 - Career Background Frequency（职业背景分布频率）
 - Trait Frequency（偏好特质频率）
@@ -885,16 +1492,16 @@ Capability Score = (Direct数量×100 + Adjacent数量×60 + Missing数量×0) /
 
 ### 文件变更清单
 
-| 文件 | 变更类型 | 优先级 |
-|------|----------|--------|
-| `assets/templates/career-dna/04_skill_graph.md` | Confidence 四维分解 + Quality/Consistency/Recency | P0 |
-| `assets/templates/career_track.md` | Track Confidence Breakdown + Market Validation v1.4.2 | P0 |
-| `assets/templates/resume-outputs/01_jd_match_report.md` | Score Breakdown（评分分解） + Evidence Basis（证据基础） | P0 |
-| `assets/templates/career-dna/08_question_backlog.md` | Triggered By JD/Role/Company/Track | P0 |
-| `references/question_backlog.md` | 规则 7: JD 绑定生成 | P0 |
-| `references/mode_a_build.md` | Step 9.2 Confidence 三分量升级 | P1 |
-| `references/mode_d_job_application.md` | Knowledge Update C 增强 + 逻辑总结更新 | P1 |
-| `assets/templates/knowledge/role_snapshot.md` | Persona Statistics | P1 |
+| 文件                                                      | 变更类型                                                  | 优先级 |
+| ------------------------------------------------------- | ----------------------------------------------------- | --- |
+| `assets/templates/career-dna/04_skill_graph.md`         | Confidence 四维分解 + Quality/Consistency/Recency         | P0  |
+| `assets/templates/career_track.md`                      | Track Confidence Breakdown + Market Validation v1.4.2 | P0  |
+| `assets/templates/resume-outputs/01_jd_match_report.md` | Score Breakdown（评分分解） + Evidence Basis（证据基础）          | P0  |
+| `assets/templates/career-dna/08_question_backlog.md`    | Triggered By JD/Role/Company/Track                    | P0  |
+| `references/question_backlog.md`                        | 规则 7: JD 绑定生成                                         | P0  |
+| `references/mode_a_build.md`                            | Step 9.2 Confidence 三分量升级                             | P1  |
+| `references/mode_d_job_application.md`                  | Knowledge Update C 增强 + 逻辑总结更新                        | P1  |
+| `assets/templates/knowledge/role_snapshot.md`           | Persona Statistics                                    | P1  |
 
 ---
 
@@ -930,11 +1537,11 @@ v1.4 的 Talent Intelligence 管线已覆盖 Hiring Intent（招聘意图） / T
 
 ### 文件变更
 
-| 文件 | 变更类型 |
-|------|----------|
-| `assets/templates/resume-outputs/01_jd_match_report.md` | Part 4.5 新增 + Part 5 重写 |
-| `references/mode_d_job_application.md` | Step 3.5 新增 + Step 4 结构化 + Knowledge Update 更新 |
-| `assets/templates/knowledge/skill_snapshot.md` | 每个 Skill 新增 Aliases 字段 |
+| 文件                                                      | 变更类型                                           |
+| ------------------------------------------------------- | ---------------------------------------------- |
+| `assets/templates/resume-outputs/01_jd_match_report.md` | Part 4.5 新增 + Part 5 重写                        |
+| `references/mode_d_job_application.md`                  | Step 3.5 新增 + Step 4 结构化 + Knowledge Update 更新 |
+| `assets/templates/knowledge/skill_snapshot.md`          | 每个 Skill 新增 Aliases 字段                         |
 
 ---
 
@@ -954,18 +1561,23 @@ v1.4:   JD → 招聘意图 → 人才画像 → 证据要求 → DNA匹配 → 
 ### 新增：Mode D 人才智能分析管线（4 个新步骤）
 
 **Step 1: Role Decomposition（岗位能力拆解）**
+
 - 从技能列表升级为 Core Functions / Responsibilities / Expected Ownership 三层拆解
 
 **Step 2: Hiring Intent Analysis（招聘意图分析）**
+
 - 推理 Explicit / Implicit Requirements / Business Context / Pain Point
 
 **Step 3: Talent Persona Inference（人才画像推理）**
+
 - 输出 Ideal Candidate natural-language 描述 / Career Background / Typical Experience / Preferred Traits
 
 **Step 4: Evidence Expectation Analysis（证据需求分析）**
+
 - 输出 Critical Evidence / Expected Stories / Expected Results / Evidence Risks
 
 **Step 5 DNA Match Analysis 升级**：
+
 - 匹配从 Skill Match 单一维度升级为 Persona Match(35%) + Evidence Match(35%) + Skill Match(30%)
 
 ### 修改：JD Match Report 重构为 6 部分
@@ -982,10 +1594,12 @@ Part 6: DNA Match Analysis（匹配分析）
 ### 修改：Knowledge Layer 增强（Role + Skill Snapshot）
 
 **role_snapshot.md (v1.4 增强)**：
+
 - `Hiring Intelligence` 区块：Common Hiring Intent（常见招聘意图） / Talent Persona（人才画像） / Typical Evidence（典型证据） / Career Background Distribution（职业背景分布）
 - `Trend Intelligence` 区块：Hiring Intent Trends / Talent Persona Trends / Evidence Trends
 
 **skill_snapshot.md (v1.4 增强)**：
+
 - 每个 Skill 新增 `Talent Intelligence` 区块：Typical Evidence / Business Meaning / Related Hiring Intent / Typical Results / Typical Ownership
 
 ### 修改：Career Track 增强
@@ -1000,6 +1614,7 @@ Part 6: DNA Match Analysis（匹配分析）
 ### 修改：Knowledge Update Logic
 
 从 `JD → Skills → Snapshot` 升级为：
+
 ```
 JD → Talent Persona → Role Snapshot（Hiring Intent + Talent Persona）
 JD → Evidence Expectation → Skill Snapshot（Typical Evidence + Business Meaning）
@@ -1007,21 +1622,22 @@ JD → Evidence Expectation → Skill Snapshot（Typical Evidence + Business Mea
 
 ### 文件变更清单
 
-| 文件 | 变更类型 |
-|------|----------|
-| `references/mode_d_job_application.md` | 完全重写：9 步流程 + Talent Intelligence Pipeline |
-| `assets/templates/resume-outputs/01_jd_match_report.md` | 完全重写：6 部分结构 |
-| `assets/templates/knowledge/role_snapshot.md` | 修改：新增 Hiring Intelligence + Trend Intelligence |
-| `assets/templates/knowledge/skill_snapshot.md` | 修改：每个 Skill 新增 Talent Intelligence 区块 |
-| `assets/templates/career_track.md` | 修改：新增 Market Intelligence 区块 |
-| `assets/templates/career-dna/08_question_backlog.md` | 修改：新增 Hiring Intent / Evidence 字段 |
-| `references/question_backlog.md` | 修改：问题格式更新 v1.4 |
-| `SKILL.md` | 修改：Mode D 完全重写 |
-| `references/career_dna_structure.md` | 修改：Knowledge Layer v1.4 结构 |
+| 文件                                                      | 变更类型                                           |
+| ------------------------------------------------------- | ---------------------------------------------- |
+| `references/mode_d_job_application.md`                  | 完全重写：9 步流程 + Talent Intelligence Pipeline      |
+| `assets/templates/resume-outputs/01_jd_match_report.md` | 完全重写：6 部分结构                                    |
+| `assets/templates/knowledge/role_snapshot.md`           | 修改：新增 Hiring Intelligence + Trend Intelligence |
+| `assets/templates/knowledge/skill_snapshot.md`          | 修改：每个 Skill 新增 Talent Intelligence 区块          |
+| `assets/templates/career_track.md`                      | 修改：新增 Market Intelligence 区块                   |
+| `assets/templates/career-dna/08_question_backlog.md`    | 修改：新增 Hiring Intent / Evidence 字段              |
+| `references/question_backlog.md`                        | 修改：问题格式更新 v1.4                                 |
+| `SKILL.md`                                              | 修改：Mode D 完全重写                                 |
+| `references/career_dna_structure.md`                    | 修改：Knowledge Layer v1.4 结构                     |
 
 ### v1.4 验收标准
 
 同一份 JD "实施顾问"，系统应输出：
+
 ```yaml
 人才画像: 有项目推进经历、能独立面对客户、具备需求梳理能力、能承担交付责任
 核心证据: 需求调研案例、客户培训案例、项目交付案例
@@ -1063,12 +1679,12 @@ JD → Evidence Expectation → Skill Snapshot（Typical Evidence + Business Mea
 
 ### 文件变更
 
-| 文件 | 变更类型 |
-|------|----------|
-| `references/mode_a_build.md` | Step 1/9/10 + 规则重写 |
-| `SKILL.md` | Mode A 产物/工作流修正 |
-| `references/question_backlog.md` | 问题格式 + 流转 + 规则 6 |
-| `assets/templates/career-dna/08_question_backlog.md` | 模板更新 |
+| 文件                                                   | 变更类型               |
+| ---------------------------------------------------- | ------------------ |
+| `references/mode_a_build.md`                         | Step 1/9/10 + 规则重写 |
+| `SKILL.md`                                           | Mode A 产物/工作流修正    |
+| `references/question_backlog.md`                     | 问题格式 + 流转 + 规则 6   |
+| `assets/templates/career-dna/08_question_backlog.md` | 模板更新               |
 
 ---
 
@@ -1081,6 +1697,7 @@ JD → Evidence Expectation → Skill Snapshot（Typical Evidence + Business Mea
 v1.2 中 `job-tracks/` 与 `knowledge/role_snapshots/` 均在维护岗位画像、职责、技能、统计，职责重叠超过 80%。v1.3 彻底删除 `job-tracks/`，将个人赛道回归 Career DNA。
 
 **本质变化**：
+
 ```
 V1.2: 市场画像(Job Tracks) + 市场画像(Role Snapshots) → 重叠
 V1.3: 个人赛道(Career Tracks) + 市场画像(Role Snapshots) → 互补
@@ -1110,12 +1727,14 @@ v1.3: career-dna/10_career_tracks/     (目录)
 ### 增强：Knowledge Layer 模板
 
 **role_snapshot.md (v1.3 增强)**：
+
 - 新增 Observed Companies（已观察到的公司列表）
 - 新增 Recent JD Sources（最近 JD 来源，格式 YYYY-MM Company Role）
 - 新增 Trend Notes（基于多次观察的趋势判断）
 - 新增 Company Distribution 表
 
 **skill_snapshot.md (v1.3 增强)**：
+
 - 每个 Skill 新增 Observed JD Count
 - 新增 Related Roles / Recent Observations（最近观察记录）
 - 新增 Trend Notes（基于累计数据的趋势判断）
@@ -1130,6 +1749,7 @@ v1.3: career-dna/10_career_tracks/     (目录)
 ### 修改：JD Match Report 模板
 
 `01_jd_match_report.md` 从单一的匹配分析模板重构为四个部分：
+
 1. **JD Metadata** — Company / Role / Date / Source / Track
 2. **Original JD** — 完整 JD 原文存档（用于回溯）
 3. **AI Extracted Summary** — Core Responsibilities / Must Have / Nice To Have / Tools / Keywords / Risk Factors
@@ -1141,19 +1761,19 @@ v1.3: career-dna/10_career_tracks/     (目录)
 
 ### 文件变更清单
 
-| 文件 | 变更类型 |
-|------|----------|
-| `SKILL.md` | 修改：三层架构去 Job Tracks、目录结构更新、Mode D 流程更新、Knowledge/Career Track Rules 重写 |
-| `references/mode_d_job_application.md` | 完全重写：去 job-tracks、Career Track Match 流程、JD Match Report 四部分结构 |
-| `references/career_dna_structure.md` | 修改：10_career_tracks 目录模式、External Knowledge Layer v1.3、删 Track Profile、新增 Resume Outputs 结构 |
-| `assets/templates/career_track.md` | 新增：Career Track 赛道模板 |
-| `assets/templates/knowledge/role_snapshot.md` | 修改：新增 Observed Companies / Recent JD Sources / Trend Notes |
-| `assets/templates/knowledge/skill_snapshot.md` | 修改：新增 Observed JD Count / Related Roles / Recent Observations / Trend Notes |
-| `assets/templates/resume-outputs/01_jd_match_report.md` | 修改：新增 JD Metadata / Original JD / AI Extracted Summary |
-| `assets/templates/career-dna/10_career_tracks.md` | 删除 |
-| `assets/templates/job-tracks/` | 整个目录删除 |
-| `scripts/init_career_dna.py` | 修改：9 个单文件 + 10_career_tracks/ 目录 + README.md，去 job-tracks |
-| `scripts/completeness_checker.py` | 修改：支持 directory 模式检查 10_career_tracks/ |
+| 文件                                                      | 变更类型                                                                                        |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `SKILL.md`                                              | 修改：三层架构去 Job Tracks、目录结构更新、Mode D 流程更新、Knowledge/Career Track Rules 重写                      |
+| `references/mode_d_job_application.md`                  | 完全重写：去 job-tracks、Career Track Match 流程、JD Match Report 四部分结构                               |
+| `references/career_dna_structure.md`                    | 修改：10_career_tracks 目录模式、External Knowledge Layer v1.3、删 Track Profile、新增 Resume Outputs 结构 |
+| `assets/templates/career_track.md`                      | 新增：Career Track 赛道模板                                                                        |
+| `assets/templates/knowledge/role_snapshot.md`           | 修改：新增 Observed Companies / Recent JD Sources / Trend Notes                                  |
+| `assets/templates/knowledge/skill_snapshot.md`          | 修改：新增 Observed JD Count / Related Roles / Recent Observations / Trend Notes                 |
+| `assets/templates/resume-outputs/01_jd_match_report.md` | 修改：新增 JD Metadata / Original JD / AI Extracted Summary                                      |
+| `assets/templates/career-dna/10_career_tracks.md`       | 删除                                                                                          |
+| `assets/templates/job-tracks/`                          | 整个目录删除                                                                                      |
+| `scripts/init_career_dna.py`                            | 修改：9 个单文件 + 10_career_tracks/ 目录 + README.md，去 job-tracks                                   |
+| `scripts/completeness_checker.py`                       | 修改：支持 directory 模式检查 10_career_tracks/                                                      |
 
 ### V2 规划（暂未实现）
 
@@ -1175,6 +1795,7 @@ Resume Outputs = 单次JD投递产物  (resume-outputs/{date}_{company}_{role}/)
 ```
 
 **关键变更**：
+
 - Job Tracks（原名 JD Track）职责大幅简化：仅保存 Role 级别市场画像，不保存用户个人数据
 - Resume Outputs 从单层文件改为按日期+公司+岗位子目录隔离，每次投递独立
 - Mode D 流程重构：Track Match → JD Match Report → Resume Package → Knowledge Update
@@ -1216,18 +1837,18 @@ Mode D Step 1 新增 Track Match 步骤，解析 JD 后先识别 Role，定位/�
 
 ### 文件变更清单
 
-| 文件 | 变更类型 |
-|------|----------|
-| `SKILL.md` | 修改：三层架构、四层产物定义、Mode D 流程重构、目录结构更新、Knowledge/Job Tracks Rules |
-| `references/mode_d_job_application.md` | 完全重写：6 步新流程 + Track Match + JD Match Report + 子目录模式 |
-| `references/career_dna_structure.md` | 修改：04_skill_graph Domain/Related Skills、10_career_tracks v1.2 字段、External Knowledge Layer v1.2、新增 Track Profile / Resume Outputs 结构 |
-| `assets/templates/knowledge/skill_snapshot.md` | 完全重写：Domain 模式 |
-| `assets/templates/job-tracks/jd_track.md` | 删除 → 替换为 `track_profile.md` |
-| `assets/templates/job-tracks/track_profile.md` | 新增：Role 级别市场画像 |
-| `assets/templates/resume-outputs/01_jd_match_report.md` | 新增：岗位匹配报告 |
-| `assets/templates/resume-outputs/02-06_*.md` | 重命名：加编号前缀，02_ats_resume 和 03_boss_resume 增加 Track 引用 |
-| `assets/templates/career-dna/04_skill_graph.md` | 修改：新增 Domain、Related Skills 字段、Domain 映射参考 |
-| `assets/templates/career-dna/10_career_tracks.md` | 修改：新增 Positioning、Core Strengths、Recommended Projects、Recommended Stories、Target Roles |
+| 文件                                                      | 变更类型                                                                                                                                |
+| ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `SKILL.md`                                              | 修改：三层架构、四层产物定义、Mode D 流程重构、目录结构更新、Knowledge/Job Tracks Rules                                                                        |
+| `references/mode_d_job_application.md`                  | 完全重写：6 步新流程 + Track Match + JD Match Report + 子目录模式                                                                                 |
+| `references/career_dna_structure.md`                    | 修改：04_skill_graph Domain/Related Skills、10_career_tracks v1.2 字段、External Knowledge Layer v1.2、新增 Track Profile / Resume Outputs 结构 |
+| `assets/templates/knowledge/skill_snapshot.md`          | 完全重写：Domain 模式                                                                                                                      |
+| `assets/templates/job-tracks/jd_track.md`               | 删除 → 替换为 `track_profile.md`                                                                                                         |
+| `assets/templates/job-tracks/track_profile.md`          | 新增：Role 级别市场画像                                                                                                                      |
+| `assets/templates/resume-outputs/01_jd_match_report.md` | 新增：岗位匹配报告                                                                                                                           |
+| `assets/templates/resume-outputs/02-06_*.md`            | 重命名：加编号前缀，02_ats_resume 和 03_boss_resume 增加 Track 引用                                                                                |
+| `assets/templates/career-dna/04_skill_graph.md`         | 修改：新增 Domain、Related Skills 字段、Domain 映射参考                                                                                          |
+| `assets/templates/career-dna/10_career_tracks.md`       | 修改：新增 Positioning、Core Strengths、Recommended Projects、Recommended Stories、Target Roles                                              |
 
 ### V2 规划（暂未实现）
 
@@ -1249,10 +1870,12 @@ Mode D Step 1 新增 Track Match 步骤，解析 JD 后先识别 Role，定位/�
 - **Knowledge Layer（市场知识层）**：外部市场情报、岗位快照、能力快照 — 存放在 `knowledge/`
 
 新增目录：
+
 - `knowledge/role_snapshots/` — 岗位快照 (Role Snapshot)
 - `knowledge/skill_snapshots/` — 能力快照 (Skill Snapshot)
 
 新增模板文件：
+
 - `assets/templates/knowledge/role_snapshot.md`
 - `assets/templates/knowledge/skill_snapshot.md`
 
@@ -1276,12 +1899,12 @@ Step 7 从 JD 中提取 Role / Track / Skills / Tools / Keywords，更新到 Kno
 
 `career-dna/04_skill_graph.md` 新增 4 个字段：
 
-| 字段 | 说明 |
-|------|------|
-| Evidence | 证据来源列表 |
-| Evidence Count | 证据数量 |
-| Confidence | 置信度评分 (0-100) |
-| Last Verified | 最近验证时间 (YYYY-MM) |
+| 字段             | 说明               |
+| -------------- | ---------------- |
+| Evidence       | 证据来源列表           |
+| Evidence Count | 证据数量             |
+| Confidence     | 置信度评分 (0-100)    |
+| Last Verified  | 最近验证时间 (YYYY-MM) |
 
 这些字段用于 Role Snapshot vs Skill Graph 交叉比对，以及 Targeted Discovery 追问优先级判断。
 
@@ -1300,6 +1923,7 @@ JD 要求 → Role Snapshot 中存在？ → DNA 有证据？ → 进入追问
 ### 修改：中英双语释义
 
 全文件增加中英双语标注，提高可读性：
+
 - 目录结构注释增加英文名
 - Mode 路由表增加中文名
 - 字段表格增加英文列名
@@ -1307,20 +1931,21 @@ JD 要求 → Role Snapshot 中存在？ → DNA 有证据？ → 进入追问
 
 ### 文件变更清单
 
-| 文件 | 变更类型 |
-|------|----------|
-| `SKILL.md` | 修改：新增 Two-Layer Architecture、Knowledge Layer Rules、Principle 6、Mode D 7步、中英释义 |
-| `references/mode_d_job_application.md` | 修改：Step 2 重命名、新增 Step 7 Knowledge Update、新增 Role Snapshot 引用 |
-| `references/targeted_discovery.md` | 修改：新增 Role Snapshot 引用源、追问逻辑升级、优先级扩展为 5 级 |
-| `references/career_dna_structure.md` | 修改：04_skill_graph 新增字段、新增 External Knowledge Layer 章节 |
-| `assets/templates/career-dna/04_skill_graph.md` | 修改：新增 Evidence/Evidence Count/Confidence/Last Verified 字段 |
-| `assets/templates/knowledge/role_snapshot.md` | 新增 |
-| `assets/templates/knowledge/skill_snapshot.md` | 新增 |
-| `scripts/init_career_dna.py` | 修改：新增 knowledge/ 目录创建 |
+| 文件                                              | 变更类型                                                                          |
+| ----------------------------------------------- | ----------------------------------------------------------------------------- |
+| `SKILL.md`                                      | 修改：新增 Two-Layer Architecture、Knowledge Layer Rules、Principle 6、Mode D 7步、中英释义 |
+| `references/mode_d_job_application.md`          | 修改：Step 2 重命名、新增 Step 7 Knowledge Update、新增 Role Snapshot 引用                  |
+| `references/targeted_discovery.md`              | 修改：新增 Role Snapshot 引用源、追问逻辑升级、优先级扩展为 5 级                                     |
+| `references/career_dna_structure.md`            | 修改：04_skill_graph 新增字段、新增 External Knowledge Layer 章节                         |
+| `assets/templates/career-dna/04_skill_graph.md` | 修改：新增 Evidence/Evidence Count/Confidence/Last Verified 字段                     |
+| `assets/templates/knowledge/role_snapshot.md`   | 新增                                                                            |
+| `assets/templates/knowledge/skill_snapshot.md`  | 新增                                                                            |
+| `scripts/init_career_dna.py`                    | 修改：新增 knowledge/ 目录创建                                                         |
 
 ### V2 规划（暂未实现）
 
 以下功能将在 V2 版本中实现：
+
 - `role_library/` — 角色知识库
 - `skill_library/` — 能力知识库
 - `ontology/` — 职业本体论
@@ -1341,6 +1966,7 @@ Career Manager 技能首发版本，包含完整的四大工作模式：
 - **Mode D: Job Application Mode（岗位投递模式）** — 6 步工作流，JD 匹配 + 求职材料生成
 
 初始文件结构：
+
 - `career-dna/` — 10 个职业资产文件
 - `job-tracks/` — 岗位专属分析库
 - `resume-outputs/` — 5 个求职材料文件

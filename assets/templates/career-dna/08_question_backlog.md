@@ -14,14 +14,14 @@ v1.4.2 新增: Triggered By JD / Triggered By Role / Triggered By Company / Trig
 ### Q[N]: [问题内容]
 - **产生原因**：
 - **关联能力/文件**：
-- **关联 Track**：[如 QA Manager / Project Manager]
+- **关联 Track**：[如 [Track A] / [Track B]]
 - **关联 Gap**：[对应 Track 的 Known Gap]
 - **关联 Skill**：[直接关联的能力名称]
 - **关联 Hiring Intent**：[该问题关联哪类招聘意图]
 - **关联 Evidence**：[该问题关联哪类证据]
-- **Triggered By JD（触发JD v1.4.2）**: [YYYYMMDD-Company-Role，如 20260720-Tencent-pm]
-- **Triggered By Role（触发岗位 v1.4.2）**: [触发该问题的 Role，如 Implementation Consultant]
-- **Triggered By Company（触发公司 v1.4.2）**: [公司名，如 Tencent]
+- **Triggered By JD（触发JD v1.4.2）**: [YYYYMMDD-Company-Role，如 20260720-[某公司]-[role]]
+- **Triggered By Role（触发岗位 v1.4.2）**: [触发该问题的 Role，如 [某岗位名称]]
+- **Triggered By Company（触发公司 v1.4.2）**: [公司名，如 [某公司]]
 - **Triggered By Track（触发赛道 v1.4.2）**: [对应的 Career Track，如 Consultant]
 - **潜在影响 (Potential Impact)**：High / Medium / Low
 - **优先级**：High / Medium / Low
