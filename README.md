@@ -3,7 +3,7 @@
 > 把你的 AI 助手变成私人 Career Manager：以 **Career DNA（职业基因库）** 为唯一事实源，持续建设、管理、升级你的职业资产，而不是每次看到 JD 都从零重写简历。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-v2.1.2-green.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-v2.5.5-green.svg)](CHANGELOG.md)
 [![Cross-Agent](https://img.shields.io/badge/agent-agnostic-brightgreen.svg)](#跨平台兼容性)
 
 ---
@@ -88,7 +88,9 @@ v1.3 起职责收敛，v2.0 进一步扩展为清晰的四层，彻底分离「�
 - **证据强度（Evidence Strength）**：每条证据按 5 维度评分（Ownership / Scope / Impact / Recency / Relevance），总分映射到 Strength 0–5，决定它该写进**主简历**、放进**面试包**，还是仅作**内部参考**——杜绝「什么都敢往简历上写」。
 - **职业决策引擎（Career Decision Engine）**：用 Evidence Distance（D0–D4）、Role Authenticity（A–D）、Recruiter Risk Funnel 与 Decision Score，把「该不该投这个岗位」变成可解释的判断，而非拍脑袋。
 - **市场知识库（Knowledge Layer）**：Role Snapshot / Skill Snapshot 把 JD 里的市场信号沉淀为可复用行业情报，越投越准。
-- **在线职业档案派生**：从 Career DNA 自动生成 Boss / 猎聘等平台的在线简历文案（`11_online_profile.md`）。
+- **在线职业档案派生**：从 Career DNA 自动生成 Boss / 猎聘等平台的在线简历文案（`11_online_profile.md`）。v2.2 重构为严格映射 Boss 字段的「Boss 在线简历」，由 Profile Positioning Engine（Primary/Secondary/Adjacent Track + Universal Strengths）驱动；v2.3 接入可迁移能力层。
+- **可迁移能力映射（Transferable Capability Mapping，v2.3）**：在 Skill Graph 与 Role Snapshot 之间插入能力转换层（`04b_transferable_capabilities.md`），回答「同一个能力在不同岗位应如何不同表达」。新增 `transferable_capability_generation.md`（Source A 自发现 / Source B JD 反馈增强），配合 Expression Intent + Position Constraint，确保生成文案「该写什么、不该写什么」。
+- **职业身份重构（Career Identity Reframe，v2.5）**：`07_career_identity.md` 升级为 5 层 Identity-First 结构（Professional Identity / Career Positioning / Career Narrative / Capability Priority / Non-Positioning Statement），明确「起点经历是能力形成路径，不是身份」。Pipeline 新增 Identity Resolution 步骤锁定身份，配合 R01–R04 硬规则（07 为唯一身份来源、经历仅作证据、Experience Reframing 把原始岗位/动词重写为能力视角表达）。
 - **能力迁移翻译（Capability Translation）**：把你的经历映射到目标岗位要求，区分 Direct / Adjacent / Missing 三类，禁止编造不存在的匹配。
 - **岗位沟通产物生成（Outreach / Boss Greeting Generation）**：由匹配报告驱动的 JD 级即时沟通文案，不只是简历。核心是一套**决策 + 人味化**管线——
   - **打招呼目标（Greeting Objective）**：按岗位与匹配度选 Type A 建联 / Type B 证明价值 / Type C 化解顾虑 / Type D 激发好奇，不同目标对应不同结尾策略；
@@ -185,6 +187,8 @@ career-manager/
 │   ├── mode_c_review.md          # 模式 C 流程
 │   ├── mode_d_job_application.md # 模式 D 流程
 │   ├── mode_e_application_tracker.md # 模式 E 流程（投递追踪）
+│   ├── online_profile_generation.md # 在线档案生成（Profile Positioning Engine）
+│   ├── transferable_capability_generation.md # 可迁移能力生成（v2.3）
 │   ├── output_contracts.md       # 产物格式契约
 │   ├── question_backlog.md       # 待澄清问题库
 │   └── targeted_discovery.md     # 定向挖掘提问库
@@ -194,9 +198,10 @@ career-manager/
     │   ├── 02_timeline.md        #   职业发展轨迹
     │   ├── 03_projects.md        #   项目资产库
     │   ├── 04_skill_graph.md     #   能力图谱（Domain/Confidence/Evidence）
+    │   ├── 04b_transferable_capabilities.md # 可迁移能力映射（v2.3 派生资产）
     │   ├── 05_story_bank.md      #   面试故事库
     │   ├── 06_failure_story.md   #   失败案例库
-    │   ├── 07_career_identity.md #   职业身份库
+    │   ├── 07_career_identity.md #   职业身份库（v2.5 Identity-First 5 层）
     │   ├── 08_question_backlog.md#   待补充问题库
     │   ├── 09_completeness_report.md # 完整度报告
     │   ├── 10_career_tracks/     #   职业赛道库（每赛道一文件）
@@ -247,8 +252,12 @@ career-manager/
 
 ## 版本与更新
 
-完整变更记录见 [CHANGELOG.md](CHANGELOG.md)。当前版本 **v2.1.2**。近期重点：
+完整变更记录见 [CHANGELOG.md](CHANGELOG.md)。当前版本 **v2.5.5**。近期重点：
 
+- **v2.5.5**：全量 PII 脱敏（7 个模板/参考文件中的具体岗位名、公司名、领域术语替换为 `[XX]`/`[Track名称]` 占位符）+ 拼写修复。
+- **v2.5**：职业身份重构（v2.5）— `07_career_identity.md` 5 层 Identity-First 结构 + Identity Resolution + R01–R04 硬规则 + Experience Reframing（R04）。
+- **v2.3**：可迁移能力映射（Transferable Capability Mapping）— 新增 `04b_transferable_capabilities.md` 与 `transferable_capability_generation.md`，Online Profile 接入能力转换层。
+- **v2.2**：在线档案重构（Boss 在线简历 v2.2）— `11_online_profile.md` 严格映射 Boss 字段 + 新增 `online_profile_generation.md`（Profile Positioning Engine）。
 - **v2.1.2**：全量质量审计（40 文件，修复 17 处问题：架构命名、破损模板引用、编码损坏）。
 - **v2.1.1**：作品集模板重写（STAR+ → 真 Portfolio，As-Is/To-Be 流程）+ Potential Score 5 维排序。
 - **v2.1**：作品集发现与生成（Portfolio Discovery & Output）——新增 `12_portfolio_candidates.md` + `XX_portfolio.md`，Mode A/B/D 全链路联动。
