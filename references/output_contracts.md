@@ -11,10 +11,10 @@ Output Contracts 定义每个求职策略（Pack A/B/C/D）对应的文件产出
 | # | 文件 | 模板 | 数据来源 |
 |---|------|------|----------|
 | 1 | `01_jd_match_report.md` | 标准模板 | JD分析 + Capability Translation |
-| 2 | `02_resume_cn.md` | `02_resume_cn.md` | Career DNA + ATS Keywords |
-| 3 | `03_resume_en.md` | `03_resume_en.md` | Career DNA (English) |
-| 4 | `04_interview_pack.md` | 标准模板 | Expected Stories + High Risk Questions |
-| 5 | `05_answer_cards.md` | 标准模板 | Story Bank |
+| 2 | `02_resume_cn.md` | `02_resume_cn.md` | Resume Identity Lock(07) + Capability Mapping(04b) + JD Skills(Step 3.5) + Evidence(03) + Timeline(02) |
+| 3 | `03_resume_en.md` | `03_resume_en.md` | 同上 (English) |
+| 4 | `04_interview_pack.md` | 标准模板 | Narrative Alignment(07 Layer 3) + Capability Priority(04b) + Expected Stories + High Risk Questions |
+| 5 | `05_answer_cards.md` | 标准模板 | Narrative Alignment(07) + Story Bank(按 TC 筛选) |
 | 6 | `06_upgrade_plan.md` | 标准模板 | Known Gaps + Improvement Priorities |
 
 ### Pack B: Moderate Fit（中等匹配 — Match 60-79）
@@ -24,8 +24,8 @@ Output Contracts 定义每个求职策略（Pack A/B/C/D）对应的文件产出
 | 1 | `01_jd_match_report.md` | 标准模板 | 同 Pack A |
 | 2 | `02_resume_cn.md` | 标准模板 | 同 Pack A |
 | 3 | `03_resume_en.md` | 标准模板 | 同 Pack A |
-| 4 | `04_interview_pack.md` | 标准模板 | + Gap 相关问题 |
-| 5 | `05_answer_cards.md` | 标准模板 | 同 Pack A |
+| 4 | `04_interview_pack.md` | 标准模板 | Narrative Alignment(07) + Capability Priority(04b) + Gap 相关问题 |
+| 5 | `05_answer_cards.md` | 标准模板 | Narrative Alignment(07) + Story Bank(按 TC 筛选) |
 | 6 | `06_gap_analysis.md` | `XX_gap_analysis.md` | Capability Translation Missing + Skill Weight |
 | 7 | `07_upgrade_plan.md` | 标准模板 | + Gap Analysis 短期行动 |
 

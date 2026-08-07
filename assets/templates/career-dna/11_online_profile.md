@@ -1,23 +1,20 @@
-# Online Career Profile（在线职业档案 v2.5.4 Experience Reframing）
+# Online Career Profile（在线职业档案 v2.5.6 I→C→E Pipeline）
 
 <!--
-Online Career Profile — v2.5.3 Identity Resolution
+Online Career Profile — v2.5.6 I→C→E Pipeline
 可直接复制填写到 Boss 直聘「在线简历」的对应字段。
 
-由 Identity Resolution 自动推导生成，不直接维护。
+由 Identity→Capability→Evidence Pipeline 自动推导生成，不直接维护。
 来源：07_career_identity（唯一身份来源）/ 10_career_tracks / 04_skill_graph / 04b_transferable_capabilities（v2.3） / 03_projects / 12_portfolio_candidates
 
 派生逻辑：用户更新以上任一文件 → 系统自动重新推导此文件。
 
-v2.3.5 Capability-First 规则：
-1. 个人优势从 Capability 出发，经历作为证据。禁止以岗位标签开头。
-2. 工作经历每段标注 Capability Tag（TC 编号）。
-3. 项目经历每个案例标注展示的 Capability（Capability Showcase）。
-4. 去重：工作经历 vs 项目经历交集 → 仅保留在项目经历。
-5. 主动嵌入 Boss 搜索高频词：项目管理 / Scrum / 需求分析 / 流程优化 / 实施交付（按实际能力取 3-5 个）。
-6. 技能标签分两层：Capability Skills（TC Components） + Technical Skills（Skill Graph 工具/技术类）。
-v2.5.4 Experience Reframing：
-7. 工作经历中的角色名 = 能力视角角色，不是原始合同抬头。工作内容从「能力形成过程」视角书写。
+v2.5.6 I→C→E Pipeline 规则：
+1. 个人优势 = 能力摘要（非经历摘要）。结构：职业定位 → 核心能力 → 支撑证据。
+2. 工作经历 = 保留真实岗位 + 增加角色解释层（R08）。工作内容从能力形成视角书写（R06）。
+3. 每个职责段落必须映射 TC（R07）。无法映射 → 删除/合并/降级。
+4. Capability 密度 ≥ 70%（R09）。
+5. 固定推理链 Identity→Capability→Evidence，不可逆序（R10）。
 -->
 - **Last Generated（最近生成）**: [YYYY-MM-DD]
 - **Source Files Version**: 07=[填], 10=[填], 04=[填], 03=[填], 12=[填]
@@ -26,19 +23,21 @@ v2.5.4 Experience Reframing：
 
 ## 个人优势
 
-<!-- Capability-First v2.3.5 | ≤300 字 | 禁止以岗位标签开头 | 能力先于经历 -->
-<!-- 结构：Top Capability（3项）+ Personal Positioning + Evidence -->
+<!-- Capability-First v2.5.6 | ≤300 字 | 能力摘要（非经历摘要） -->
+<!-- 结构：职业定位 → 核心能力 → 支撑证据 -->
 
 [结构：
 
+[职业定位一句话]
+
 擅长：
-- [Capability Identity 1]：[简洁能力描述]
-- [Capability Identity 2]：[描述]
-- [Capability Identity 3]：[描述]
 
-[Personal Positioning 一句话]
+- [核心能力 A]：[描述]
+- [核心能力 B]：[描述]
+- [核心能力 C]：[描述]
 
-曾 [Evidence 1]，[Evidence 2]。
+代表案例：
+[关键证据 1]，[关键证据 2]。
 ]
 
 ---
@@ -46,6 +45,7 @@ v2.5.4 Experience Reframing：
 ## 工作经历
 
 <!-- Boss 字段：工作经历 → 每段经历对应一个公司/岗位 -->
+<!-- v2.5.6 R08 Role Interpretation：保留真实岗位 + 增加角色解释层 -->
 
 ### 公司名称
 [公司名]
@@ -53,21 +53,31 @@ v2.5.4 Experience Reframing：
 ### 所属行业
 [行业]
 
-### 部门
-[部门名]
-
 ### 职位名称
-[岗位]
+[原始岗位]
+<!-- ↑ 保留为事实。HR 阅读时优先关注下方「角色解释」 -->
+
+### 角色解释（R08）
+<!-- 该岗位在能力体系中承担的角色 -->
+
+- [能力维度 1]
+- [能力维度 2]
+- [能力维度 3]
+
+### 能力贡献（R07）
+<!-- 本段经历体现的 Capability，引用 04b TC 编号 -->
+
+TC001, TC002
 
 ### 在职时间
 [起止时间]
 
 ### 工作内容
-<!-- 规则：2-3 句职责小结 + 有序/无序列表（3-5 条）。每条为长期持续职责，不是一次性项目行动。 -->
-<!-- 禁止："负责..."开头 / 项目级一次性行动 -->
+<!-- R06+R07+R09：每条必须回答「形成了什么能力」，且必须映射 TC。能力描述占比 ≥ 70%。 -->
+<!-- 禁止："负责..."开头 / 项目级一次性行动 / 无法映射 TC 的流水账 -->
 <!-- 生成后去重检查：与项目经历每条行动做交集 → 重叠则从此处删除 -->
 
-[2-3 句小结。例如：
+[2-3 句能力小结。例如：
 负责 [业务范围]，覆盖 [关键词1]、[关键词2] 及 [关键词3]。
 管理 [团队范围 / 跨部门协作范围]，协调 [相关部门]，保障 [核心交付目标]。
 ]

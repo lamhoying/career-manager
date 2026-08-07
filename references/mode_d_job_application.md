@@ -1,4 +1,4 @@
-# Mode D: Job Application Mode（岗位投递模式 v1.6.3）
+# Mode D: Job Application Mode（岗位投递模式 v2.6.4）
 
 ## Trigger（触发条件）
 
@@ -16,7 +16,7 @@
 
 从 JD 关键词提取升级为 Talent Persona Inference（人才画像推理）。不仅分析 JD"要什么技能"，更要推理"要什么样的人、为什么招、怎样证明匹配"。
 
-## Talent Intelligence Pipeline（人才智能分析管线 v1.6.3）
+## Talent Intelligence Pipeline（人才智能分析管线 v2.6）
 
 ```
 JD
@@ -33,6 +33,9 @@ Step 3: Talent Persona Inference（人才画像推理）
 Step 4: Evidence Expectation Analysis（证据需求分析）
     └── 输出：Critical Evidence / Expected Stories / Expected Results
 ↓
+Step 4.5: Resume Identity Lock（简历身份锁定 v2.6 新增）
+    └── 强制读取 07 → 锁定职业身份 → 后续步骤以本步骤身份为唯一锚点
+↓
 Step 5: DNA Match Analysis（基因库匹配分析 v1.4.2）
     └── Persona Match(35%) + Evidence Match(35%) + Capability Match(30%)
 ↓
@@ -43,7 +46,13 @@ Step 6: Targeted Discovery（定向证据发现）
     └── 基于 Evidence Expectation + Match Gaps 定向追问
 ↓
 Step 7: Career DNA Update（职业资产回写）
-Step 8: Resume Package（求职材料包）
+Step 8: Capability-Driven Resume Generation（能力驱动简历生成 v2.6.4）
+    └── 07 Identity → 04b Capability → JD Skills → 03 Evidence → 02 Timeline
+    └── ATS 三层输出：Capability Interpretation → JD Mapping → ATS Evidence Output(E01-E04)
+    └── Step 9.1 Resume QA Layer(QA-1~QA-4) → 生成后自检 → 全部通过后才输出
+    └── Timeline 从主输入降级为辅助输入
+Step 8.12: Narrative Alignment（叙事对齐 v2.6.1）
+    └── 07 Career Narrative + 04b Capability Priority → JD 语境 → 叙事主线 + 面试身份框架
 Step 9: Knowledge Update（知识更新 → 沉淀 Talent Persona/Evidence Expectation 到 knowledge/）
 ```
 
@@ -252,11 +261,54 @@ Evidence Risks:
 
 ---
 
-## Step 5: DNA Match Analysis（基因库匹配分析）
+## Step 4.5: Resume Identity Lock（简历身份锁定 v2.6）
 
 ### 目标
 
-将 Talent Persona + Evidence Expectation 与 Career DNA 交叉比对，输出匹配度。v1.4 的匹配更精准——不是比技能列表，而是比画像+证据。
+在进入 DNA Match 和简历生成流程之前，从 `07_career_identity` 强制锁定职业身份。**后续所有步骤（Step 5-10）的简历生成必须以本步骤的身份为唯一锚点。**
+
+### 输入
+
+| 来源 | 提取内容 |
+|------|------|
+| `07_career_identity` Layer 1 | Professional Identity |
+| `07_career_identity` Layer 2 | Career Positioning（Primary） |
+| `07_career_identity` Layer 5 | Non-Positioning Statement |
+
+### 输出
+
+```yaml
+Resume Identity Lock:
+  职业身份: [07 Layer 2 Primary Positioning]
+  禁止表达: [07 Layer 5 全部条目]
+  身份来源: 07（禁止从 Timeline / 岗位历史推导）
+```
+
+### 硬约束
+
+- 简历中的「职业定位」「个人总结」「核心能力」必须以本步骤的身份为唯一来源
+- 禁止从 Timeline 的岗位频次推导职业身份
+- 禁止从 JD 反推「我应该是什么身份」
+- 07 Layer 5 中列出的原始岗位不得出现在简历的身份表达层（仅可作为事实信息在「公司·岗位」行出现）
+
+### Identity Lock vs Role Tailoring（v2.6）
+
+Resume Identity Lock 锁定的是「职业身份的核心名词」，不是简历上的每一个字：
+
+- **锁定**：Career Positioning 的核心词（如 "项目管理"、"交付驱动"）
+- **不锁定**：JD 适配的修饰语（如 "技术背景的" + JD 岗位名）
+- **不锁定**：「求职意向」行（直接填 JD 岗位名，不填 07 Positioning）
+- **不锁定**：经历描述中 JD 关键词的自然融入
+
+规则：身份核心名词来自 07，语境措辞来自 JD，经历证据来自 03/04b。三层各司其职。
+
+---
+
+## Step 5: DNA Match Analysis（基因库匹配分析 v2.6）
+
+### 目标
+
+将 Talent Persona + Evidence Expectation 与 Career DNA 交叉比对，输出匹配度。v2.6 输入新增 Step 4.5 Resume Identity Lock → 约束匹配解释方向（身份核心名词不可由 Timeline 覆盖）。
 
 ### 读取的数据源
 
@@ -512,9 +564,221 @@ Package（生成包）: Pack A / B / C / D
 
 ---
 
-## Step 9: Resume Package（求职材料包 v1.5.1）
+## Step 9: Capability-Driven Resume Generation（能力驱动简历生成 v2.6.4）
+
+### 生成顺序（不可逆）
+
+```
+Step 4.5: Resume Identity Lock
+    ↓ 确定职业身份（核心名词来自 07，不可变）
+Step 3.5: Skill Weight（JD 关键词提取）
+    ↓ 确定 JD 需要什么能力 + ATS 关键词
+04b → Capability Interpretation（v2.6.4 第一层）
+    ↓ 每条经历：原始岗位 → 角色解释 + 形成 TC + 关键证据
+04b + Evidence Distance D0-D4 → JD Mapping（v2.6.4 第二层）
+    ↓ JD 要求 ← TC ← 证据 ← D0-D4 距离 → 匹配写法方向
+03_projects
+    ↓ 按 04b TC 关联度筛选证据
+02_timeline
+    ↓ 补充时间线和公司信息（辅助输入，不驱动身份）
+ATS Evidence Output（v2.6.4 第三层）
+    ↓ 基于前两层中间产物 + E01-E04 检查 → 生成简历
+→ 生成简历
+```
+
+### Capability Mapping（v2.6 新增）
+
+JD 中的每项关键要求，必须映射到 04b 的 TC：
+
+| JD 要求 | 映射方式 | 结果 |
+|------|------|------|
+| [JD要求A] | → 找 04b 中匹配的 TC 编号 | TC001 → 在 03 中搜索 TC001 关联的案例作为证据 |
+| [JD要求B] | → 找 04b 中匹配的 TC 编号 | TC002 → 03 中 TC002 关联的案例覆盖多个原始岗位 |
+
+**不是**按 JD 关键词去 Timeline 中搜索岗位名匹配的经历，而是按 TC 编号去 03 的 TC 映射字段找证据。
+
+### Step 9.0: Per-Experience Engine Loop（逐经历重构循环 v2.7.1）
+
+对 Timeline 中的每条经历，不直接写入简历，而是依次执行以下循环。Reframing 在此循环中作为生成引擎而非事后检查。
+
+```
+对于每条经历：
+  1. Capability Interpretation
+     → 输出该经历的 角色解释 + 形成 TC + 关键证据
+  2. JD Mapping
+     → 输出 JD 要求 ← TC ← D距离 → 写法方向
+  3. 基于 JD Mapping 的「写法方向」生成该段简历文本
+     → Direct(D0-D1)：肯定语气
+     → Adjacent(D2-D3)：可迁移语气
+     → D4：跳过，不写入简历
+  4. E01-E04 单段检查 → 通过则追加到简历 → 不通过则重写该段
+```
+
+只有全部经历生成完毕且通过 E01-E04 后，进入 Step 9.1 Resume QA Layer。
+
+### Capability Interpretation（角色解释层 v2.6.4）
+
+**每段工作经历在放入 ATS 简历前，必须生成一个中间结构化产物：**
+
+```yaml
+Capability Interpretation:
+  原始岗位: [合同岗位名称]
+  公司: [公司名]
+  时间段: [YYYY.MM - YYYY.MM]
+  角色解释: [该岗位在能力体系中承担的角色 — 来自 R08 Role Interpretation]
+  形成能力:
+    - TC001: [该 TC 在此经历中的具体体现]
+    - TC002: [体现]
+  关键证据: [03 中该经历的量化结果摘录]
+```
+
+**规则**：
+- 角色解释 ≠ 原始岗位名，必须来自 04b 的能力语言
+- 形成能力必须能在 03 中找到对应 Evidence
+- 此层作为 JD Mapping 的输入，不直接进入简历
+
+### JD Mapping（JD 匹配映射层 v2.6.4）
+
+**对每个 Capability Interpretation，映射到 JD 要求 + Evidence Distance：**
+
+```yaml
+JD Mapping:
+  JD 要求: [JD 中的具体能力要求]
+  对应 TC: [TC001 / TC002]
+  证据距离: [D0 / D1 / D2 / D3 — 来自 Step 5.5 Evidence Distance Analysis]
+  匹配写法方向:
+    Direct(D0-D1): "已验证"
+    Adjacent(D2-D3): "可迁移"
+    Missing(D4): 不写入简历
+  JD 措辞映射: [JD 原文关键词列表 — 用于 ATS 关键词密度]
+```
+
+**规则**：
+- 每条 JD 要求至少映射一个 Capability Interpretation
+- D0-D1 直接用肯定语气（"主导/负责"）；D2 从可迁移角度写（"在 [原始场景] 中承担的 [角色] 职责，形成了可迁移至 [JD场景] 的 [能力]"）；D3 简化为辅助证据；D4 不出现在简历中
+- 此层输出作为 ATS Evidence Output 的生成指令
+
+### ATS Evidence Output（ATS 证据输出层 v2.6.4）
+
+基于 Capability Interpretation + JD Mapping 中间产物 + E01-E04 检查，生成 ATS 简历文本。
+
+**生成顺序**：
+1. 取 Capability Interpretation 的「角色解释」→ 作为工作内容的叙事视角
+2. 取 JD Mapping 的「匹配写法方向」→ 决定语气（已验证/可迁移）
+3. 取 JD Mapping 的「JD 措辞映射」→ 融入关键词密度
+4. E01-E04 检查 → 通过后输出
+
+### ATS Keyword Preservation（v2.6）
+
+Capability Mapping 与 ATS Keyword Extraction 是并行层，不替代：
+
+- **Step 3.5 Skill Weight** → 提取 JD 原始措辞 → 融入简历关键词密度（如 "[某关键词A]"、"[某关键词B]"、"[某关键词C]"）
+- **Step 4.5 → 04b TC 映射** → 决定证据选取 + 经历叙事方向（如 "TC001 对应案例3"）
+- 两者在简历中同时生效：TC 控制「选什么经历、怎么写」，JD 关键词控制「用什么词写」
+
+### ATS Reframing（v2.6.2 新增）
+
+**ATS Resume 的 Experience Reframing 与 Online Profile 是两种不同机制。**
+
+| 维度 | Profile Reframing | ATS Reframing |
+|------|------|------|
+| 目标 | 建立职业身份（Identity Construction） | 证明岗位匹配（Evidence Optimization） |
+| 输出 | 职业形象（Identity） | JD 证据（Evidence） |
+| 核心问题 | 我是谁 | 为什么录用我 |
+| 推理链 | Experience→Capability→Identity | Experience→Capability→JD |
+| 可抽象程度 | 高 | 中 |
+| 是否允许职业包装 | 可以（如 "跨组织协调推动者"） | 很少（必须有可追溯证据） |
+| 是否允许职责升级 | 不允许 | 不允许 |
+| 验证标准 | 市场定位是否成立 | 面试追问是否能回到原始事实 |
+
+**ATS Reframing Pipeline**：
+
+```
+Experience（原始事实）
+    ↓
+Capability（能力抽象 — 来自 04b TC）
+    ↓
+JD Mapping（JD 要求 → 对应 TC → 对应证据）
+    ↓
+Evidence（JD 语言 + 可追溯事实）
+```
+
+注意：ATS 推理链不到 Identity 层。不生成「职业形象」，只生成「能力证据」。
+
+#### Evidence Preservation Rules（E01-E04 v2.6.2）
+
+##### Rule E01 — Traceability（可追溯性）
+
+每一条 ATS 描述必须可追溯回 `02_timeline`、`03_projects`、`04_skill_graph`、`04b` 中的原始证据。
+
+- 通过：面试追问「请具体讲讲」→ 可回到真实经历
+- 不通过：追问后只能继续编 → FAIL
+
+##### Rule E02 — Perspective Not Authority（视角可改，级别不可改）
+
+Reframing 允许改变视角，不允许改变责任等级。
+
+- 允许：[原始岗位 A] → [能力视角角色名]（实际干过）
+- 不允许：[原始岗位 A] → [更高级别头衔]（级别变了）
+
+##### Rule E03 — Capability Not Authority Upgrade（能力可升级，权限不可升级）
+
+Reframing 允许能力抽象，不允许权限升级。
+
+- 允许：[某操作] → [某管理能力]（能力抽象）
+- 不允许：[参与讨论] → [决策负责人]（权限升级）
+
+##### Rule E04 — Interviewer Traceability（面试追溯性）
+
+所有 Reframing 后的描述必须能回答面试官追问：「请具体讲讲当时是怎么做的」。
+
+- 追问能回到真实经历 → PASS
+- 追问只能继续编 → FAIL
+
+### Resume Identity Lock（v2.6）
+
+```
+简历身份锁定规则：
+- 简历第一段「职业定位」= Step 4.5 的职业身份核心名词（来自 07）
+- 「求职意向」行 = JD 岗位名（不填 07 Positioning）
+- Timeline 中的原始岗位名称仅作为「公司·岗位」行的事实信息
+- 工作内容描述以 Capability Identity 关键词为主语
+- 任何从 Timeline 自动推断「我是XX岗位」的行为 → 阻断
+- 07 Layer 5 中列出的原始岗位不得出现在简历的身份表达层
+```
+
+### Step 9.1: Resume QA Layer（简历自检层 v2.7.1）
+
+简历生成后、输出前，执行四项检查。任一不通过 → 重写对应段落。
+
+#### QA-1: Identity Drift Check（身份漂移检查）
+
+检查简历中是否存在与 Step 4.5 Identity Resolution 冲突的表达。
+- Headline/第一段中是否出现 07 Layer 5 禁止表达 → 是则替换
+- 工作经历中是否从 Timeline 自动推断身份 → 是则重写
+
+#### QA-2: Capability Gap Check（能力缺失检查）
+
+检查 JD 要求的 Top 3 关键能力是否在简历中有对应证据。
+- 缺失 → 标记 `[缺证据]`，不编造
+
+#### QA-3: D3 Over-Packaging Check（D3 过度包装检查）
+
+检查 D3 级别的 Adjacent Match 在简历中的表达是否超过「可迁移」语气。
+- 出现「主导/负责」等 Direct 语气 → 降级为「参与/协助」
+
+#### QA-4: Identity Regression Check（身份回退检查）
+
+检查简历尾部是否退化成原始岗位叙事。
+- 最后一段工作经历如回到「负责 [某操作]」流水账 → 重写为能力视角
+
+### Pack 策略（v2.6 更新）
 
 按 Step 7 的策略决定生成哪套文件。详细产出合约见 `references/output_contracts.md`。
+
+**v2.7.1**：简历生成前，先读取对应 Track 的 Strategy 文件（`career-dna/10_career_tracks/{track}_strategy.md`），使用其中 Recommended Positioning / Top Stories / Self-Intro Script 作为生成指令。
+
+**所有 Pack 中的简历生成，必须先执行 Step 4.5 Resume Identity Lock。简历中的「职业定位」段统一来自 07，不由 JD 或 Timeline 自动推导。**
 
 ### Pack A: Strong Fit — 投递包（Match ≥ 80）
 
@@ -767,6 +1031,50 @@ Why Alternative:
 ### 输出
 
 写入 `07_boss_greeting.md` 完整文件。
+
+---
+
+## Step 8.12: Narrative Alignment（叙事对齐 v2.6.1）
+
+### 目标
+
+在生成面试和回答材料之前，将 `07_career_identity` Career Narrative + `04b` Capability Priority 对齐到 JD 语境。
+
+### 输入
+
+| 来源 | 内容 |
+|------|------|
+| Step 4.5 Resume Identity Lock | 职业身份 + 禁止表达 |
+| `07_career_identity` Layer 3 | Career Narrative（核心叙事） |
+| `07_career_identity` Layer 4 | Capability Priority（Tier A/B/C） |
+| Step 2 Hiring Intent + Step 3 Talent Persona | JD 需要什么样的人 |
+
+### 输出
+
+```yaml
+Narrative Alignment:
+  核心叙事: [07 Layer 3]
+  JD 适配角度: [JD 需要什么角度]
+  叙事主线: [07 核心叙事 + JD 适配 — 一句话]
+  Tier A Stories: [按 Narrative Strength 排序的 Story Bank 条目]
+  面试身份框架: [07 Professional Identity 的一句话变体 — 适配 JD 语境]
+
+Narrative Strength（叙事强度 v2.7.1）:
+  评估维度:
+    - Problem-Solution Arc: 是否有清晰的问题→解决→结果线（0-5）
+    - Memorability: 是否能让面试官记住（0-5）
+    - STAR Completeness: Situation/Task/Action/Result 完整度（0-5）
+    - Identity Alignment: 是否强化 07 Career Narrative（0-5）
+  总分: [0-20]
+  用途: 面试故事排序（Interview Pack + Answer Cards）
+```
+
+### 规则
+
+- Narrative Mapping → 写入 `01_jd_match_report.md` Part 8.3
+- Tier A Stories → 按 Narrative Strength 总分排序（非 TC 优先级），应用于 `04_interview_pack.md`
+- 面试身份框架 → 应用于 `05_answer_cards.md` 的回答框架
+- Step 9 简历生成前必须先完成本步骤
 
 ---
 

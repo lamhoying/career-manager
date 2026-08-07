@@ -18,7 +18,8 @@
 ### Step 1: 读取 Career DNA
 
 读取以下核心文件：
-- `career-dna/07_career_identity.md` — 职业身份
+- `career-dna/07_career_identity.md` — 职业身份（5 层结构）
+- `career-dna/04b_transferable_capabilities.md` — 可迁移能力
 - `career-dna/10_career_tracks/` — 职业方向
 - `career-dna/04_skill_graph.md` — 能力图谱
 - `career-dna/02_timeline.md` — 职业轨迹
@@ -26,11 +27,10 @@
 
 ### Step 2: 分析职业身份（Career Identity Analysis）
 
-基于 Career Identity 文件分析：
-- **当前定位**：用户目前的职业身份是什么
-- **核心标签**：哪些标签最能代表用户
-- **核心竞争力**：排名前 3 的竞争力及其证据强度
-- **差异化优势**：相比同级别从业者的独特之处
+基于 Career Identity 5 层结构分析：
+- **当前定位**：07 Layer 1 Professional Identity + Layer 2 Career Positioning
+- **非定位声明**：07 Layer 5 — 哪些经历属于来源而非定位
+- **核心能力体系**：基于 04b + 07 Layer 4 Capability Priority（Tier A/B/C）
 
 ### Step 3: 分析职业方向（Career Track Analysis）
 
@@ -72,6 +72,57 @@ Career DNA 现有能力
 **长期（6-12个月）**：
 - 需要深度积累的能力
 - 建议的实践机会
+
+### Step 6: Market Signal Review（市场信号回顾 v2.7）
+
+可选步骤。当 `application-tracker/` 中有投递记录时，结合 07 做方向校准。
+
+**输入**：
+
+| 来源 | 内容 |
+|------|------|
+| `application-tracker/01_application_index.md` | 投递记录 + 面试结果 |
+| `07_career_identity` Layer 2 | Career Positioning |
+| `10_career_tracks/` | 各 Track Confidence |
+
+**分析维度**：
+
+| 维度 | 说明 |
+|------|------|
+| **市场验证率** | 按 Track 统计面试率 → 哪些 Track 市场验证强 |
+| **定位偏离检查** | 如果某个 Track 面试率高但 07 未将其列为主/次定位 → 检查是否需要更新 Career Positioning |
+| **叙事效果** | 面试反馈中是否有关于「你是什么样的人」的信号 |
+
+**输出**：分析报告（不自动修改 07，仅建议）。
+
+### Step 7: Track Strategy Generation（赛道策略生成 v2.7.1）
+
+基于 Career Identity + Capability Resolution + Track Confidence，为每个 Primary/Secondary Track 生成策略文件。
+
+#### 输入
+
+| 来源 | 内容 |
+|------|------|
+| `07_career_identity` | Career Positioning + Career Narrative |
+| `04b_transferable_capabilities` | Capability Identity + Evidence |
+| `10_career_tracks/{track}.md` | Track Confidence + Known Gaps |
+
+#### 输出：每个 Track 生成策略卡片
+
+```yaml
+Track Strategy: [Track名称]
+  Recommended Positioning: [针对此 Track 的定位变体]
+  Top 3 Stories: [按 Narrative Strength 排序]
+  Gap Mitigation: [此 Track 的缺口应对策略]
+  Self-Intro Script: [30秒自我介绍框架]
+  Project Priority: [针对此 Track 的项目展示顺序]
+```
+
+#### 规则
+
+- 策略文件存储在 `career-dna/10_career_tracks/{track}_strategy.md`
+- Mode D 投递时，先读取对应 Track 的 Strategy，再生成简历
+- Mode A/B 更新 DNA 后 → 触发策略重新生成
 
 ## Outputs（产物）
 

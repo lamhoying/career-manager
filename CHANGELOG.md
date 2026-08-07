@@ -1,5 +1,282 @@
 # CHANGELOG
 
+## v2.7.1 — 2026-08-07
+
+### P0-P3 全面升级（v2.7.1）
+
+#### P0：Resume QA Layer + PII 清理
+
+- **Step 9.1 Resume QA Layer**：QA-1 身份漂移 / QA-2 能力缺失 / QA-3 D3 过度包装 / QA-4 身份回退
+- PII 残留清理：transferable_capability_generation L76 / 01_jd_match_report Evidence Distance 表 / mode_d ATS Keyword 示例
+- 11_online_profile 工作经历视觉层级标注
+
+#### P1：Reframing Gate→Engine
+
+- **Step 9.0 Per-Experience Engine Loop**：逐经历重构循环（Capability Interpretation → JD Mapping → 生成 → E01-E04），替代全文生成后整体检查
+
+#### P2：Evidence/Narrative Strength 分离
+
+- **Step 8.12 Narrative Strength**：Problem-Solution Arc / Memorability / STAR Completeness / Identity Alignment（0-20 总分）
+- 05_story_bank 追加 Narrative Strength 字段
+- 04_interview_pack + 05_answer_cards 故事选用规则更新
+
+#### P3：Track Strategy Engine
+
+- **Mode C Step 7 Track Strategy Generation**：每个 Track 生成策略卡片
+- Mode D Step 9 简历生成前置读取 Track Strategy
+- career_track 模板追加 strategy 字段引用
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `references/mode_d_job_application.md` | QA Layer + Engine Loop + Narrative Strength + PII + Pipeline + Track Strategy |
+| `references/transferable_capability_generation.md` | L76 脱敏 |
+| `assets/templates/resume-outputs/01_jd_match_report.md` | Evidence Distance 表脱敏 |
+| `assets/templates/career-dna/11_online_profile.md` | 工作经历视觉层级 |
+| `assets/templates/career-dna/05_story_bank.md` | Narrative Strength 字段 |
+| `assets/templates/resume-outputs/04_interview_pack.md` | 故事选用规则更新 |
+| `assets/templates/resume-outputs/05_answer_cards.md` | 回答卡片规则更新 |
+| `references/mode_c_review.md` | Track Strategy Generation |
+| `assets/templates/career_track.md` | strategy 字段引用 |
+
+---
+
+## v2.7 — 2026-08-07
+
+### P1-P4 全面升级：规则合并 + Mode B/C/E 同步 + 叙事补齐（v2.7）
+
+#### P3 规则合并（14→7 条）
+
+- R02+R03 合并为 **R02 Identity Derivation Prohibition**
+- R04+R08 合并为 **R03 Role Interpretation**
+- R05+R06 合并为 **R04 Capability-First Experience Writing**
+- R06/R07/R08/R09/R10 → 重新编号为 R05/R06/R07
+
+#### P1 Mode B/C 同步 07/04b
+
+- Mode B：Step 1 追加 04b；Step 3 字段名更新为 5 层结构；Step 5 新增 Profile Regeneration 触发
+- Mode C：Step 1 追加 04b；Step 2 分析框架更新为 07 5 层结构
+
+#### P2 Gap Analysis + Upgrade Plan 叙事对齐
+
+- XX_gap_analysis.md：注入 07 Career Narrative 上下文
+- 06_upgrade_plan.md：注释 + 字段追加
+
+#### P4 Mode C Market Signal Review
+
+- 新增 Step 6：投递记录 → 市场验证率 + 定位偏离检查 + 叙事效果分析
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `references/online_profile_generation.md` | 规则合并 14→7 + Pipeline 引用更新 |
+| `references/mode_b_update.md` | 04b 追加 + 5层字段 + Profile Regeneration |
+| `references/mode_c_review.md` | 04b 追加 + 5层分析 + Step 6 Market Signal Review |
+| `assets/templates/resume-outputs/XX_gap_analysis.md` | 叙事对齐注释 |
+| `assets/templates/resume-outputs/06_upgrade_plan.md` | 叙事对齐注释 |
+
+---
+
+## v2.6.4 — 2026-08-07
+
+### ATS 三层输出结构层 + 系统全面评估（v2.6.4）
+
+将 ATS 简历生成从「事实→重写」一步升级为「Capability Interpretation → JD Mapping → ATS Evidence Output」三层显式结构。
+
+### 核心变化
+
+- **Capability Interpretation（第一层）**：每条经历 → 结构化角色解释 + 形成 TC + 关键证据
+- **JD Mapping（第二层）**：每条匹配 → JD 要求 ← TC ← 证据 ← D0-D4 距离 → 匹配写法方向（已验证/可迁移）
+- **ATS Evidence Output（第三层）**：基于前两层 + E01-E04 检查 → 生成简历文本
+- Adjacent Match(D2-D3) 写法从「已验证」改为「可迁移」角度
+
+### 三层结构
+
+```
+Fact → Capability Interpretation → JD Mapping → ATS Evidence Output(E01-E04) → Resume
+```
+
+### 系统评估摘要
+
+| 维度 | 评分 |
+|------|:--:|
+| 架构完整度 | 7.5/10 |
+| 规则覆盖率 | 9/10 |
+| 推理链闭环 | 8.5/10 |
+| ATS 质量 | 8/10（v2.6.4 预计 +1） |
+| Online Profile 质量 | 9/10 |
+| 泛化能力 | 9/10 |
+| 维护成本 | 7/10（规则密度近临界，下一阶段应合并） |
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `references/mode_d_job_application.md` | Step 9 三层定义 + Pipeline 图更新 |
+| `assets/templates/resume-outputs/02_resume_cn.md` | 工作经历模板追加三层标记 |
+| `assets/templates/resume-outputs/03_resume_en.md` | 同上 |
+
+---
+
+## v2.6.3 — 2026-08-07
+
+### ATS Reframing E01-E04 接入 Pipeline（v2.6.3）
+
+v2.6.2 定义了 E01-E04 规则但 Pipeline 图未显式调用。本版将 E01-E04 作为 Step 9 生成简历前的强制检查节点接入 Pipeline。
+
+### 核心变化
+
+- **Step 9 生成顺序图**：在「生成简历」前插入 ATS Reframing(E01-E04) 验证节点
+- **文件顶部 Pipeline 总图**：Step 8 标注 `ATS Reframing(E01-E04) → Resume`
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `references/mode_d_job_application.md` | Pipeline 总图 + Step 9 生成顺序图接入 E01-E04 |
+
+---
+
+## v2.6.2 — 2026-08-07
+
+### Experience Reframing 拆分 + ATS Evidence Preservation Rules（v2.6.2）
+
+将 Experience Reframing 拆分为 Profile Reframing（Online Profile）和 ATS Reframing（ATS Resume）两种独立机制，并新增 E01-E04 证据保全规则防止 ATS 简历过度包装。
+
+### 核心变化
+
+- **R06 重命名 → Profile Reframing**：明确仅适用于 Online Profile（Identity Construction，高抽象允许）
+- **ATS Reframing 新增**：推理链 = Experience→Capability→JD→Evidence（不到 Identity 层）
+- **E01-E04 Evidence Preservation Rules**：
+  - E01 Traceability：每条 ATS 描述必须可追溯回原始证据
+  - E02 Perspective Not Authority：视角可改，级别不可改
+  - E03 Capability Not Authority Upgrade：能力可升级，权限不可升级
+  - E04 Interviewer Traceability：面试追问必须能回到真实经历
+
+### 两种机制对比
+
+| | Profile Reframing | ATS Reframing |
+|------|------|------|
+| 推理链终点 | Identity | Evidence |
+| 高抽象 | 允许 | 需可追溯 |
+| 文件位置 | online_profile_generation.md R06 | mode_d_job_application.md Step 9 |
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `references/online_profile_generation.md` | R06 重命名 + 边界明确 |
+| `references/mode_d_job_application.md` | Step 9 新增 ATS Reframing + E01-E04 |
+| `assets/templates/resume-outputs/02_resume_cn.md` | ATS Reframing 边界注释 |
+| `assets/templates/resume-outputs/03_resume_en.md` | ATS Reframing 边界注释 |
+
+---
+
+## v2.6.1 — 2026-08-06
+
+### Narrative Alignment + Story/Answer 材料接入 07+04b（v2.6.1）
+
+v2.6 解决了 ATS 简历的身份锁定，但面试故事、叙事主线、回答框架仍绕过 07。本版将 07 Career Narrative + 04b Capability Priority 注入所有面试材料。
+
+### 核心变化
+
+- **01_jd_match_report.md Part 8.3**：Narrative Mapping 从 JD 驱动 → 07 核心叙事 + JD 适配角度驱动
+- **04_interview_pack.md**：故事选用按 04b TC 优先级排序（Tier A → B → C），每个问题关联 TC
+- **05_answer_cards.md**：回答框架注入 07 Professional Identity + TC 标签
+- **Step 8.12 Narrative Alignment**：新增前置步骤 — 07 + 04b → JD 语境 → 叙事主线+Tier A Stories+面试身份框架
+
+### Pipeline 追加
+
+```
+Step 8.12: Narrative Alignment ★ 新增（面试材料生成前）
+```
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `assets/templates/resume-outputs/01_jd_match_report.md` | Part 8.3 Narrative Mapping 升级 |
+| `assets/templates/resume-outputs/04_interview_pack.md` | 故事选用规则 + TC 关联 |
+| `assets/templates/resume-outputs/05_answer_cards.md` | 回答框架 + TC 标签 |
+| `references/mode_d_job_application.md` | Step 8.12 Narrative Alignment 新增 |
+| `references/output_contracts.md` | 面试材料数据来源更新 |
+
+---
+
+## v2.6 — 2026-08-06
+
+### Mode D 集成 07 + 04b：Resume Identity Lock + Capability Mapping（v2.6）
+
+Mode D 的简历生成此前完全绕过 07——Timeline 作为主输入驱动身份推导。本版将 07 和 04b 作为第一优先级输入插入 Mode D 管线。
+
+### 核心变化
+
+- **Step 4.5 Resume Identity Lock**：在 DNA Match 之前，从 07 强制锁定职业身份。身份核心名词来自 07（不可变），语境措辞来自 JD（可适配）
+- **Step 9 Capability-Driven Resume Generation**：生成顺序从 `JD Keywords → Timeline → Resume` 变为 `07 Identity → 04b Capability → JD Skills → 03 Evidence → 02 Timeline → Resume`
+- **Capability Mapping**：JD 要求 → 04b TC 编号 → 03 TC 映射找证据（不是按关键词在 Timeline 中搜索岗位名）
+- **ATS Keyword Preservation**：Capability Mapping 与 JD 关键词提取是并行层——TC 控制「选什么经历、怎么写」，JD 关键词控制「用什么词写」
+- **Identity Lock vs Role Tailoring**：「求职意向」= JD 岗位名、「身份核心名词」= 07、「语境措辞」= JD 适配
+
+### Pipeline 变化
+
+```
+Step 4.5: Resume Identity Lock  ★ 新增
+Step 9:   Capability-Driven Resume Generation  ★ 从 Resume Package 升级
+```
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `references/mode_d_job_application.md` | Step 4.5 新增 + Step 9 重构 + Capability Mapping + ATS Keyword + Identity Lock 规则 |
+| `references/output_contracts.md` | 简历数据来源更新（07 + 04b + JD Skills + 03 + 02） |
+| `assets/templates/resume-outputs/02_resume_cn.md` | 职业定位注释更新（07 替代 Track） |
+| `assets/templates/resume-outputs/03_resume_en.md` | Data sources 更新（07 + 04b 替代 Track） |
+
+### 未改
+
+07 / 04b / 03 / online_profile_generation.md — 已定型
+
+---
+
+## v2.5.6 — 2026-08-06
+
+### Identity → Capability → Evidence Pipeline + R05-R10（v2.5.6）
+
+从 v2.5.1-v2.5.4 逐版修补 Identity Resolution 和 Experience Reframing 后，本版完成最后一环：**固定推理链 + Capability Resolution 中枢层**。
+
+### 核心变化
+
+- Pipeline 新增 **Step 0.3 Capability Resolution**（能力解析中枢层）+ **Step 0.7 Evidence Retrieval**（TC 驱动的证据检索）
+- 新增 **R05 Capability Hierarchy**：Profile 优先展示能力，经历只能作为能力证据
+- 新增 **R06 Experience Reframing**（覆盖 R04 工作内容部分）：经历必须回答能力形成三问
+- 新增 **R07 Capability Evidence Rule**：每个职责段落必须映射 TC，无关内容→删除/合并/降级
+- 新增 **R08 Role Interpretation**：保留真实岗位 + 增加角色解释层，禁止修改事实
+- 新增 **R09 Capability Density**：能力描述占比 ≥ 70%，流水账超 30% → 判定失败
+- 新增 **R10 I→C→E Pipeline**：固定推理链 Identity→Capability→Evidence，不可逆序
+
+### Pipeline 完整结构
+
+```
+Step 0:   Identity Resolution
+Step 0.3: Capability Resolution  ★ 新增
+Step 0.5: Experience Reframing
+Step 0.7: Evidence Retrieval     ★ 新增
+Step 1-6: 原有流程
+```
+
+### 文件变更
+
+| 文件 | 变更 |
+|------|------|
+| `references/online_profile_generation.md` | R05-R10 新增 + Step 0.3/0.7 + 推理链升级 |
+| `references/mode_a_build.md` | Pipeline 表 + 规则更新 |
+| `assets/templates/career-dna/11_online_profile.md` | 个人优势/工作经历模板重构 + 注释升级 |
+
+---
+
 ## v2.5.5 — 2026-08-05
 
 ### 全量 PII 脱敏 + 拼写修复（v2.5.5）

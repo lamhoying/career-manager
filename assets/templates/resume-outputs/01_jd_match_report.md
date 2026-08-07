@@ -141,7 +141,7 @@ Part 8: Recommended Strategy（推荐策略）
 | 级别 | 等级含义 | 定义 | 示例 |
 |------|------|------|------|
 | **D0** | Strong Direct（强力直接证据） | 完全同岗位 | Delivery Lead → Delivery Lead |
-| **D1** | Functional Equivalent（职能等同） | 同职责 / 不同岗位 | Senior Analyst → Sprint 管理 |
+| **D1** | Functional Equivalent（职能等同） | 同职责 / 不同岗位 | [来源岗位A] → [目标职能B] |
 | **D2** | Transferable Evidence（可转移证据） | 同能力域 / 不同场景 | 制造业流程建设 → 敏捷教练 |
 | **D3** | Inferential Evidence（推理证据） | 需解释的映射 | 数据分析 → 数据方案落地 |
 | **D4** | No Evidence（无证据） | 无可信映射 | ERP 系统 → CRM 项目 |
@@ -152,7 +152,7 @@ Part 8: Recommended Strategy（推荐策略）
 
 | JD 能力 | DNA 证据 | Distance | Strength | 说明 |
 |---------|----------|:--:|:--:|------|
-| Sprint 管理 | 多团队沟通机制 | D1 | 5 | 主导+多项目验证+高相关 |
+| [某能力] | 多团队沟通机制 | D1 | 5 | 主导+多项目验证+高相关 |
 | 跨团队协调 | 跨部门协调实战 | D1 | 5 | 跨团队+量化结果 |
 | 流程优化 | 传统团队流程改造 | D2 | 4 | 语境不同但方法可迁移 |
 | 数据方案 | 数据分析项目 | D3 | 4 | 有实践，非 ToB 落地 |
@@ -324,8 +324,20 @@ Part 8: Recommended Strategy（推荐策略）
 | [能力X] | 25% | High | Low | P0 |
 | [能力Y] | 10% | Low | High | P2 |
 
-### 8.3 Narrative Mapping（叙事映射）
-[一句话：用什么样的故事主线来包装这次投递]
+### 8.3 Narrative Mapping（叙事映射 v2.6.1）
+
+<!-- 叙事主线 = 07 Career Narrative + JD 适配角度 -->
+
+**我的核心叙事**（来自 `07_career_identity` Layer 3 Career Narrative）：
+[07 的核心职业叙事，如 "[状态A] → [状态B]" + 价值主张]
+
+**JD 适配角度**（来自 Step 2 Hiring Intent + Step 3 Talent Persona）：
+[JD 需要什么样的人，用什么角度切入]
+
+**叙事主线**：
+[一句话：将 07 核心叙事与 JD 适配角度结合的故事主线]
+
+> 逻辑：我的核心叙事是「从 [起点] 到 [能力]」，JD 需要 [某特质] 的人，因此叙事主线为：「我是一个通过 [核心能力] 推动 [JD需要的结果] 的人」
 
 ### 8.4 Key Projects & Stories（推荐项目与故事）
 

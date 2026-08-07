@@ -98,4 +98,13 @@ v1.4.2 新增: Track Confidence Breakdown（三分量分解）/ Market Validatio
 - **Secondary Track（副赛道）**: [Track Name] — Confidence: [XX]
 - **Supporting Track（支持赛道）**: [Track Name] — Confidence: [XX]
 
+## Track Strategy（赛道策略 v2.7.1）
+
+<!-- 由 Mode C Step 7 Track Strategy Generation 自动生成 -->
+<!-- 存储于 career-dna/10_career_tracks/{track}_strategy.md -->
+<!-- 包含：Recommended Positioning / Top Stories / Self-Intro / Project Priority -->
+
+- **Strategy File**: `{track_name}_strategy.md`
+- **Last Generated**: [YYYY-MM-DD]
+
 > 系统自动按 Confidence 排序。Primary 用于 Boss 标题；Secondary/Supporting 补充展示。

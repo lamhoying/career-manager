@@ -11,7 +11,12 @@
 -->
 
 ## 职业定位 (Professional Positioning)
-<!-- 引用 career-dna/10_career_tracks/{track}.md 的 Positioning 字段 -->
+<!-- 引用 career-dna/07_career_identity.md Layer 2 Career Positioning（Primary） -->
+<!-- v2.6: 职业身份来源 = 07，不由 Track 或 JD 推导。语境措辞可适配 JD。 -->
+<!-- v2.6.2 ATS Reframing 边界（E01-E04）：
+     Reframing 允许：能力抽象 + JD 语言润色 + 视角调整
+     Reframing 禁止：职责升级 + 权限升级 + 无证据包装
+     所有描述必须可追溯至 02/03/04/04b 原始证据 -->
 [一句话职业定位]
 
 ## 基本信息
@@ -30,9 +35,15 @@
 
 ## 工作经历
 
-### [公司名] | [岗位] | [起止时间]
+<!-- v2.6.4 三层输出结构：
+第一层 Capability Interpretation → 角色解释
+第二层 JD Mapping → 匹配方向 + JD 措辞
+第三层 ATS Evidence Output → 以下简历文本 -->
 
-[1-2句话公司简介]
+### [公司名] | [原始岗位] | [起止时间]
+
+**角色**：[能力视角角色名 — Capability Interpretation]
+**JD 匹配**：[D0/D1/D2 — JD Mapping — 已验证/可迁移][1-2句话公司简介]
 
 - [动词] + [做了什么] + [量化结果]
 - [动词] + [做了什么] + [量化结果]

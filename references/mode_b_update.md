@@ -25,7 +25,8 @@
 - `career-dna/03_projects.md` — 现有项目列表
 - `career-dna/04_skill_graph.md` — 现有能力图谱
 - `career-dna/05_story_bank.md` — 现有故事库
-- `career-dna/07_career_identity.md` — 现有职业身份
+- `career-dna/07_career_identity.md` — 现有职业身份（5 层结构）
+- `career-dna/04b_transferable_capabilities.md` — 现有可迁移能力
 - `career-dna/10_career_tracks/` — 现有职业方向
 - `career-dna/08_question_backlog.md` — 待回答问题列表
 
@@ -35,8 +36,8 @@
 
 | 用户输入 | 需要更新的文件 |
 |----------|----------------|
-| 新工作/新岗位 | 02_timeline.md, 03_projects.md, 04_skill_graph.md |
-| 新项目 | 03_projects.md, 04_skill_graph.md, 05_story_bank.md |
+| 新工作/新岗位 | 02_timeline.md, 03_projects.md, 04_skill_graph.md, 04b_transferable_capabilities.md |
+| 新项目 | 03_projects.md, 04_skill_graph.md, 04b_transferable_capabilities.md, 05_story_bank.md |
 | 管理经验 | 04_skill_graph.md, 05_story_bank.md, 07_career_identity.md |
 | 新技能 | 04_skill_graph.md |
 | 回答 Backlog 问题 | 对应文件 + 08_question_backlog.md |
@@ -61,8 +62,12 @@
 - 标注适用面试问题和风险提示
 
 **Career Identity（职业身份）**：
-- 如新信息显著改变了职业定位，更新 `07_career_identity.md`
-- 更新职业标签、核心竞争力、差异化优势
+- 检查新信息是否影响 07 的 5 层结构（Professional Identity / Career Positioning / Career Narrative / Capability Priority / Non-Positioning Statement）
+- Layer 4 Capability Priority 如有变化 → 同步更新
+
+**04b Transferable Capabilities**：
+- 新项目/经历如形成新的可迁移能力 → 追加 Capability Identity
+- 已有 Capability 如有新证据 → 更新 Evidence 字段
 
 **Career Tracks（职业方向）**：
 - 如新能力/经历影响了职业方向匹配度，更新 `10_career_tracks/{track}.md`
@@ -86,6 +91,10 @@ python3 scripts/completeness_checker.py [career-dna目录路径]
 - 更新信息缺口列表
 - 更新建议补充项
 - 更新生成时间
+
+### Step 5: 触发 Profile Regeneration（v2.7 新增）
+
+更新完成后，如 `07_career_identity` / `04b_transferable_capabilities` / `03_projects` 任一文件变化 → 触发 `references/online_profile_generation.md` Pipeline 重新生成 `11_online_profile.md`。
 
 ### Step 4.5: 刷新派生资产（Derived Asset Refresh v1.5 + v2.1）
 

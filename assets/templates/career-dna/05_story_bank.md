@@ -30,3 +30,11 @@
 - **可验证性（Verifiability）**: 高 / 中 / 低
 - **场景适配度（Scenario Fit）**: 高 / 中 / 低
 - **强度等级（Strength）**: 5 / 4 / 3 / 2 / 1
+
+### Narrative Strength（叙事强度 v2.7.1）
+<!-- 用于面试故事排序，与 Evidence Strength 互补 -->
+- **Problem-Solution Arc**: 问题→解决→结果线清晰度（0-5）
+- **Memorability**: 面试官记住的可能性（0-5）
+- **STAR Completeness**: STAR 完整度（0-5）
+- **Identity Alignment**: 强化 07 Career Narrative 的程度（0-5）
+- **总分**: [0-20]

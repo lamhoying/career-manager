@@ -234,22 +234,28 @@ python3 scripts/completeness_checker.py [career-dna目录路径]
 
 **推理链**：Career DNA → Profile Positioning Engine → Universal Strengths → Online Career Profile
 
-**Online Profile Generation Pipeline**（v2.5.4，R01-R04 强制规则 + Identity Resolution + Experience Reframing）：
+**Online Profile Generation Pipeline**（v2.5.6，R01-R10 强制规则 + Identity→Capability→Evidence）：
 
 | 步骤 | 操作 | 输入 | 输出 |
 |------|------|------|------|
-| 0 | Identity Resolution | `07_career_identity` Layer 1,2,5 | 职业身份 + 禁止表达 + 锚点来源 |
-| 0.5 | Experience Reframing | Step 0 + `03_projects` TC 映射 + `04b_transferable_capabilities` | Reframed Experience（能力视角） |
-| 1 | Identity Anchor | Step 0 + Step 0.5 + `07_career_identity` Layer 3 | 身份锚点 + 市场定位 + 价值主张 |
+| 0 | Identity Resolution | `07_career_identity` Layer 1,2,5 | 职业身份 + 禁止表达 |
+| 0.3 | Capability Resolution | Step 0 + `07_career_identity` Layer4 + `04b_transferable_capabilities` | 核心能力体系（Core Value Proposition） |
+| 0.5 | Experience Reframing | Step 0 + 0.3 + `03_projects` TC 映射 + `04b` | Reframed Experience（能力视角） |
+| 0.7 | Evidence Retrieval | Step 0.3 + `03_projects` + `02_timeline` | 按 TC 关联度筛选后的证据列表 |
+| 1 | Identity Anchor | Step 0 + 0.3 + 0.5 + 0.7 + `07_career_identity` Layer 3 | 身份锚点 + 市场定位 + 价值主张 |
 | 2 | Capability Priority | `07_career_identity` Layer 4 + `04b_transferable_capabilities` | Tier A/B/C 排序后的 TC |
 | 3 | TC Selection | Step 2 输出 | Tier A TCs（优先） |
 | 4 | Evidence Filtering | Step 3 输出 + `03_projects`（含 TC 映射） | 筛选后的案例列表 |
-| 5 | 生成个人优势 | Step 0 + 0.5 + 1 + 3 + 4 + R01-R04 规则 | ≤300 字 Capability Summary |
+| 5 | 生成个人优势 | Step 0–4 + R01-R10 规则 | ≤300 字能力摘要（非经历摘要） |
 | 6 | 展开工作经历/项目经历/Track Coverage | Step 0.5 + Step 4 输出 + `02_timeline` + `12_portfolio_candidates` | 完整 Online Profile |
 
 **规则**：
-- Identity Resolution（Step 0）：职业身份唯一来源是 07。任何从工作经历推导的身份 → 丢弃。
-- Experience Reframing（Step 0.5）：经历角色名 = 能力视角角色。工作内容 = 能力形成过程。禁止操作级动词作句首。
+- R05 → 全 Pipeline：能力优先于经历。个人优势是能力摘要，不是经历摘要。禁止经历驱动生成。
+- R06 → Step 0.5+6：经历必须回答能力形成三问（形成什么能力 / 解决什么问题 / 体现什么价值）。
+- R07 → Step 0.5+0.7+6：每个职责段落必须映射 TC。无关内容删除/合并/降级。
+- R08 → Step 0.5：保留真实岗位 + 增加角色解释层。禁止修改岗位事实。
+- R09 → Step 5+6：Capability 密度 ≥ 70%。「负责…」占比超 30% → 判定失败。
+- R10 → 全 Pipeline：固定 Identity→Capability→Evidence 推理链。禁止跳过 Capability Resolution。
 - R01 → Step 0+1 执行：07 是唯一身份来源。禁止统计岗位频次作为职业身份。
 - R02 → Step 5 检查：经历仅作为证据，不得作为身份定义。
 - R03 → Step 5 检查：主语来自 Career Positioning，不得来自原始岗位名。
