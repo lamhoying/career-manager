@@ -3,7 +3,7 @@
 > 把你的 AI 助手变成私人 Career Manager：以 **Career DNA（职业基因库）** 为唯一事实源，持续建设、管理、升级你的职业资产，而不是每次看到 JD 都从零重写简历。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-v2.5.5-green.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-v2.7.1-green.svg)](CHANGELOG.md)
 [![Cross-Agent](https://img.shields.io/badge/agent-agnostic-brightgreen.svg)](#跨平台兼容性)
 
 ---
@@ -101,6 +101,7 @@ v1.3 起职责收敛，v2.0 进一步扩展为清晰的四层，彻底分离「�
   - **候选池（Portfolio Candidates）**：4 项 Discovery Rules 筛选项目，7 维 Validation（背景 / 角色 / 问题 / 方案 / 行动 / 成果 / 能力）判定 Readiness ≥ 70% Ready / < 70% Need More Evidence；5 维 Potential Score 排序。
   - **案例模板（Portfolio Case）**：8 字段结构化（概览 / 背景 / 角色 / 问题 / 方案 / 行动 / 成果 / 能力体现），从 DNA 严格映射、不自由发挥；Mode A 构建 / Mode B 更新 / Mode D 投递时自动联动（投递时按 JD 推荐 Top 3 最佳案例）。
 - **投递追踪系统（Application Tracker，v2.0）**：v1.x 解决「我该怎么投」，v2.0 解决「我投了以后发生了什么」。录入投递（Index）、更新状态（Stage 0 Planned → Stage 7 Offer / Stage 8 Rejected）、登记面试反馈 / 拒绝原因（archives/）、查看转化与 Offer 率看板——形成「分析 → 决策 → 投递 → 反馈」的完整闭环。
+- **简历 / 面试证据管线（ATS Evidence Pipeline，v2.6–v2.7）**：把「重写整份简历」拆成可审计、可解释的步骤——Mode D 先从 `07` 锁定职业身份（Resume Identity Lock, Step 4.5）、用 `04b` 做能力映射（Capability Mapping）选经历；每条经历经 Experience Reframing 拆分为 **Profile Reframing**（在线档案，高抽象允许）与 **ATS Reframing**（简历，受 **E01–E04 证据保全规则**约束，禁止夸大职级 / 权限）；ATS 输出为三层结构（Capability Interpretation → JD Mapping → ATS Evidence Output）；最终由 **Step 9.1 Resume QA Layer**（QA-1 身份漂移 / QA-2 能力缺失 / QA-3 D3 过度包装 / QA-4 身份回退）把关，并由 **Step 9.0 逐经历重构循环**逐项生成。面试材料（故事 / 回答卡片）同样从 `07` Career Narrative + `04b` 能力优先级派生（Step 8.12 Narrative Alignment）。
 
 ---
 
@@ -252,8 +253,14 @@ career-manager/
 
 ## 版本与更新
 
-完整变更记录见 [CHANGELOG.md](CHANGELOG.md)。当前版本 **v2.5.5**。近期重点：
+完整变更记录见 [CHANGELOG.md](CHANGELOG.md)。当前版本 **v2.7.1**。近期重点：
 
+- **v2.7.1**：P0–P3 全面升级——新增 Step 9.1 Resume QA Layer（QA-1 身份漂移 / QA-2 能力缺失 / QA-3 D3 过度包装 / QA-4 身份回退）+ Step 9.0 逐经历重构循环（Per-Experience Engine Loop）+ Step 8.12 Narrative Strength（叙事强度 0–20）+ Mode C Step 7 Track Strategy Engine；并清理残留在模板/参考文件中的 PII 痕迹。
+- **v2.7**：P3 规则合并（14→7 条：R02 身份推导禁止 / R03 角色解释 / R04 能力优先 / R05–R07）+ Mode B/C 同步读取 07(5 层)/04b + Gap Analysis / Upgrade Plan 叙事对齐 07 + Mode C Step 6 市场信号复盘。
+- **v2.6.4**：ATS 三层输出结构（Capability Interpretation → JD Mapping → ATS Evidence Output）+ 系统评估（架构 7.5/10、规则覆盖 9/10）。
+- **v2.6.2–v2.6.3**：Experience Reframing 拆分为 Profile Reframing（在线档案，高抽象允许）与 ATS Reframing（简历，证据绑定）+ **E01–E04 证据保全规则**，并接入 Pipeline 生成前强制闸门。
+- **v2.6.1**：叙事对齐——面试故事 / 回答卡片注入 07 Career Narrative + 04b 能力优先级。
+- **v2.6**：Mode D 集成 07+04b——Step 4.5 Resume Identity Lock + 能力驱动简历生成（Capability Mapping）。
 - **v2.5.5**：全量 PII 脱敏（7 个模板/参考文件中的具体岗位名、公司名、领域术语替换为 `[XX]`/`[Track名称]` 占位符）+ 拼写修复。
 - **v2.5**：职业身份重构（v2.5）— `07_career_identity.md` 5 层 Identity-First 结构 + Identity Resolution + R01–R04 硬规则 + Experience Reframing（R04）。
 - **v2.3**：可迁移能力映射（Transferable Capability Mapping）— 新增 `04b_transferable_capabilities.md` 与 `transferable_capability_generation.md`，Online Profile 接入能力转换层。
