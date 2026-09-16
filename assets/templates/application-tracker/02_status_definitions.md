@@ -1,5 +1,6 @@
-# Status Definitions（状态定义 v2.0）
+# Status Definitions（状态定义）
 
+> Aligns to: v2.19.0
 <!--
 统一状态定义。所有 Mode E 操作共用。
 

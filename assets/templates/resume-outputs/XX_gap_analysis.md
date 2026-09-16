@@ -5,8 +5,8 @@
 Moderate Fit / Stretch Fit / Weak Fit 均生成。Weak Fit 不生成简历但保留此文件。
 
 数据来源：
-- resume-outputs/01_jd_match_report.md Part 6.5 Capability Translation → Missing Match 列表
-- resume-outputs/01_jd_match_report.md Part 4.5 Skill Weight → 权重排序
+- resume-outputs/01_jd_match_report.md Part 8.2 Gap Priority Matrix → Missing Match 列表
+- resume-outputs/01_jd_match_report.md Part 2.3 Skill Weight Analysis → 权重排序
 v2.7 Narrative Alignment：
 - 每条 Gap 解释注入 07 Career Narrative：「当前我的核心能力是 [Tier A TCs]，此 Gap 补齐后叙事主线将从 [当前状态] 增强至 [目标状态]」
 -->

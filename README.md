@@ -3,7 +3,7 @@
 > 把你的 AI 助手变成私人 Career Manager：以 **Career DNA（职业基因库）** 为唯一事实源，持续建设、管理、升级你的职业资产，而不是每次看到 JD 都从零重写简历。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-v2.7.1-green.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-v2.19.0-green.svg)](https://github.com/lamhoying/career-manager/releases)
 [![Cross-Agent](https://img.shields.io/badge/agent-agnostic-brightgreen.svg)](#跨平台兼容性)
 
 ---
@@ -176,7 +176,6 @@ Codex 等没有原生的「技能包」概念，两种用法皆可：
 career-manager/
 ├── SKILL.md                      # 技能入口与核心指令（必含）
 ├── LICENSE                       # MIT 许可证
-├── CHANGELOG.md                  # 版本历史
 ├── README.md                     # 本文件
 ├── scripts/                      # 可执行脚本（确定性逻辑，仅标准库）
 │   ├── init_career_dna.py        # 初始化 Career DNA 目录结构
@@ -253,8 +252,9 @@ career-manager/
 
 ## 版本与更新
 
-完整变更记录见 [CHANGELOG.md](CHANGELOG.md)。当前版本 **v2.7.1**。近期重点：
+完整变更记录与逐版本能力变动见 [GitHub Release notes](https://github.com/lamhoying/career-manager/releases)。当前版本 **v2.19.0**。近期重点：
 
+- **v2.19.0**：发布包不再内含内部变更日志（CHANGELOG），改为在 GitHub Release notes 提供精炼公开摘要；完成多轮架构治理与模板中性化——身份（07）/ 能力（04b）/ 证据（03）三层推理链收敛、面试表达层 SSOT（13）、Mode D 两阶段门控与 G5 冲突检测；并系统性去除模板与参考文档中的个人化痕迹，使 skill 默认通用可复用。
 - **v2.7.1**：P0–P3 全面升级——新增 Step 9.1 Resume QA Layer（QA-1 身份漂移 / QA-2 能力缺失 / QA-3 D3 过度包装 / QA-4 身份回退）+ Step 9.0 逐经历重构循环（Per-Experience Engine Loop）+ Step 8.12 Narrative Strength（叙事强度 0–20）+ Mode C Step 7 Track Strategy Engine；并清理残留在模板/参考文件中的 PII 痕迹。
 - **v2.7**：P3 规则合并（14→7 条：R02 身份推导禁止 / R03 角色解释 / R04 能力优先 / R05–R07）+ Mode B/C 同步读取 07(5 层)/04b + Gap Analysis / Upgrade Plan 叙事对齐 07 + Mode C Step 6 市场信号复盘。
 - **v2.6.4**：ATS 三层输出结构（Capability Interpretation → JD Mapping → ATS Evidence Output）+ 系统评估（架构 7.5/10、规则覆盖 9/10）。

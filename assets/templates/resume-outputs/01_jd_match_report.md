@@ -243,40 +243,20 @@ Part 8: Recommended Strategy（推荐策略）
 
 ---
 
-## Part 7: Decision Score（决策评分 v1.5.6）
+## Part 7: Decision Score（决策评分）
 
-<!-- 全部因子来自 JD + DNA，零市场假设 -->
+<!-- 本副本自 v2.16.0 起不再承载 Part 7 定义，只留指针。 -->
 
-### Factor Types（因子类型 v1.5.6）
+**本节的规则与版式均以 canonical 为准：**
 
-| 类型 | 含义 | 示例因子 |
-|------|------|----------|
-| **Core（核心项）** | 直接参与计算的基础分 | Match Score |
-| **Multiplier（乘数项）** | 以 Match 为基础做乘法修正 | Hire Probability（= Match × Authenticity/100） |
-| **Additive（加分项）** | 有则加分，无则 0 | Location, Language, Industry |
+| 内容 | 唯一定义源 |
+|---|---|
+| **规则**（公式 / Factor Types / Additive 废除原因 / Role Authenticity 折扣语义 / 情境因子边界） | `references/mode_d_job_application.md` **§Step 5.8** |
+| **版式**（7.1 公式与因子 / 7.2 计算拆解 / 7.3 情境因子展示区） | `references/pack_templates/01_jd_match_report_template.md` **Part 7** |
 
-### Decision Factors（决策因子）
-
-| 因子 | 类型 | 权重 | 判定来源 | 示例 |
-|------|:--:|:--:|------|:--:|
-| **Match Score（匹配度）** | Core | 50% | → 3.2 Overall | 65 |
-| **Hire Probability（录用概率）** | Multiplier | 25% | → Part 5 | 65 × 0.75 ≈ 49 |
-| **Location Advantage（城市优势）** | Additive | 10% | 同城市=10pt | 10 |
-| **Language Advantage（语言优势）** | Additive | 10% | 外语=10pt | 10 |
-| **Industry Advantage（行业优势）** | Additive | 5% | 同行业=5pt | 5 |
-
-> 公式：Decision = 0.5×Match + 0.25×HireProb + Location + Language + Industry
-> 计算结果 → 填入 3.1 摘要。
-
-### Decision Score（对比）
-
-| 岗位 | Match(50%) | HireProb(25%) | Location(10%) | Language(10%) | Industry(5%) | **Decision** |
-|------|:----:|:----:|:----:|:----:|:----:|:----:|
-| [Role A] | 43 | 18 | 10 | 5 | 5 | **81** |
-| [Role B] | 36 | 14 | 10 | 10 | 3 | **73** |
-| [Role C] | 35 | 9 | 10 | 5 | 0 | **59** |
-
-> Decision Score ≠ 匹配度。回答的是"综合条件下值不值得现在投"。表中数值为加权后的贡献值（原始分 × 权重百分比），非原始分数。
+> **v2.16.0 说明**：本副本原载 v1.5.6 完整版定义（含已废除的 Additive 三项因子：Location / Language / Industry），
+> **比当时的 canonical 更完整 → 版本倒挂**。现已**收敛进 canonical**，本节降为指针。
+> **禁止**在此重新展开定义 —— 否则会出现第四处定义点。生成产物时以 canonical 为准（见 `SKILL.md` 模板索引）。
 
 ---
 
@@ -366,55 +346,12 @@ Part 8: Recommended Strategy（推荐策略）
 
 ---
 
-## Part 9: Outreach Package（外联沟通包 v1.6.2）
+## Part 9: Outreach Package（外联沟通包）
 
-<!--
-从 Evidence Matrix 到 Platform Greeting 的桥梁层。
-Part 4 分析证据 → Part 9 路由证据 → 07_boss_greeting 消费证据。
-Greeting 不再自己选证据。
--->
-
-### 9.1 Evidence Routing（证据路由 v1.6.2）
-
-#### Candidate Pool（候选池）
-从 Part 4 Evidence Matrix 提取 Strength ≥ 4 的全部证据。
-
-#### Routing Rules（路由规则）
-
-| 优先级 | 规则 | 逻辑 |
-|:--:|------|------|
-| **Rule 1** | Distance Priority（距离优先） | D0/D1 永远排最前，D2 次之，D3 仅作备选 |
-| **Rule 2** | Role Relevance（角色相关度） | 与 JD Role 直接相关 → 升一级；仅间接相关 → 降一级 |
-| **Rule 3** | Novelty Injection（新奇注入） | 若 Top2 证据过于同质化，允许插入 1 个 D2/D3 好奇心证据 — 仅作为第三证据 |
-
-#### Routing Output（路由输出）
-
-| 层级 | 选取规则 | 用途 |
-|------|------|------|
-| **Primary（主证据）** | Rule 1+2 最高分证据，通常 D0/D1 | Greeting 核心卖点，简历主叙事 |
-| **Secondary（辅证据）** | Rule 1+2 次高分证据，D1/D2 | 补强匹配度，猎聘/邮件用 |
-| **Curiosity（好奇心证据）** | Rule 3 注入，D2/D3 但 Strength≥4 | Boss Type D / LinkedIn 开场用 |
-
-> Primary/Secondary 必须与 JD Role 直接相关。Curiosity 允许跨域，但仅在 Type D 中使用。
-
-### 9.2 Platform Variants（平台变体 v1.6.2）
-
-| 平台 | 目标 | 字数 | 结构 | 证据策略 |
-|------|------|:--:|------|------|
-| **Boss 直聘** | 让 HR 回复 | 60-120 | 一句价值 + 一个问题结尾 | Primary 证据 1 个 |
-| **猎聘** | 建立专业感 | 150-250 | 背景 + 匹配点 + 交流意愿 | Primary + Secondary |
-| **邮件** | 正式投递 | 300+ | 背景 + 项目 + 优势 + 附简历 | Primary + Secondary + 可选 Curiosity |
-| **LinkedIn** | 建立关系（非求职硬推） | 80-120 | 轻量连接 + 行业共识 + 不附简历 | Curiosity 或 Primary 中最行业相关的 |
-
-#### LinkedIn 参考结构
-
-> Hi [Name],
+> **本节的版式唯一定义源 = `references/pack_templates/01_jd_match_report_template.md` 的 Part 9**
+> （v2.18.0 收敛：原 v1.6.2 完整版内容已上移至 canonical —— 与 Part 7 在 v2.16.0 的收敛同源，属**第二例「版本倒挂」修复**）。
+> 规则定义源 = `references/mode_d_job_application.md` 的 Step 8.5 / 8.6。
 >
-> I noticed you're hiring [Role] at [Company]. I spent [N] years in [Industry/Domain], and your opening caught my attention.
->
-> Would love to connect and learn more about what you're working on.
->
-> Best,
-> [Name]
+> 产出：9.1 Evidence Routing（候选池 + 3 条路由规则 + Primary/Secondary/Curiosity）+ 9.2 Platform Variants（四平台变体 + LinkedIn 参考结构）。
 
-> LinkedIn 连接消息不附简历、不开口就问"有没有机会"。目标是建立联系，不是推销。
+<!-- v2.18.0：本副本不再复制 Part 9 全文，避免第二定义点。 -->

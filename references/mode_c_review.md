@@ -84,6 +84,7 @@ Career DNA 现有能力
 | `application-tracker/01_application_index.md` | 投递记录 + 面试结果 |
 | `07_career_identity` Layer 2 | Career Positioning |
 | `10_career_tracks/` | 各 Track Confidence |
+| `knowledge/role_snapshots/README.md` | **「新赛道候选」表**（v2.17.0）—— 由 `mode_d` Step 10 C 第 7 条累积的观察计数，本步只**消费**，不重算 |
 
 **分析维度**：
 
@@ -92,6 +93,7 @@ Career DNA 现有能力
 | **市场验证率** | 按 Track 统计面试率 → 哪些 Track 市场验证强 |
 | **定位偏离检查** | 如果某个 Track 面试率高但 07 未将其列为主/次定位 → 检查是否需要更新 Career Positioning |
 | **叙事效果** | 面试反馈中是否有关于「你是什么样的人」的信号 |
+| **新赛道候选**（v2.17.0） | 读 `role_snapshots` README 的候选表：是否有岗已达「同一快照 ≥3 家不同公司」→ 建议评估新建赛道；**只建议，新建须走 Mode A/B**（判据定义在 `mode_d` §Step 10 C 第 7 条，本步不复制） |
 
 **输出**：分析报告（不自动修改 07，仅建议）。
 
@@ -109,20 +111,26 @@ Career DNA 现有能力
 
 #### 输出：每个 Track 生成策略卡片
 
+> **落点**：写入该 Track 文件的 `## Track Strategy` 段（`career-dna/10_career_tracks/{track}.md`）——
+> **禁止新建文件**（v2.12.0 起废除独立文件写法）。
+
 ```yaml
 Track Strategy: [Track名称]
-  Recommended Positioning: [针对此 Track 的定位变体]
-  Top 3 Stories: [按 Narrative Strength 排序]
-  Gap Mitigation: [此 Track 的缺口应对策略]
-  Self-Intro Script: [30秒自我介绍框架]
-  Project Priority: [针对此 Track 的项目展示顺序]
+  Recommended Positioning: [针对此 Track 的定位变体]      # 段内 S1
+  Self-Intro Script: [30秒自我介绍框架]                   # 段内 S2
+  Project Priority: [针对此 Track 的项目展示顺序]          # 段内 S3
+  Top 3 Stories: [按 Narrative Strength 排序]             # 段内 S4（Story Mapping）
+  Gap Mitigation: [此 Track 的缺口应对策略]                # 不建列，指向 ## Known Gaps + ## Improvement Priorities
 ```
 
 #### 规则
 
-- 策略文件存储在 `career-dna/10_career_tracks/{track}_strategy.md`
-- Mode D 投递时，先读取对应 Track 的 Strategy，再生成简历
-- Mode A/B 更新 DNA 后 → 触发策略重新生成
+- 策略写入 `career-dna/10_career_tracks/{track}.md` 的 `## Track Strategy` 段（S1-S4）；
+  **禁止新建 `{track}_strategy.md` 或其他文件**。该段已存在则**原地刷新**，不动同文件其他段落。
+- `Gap Mitigation` 不在该段建列 —— 指向同文件的 `## Known Gaps` + `## Improvement Priorities`（避免双份维护）。
+- 该段自带 `Last Generated`；**不动文件头 `Last Updated`**（后者 = 赛道置信度重评时间，语义不同）。
+- Mode D 投递时，先读取对应 Track 的 `## Track Strategy` 段，再生成简历。
+- Mode A/B 更新 DNA 后 → 触发策略段重新生成。
 
 ## Outputs（产物）
 

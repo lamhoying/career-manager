@@ -13,29 +13,53 @@ If directory is omitted, looks for ./career-dna/
 Output: Prints a completeness report and optionally updates 09_completeness_report.md
 """
 
+import argparse
+import json
 import os
-import sys
 import re
 from pathlib import Path
 from datetime import datetime
 
-# Files to check and their weights in overall score
-# v1.3: 10_career_tracks is a directory, not a single file
-# v1.5: 11_online_profile is a derived asset, low weight
-MODULE_CONFIG = {
-    "01_profile.md": {"name": "Profile", "weight": 10},
-    "02_timeline.md": {"name": "Timeline", "weight": 12},
-    "03_projects.md": {"name": "Projects", "weight": 18},
-    "04_skill_graph.md": {"name": "Skill Graph", "weight": 16},
-    "04b_transferable_capabilities.md": {"name": "Transferable Capabilities", "weight": 4},
-    "05_story_bank.md": {"name": "Story Bank", "weight": 8},
-    "06_failure_story.md": {"name": "Failure Story", "weight": 4},
-    "07_career_identity.md": {"name": "Career Identity", "weight": 8},
-    "08_question_backlog.md": {"name": "Question Backlog", "weight": 4},
-    "10_career_tracks": {"name": "Career Tracks", "weight": 4, "is_dir": True},
-    "11_online_profile.md": {"name": "Online Profile", "weight": 6},
-    "12_portfolio_candidates.md": {"name": "Portfolio Candidates", "weight": 6},
-}
+# ---------------------------------------------------------------------------
+# v2.9.1: 模块清单与权重改由 assets/career_dna_manifest.json 唯一定义。
+# 此前同一份清单在本脚本 / init_career_dna.py / SKILL.md / career_dna_structure.md
+# 各写一份，且口径已漂移（"10 个文件" vs "12 个文件"）。manifest 是唯一事实源，
+# 未登记的 career-dna/ 根目录文件由 validate_career_dna.py 报 P0。
+# ---------------------------------------------------------------------------
+
+MANIFEST_REL = Path("assets") / "career_dna_manifest.json"
+
+
+def find_manifest() -> Path:
+    """定位 career_dna_manifest.json（Career DNA 文件清单唯一定义源）。"""
+    script_dir = Path(__file__).resolve().parent
+    candidates = (script_dir.parent / MANIFEST_REL, script_dir / MANIFEST_REL)
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    tried = "\n".join(f"           {c}" for c in candidates)
+    raise SystemExit(
+        "❌ 找不到 career_dna_manifest.json（Career DNA 文件清单唯一定义源）。\n"
+        f"   已尝试:\n{tried}\n"
+        "   请确认本脚本位于 skill 的 scripts/ 目录内，且 assets/ 未被删除。"
+    )
+
+
+def build_module_config() -> dict:
+    """从 manifest 派生 MODULE_CONFIG（只取 weight > 0 的 SSOT 条目）。"""
+    manifest = json.loads(find_manifest().read_text(encoding="utf-8"))
+    config = {}
+    for entry in manifest["ssot_files"]:
+        if entry.get("weight", 0) <= 0:
+            continue  # 09_completeness_report.md 等 generated 产物不计分
+        item = {"name": entry["name"], "weight": entry["weight"]}
+        if entry.get("is_dir"):
+            item["is_dir"] = True
+        config[entry["filename"]] = item
+    return config
+
+
+MODULE_CONFIG = build_module_config()
 
 # Placeholders that indicate unfilled content
 PLACEHOLDERS = [
@@ -221,7 +245,7 @@ def run_check(career_dna_dir: str = "./career-dna"):
     overall_icon = get_status_icon(overall_score)
 
     print("-" * 50)
-    print(f"  {'整体完整度':<23} {overall_score:>6}%  {'100%':>5}%  {overall_icon:>4}")
+    print(f"  {'整体完整度':<23} {overall_score:>6}%  {total_weight:>5}%  {overall_icon:>4}")
     print(f"  等级: {overall_grade}")
     print()
 
@@ -312,8 +336,24 @@ def generate_report(overall_score, overall_grade, results, gaps, suggestions):
 
 
 def main():
-    career_dna_dir = sys.argv[1] if len(sys.argv) > 1 else "./career-dna"
-    run_check(career_dna_dir)
+    parser = argparse.ArgumentParser(
+        prog="completeness_checker.py",
+        description="扫描 Career DNA 文件并输出完整度报告。",
+    )
+    parser.add_argument(
+        "career_dna_dir",
+        nargs="?",
+        default="./career-dna",
+        help="career-dna 目录路径（默认为 ./career-dna）",
+    )
+    args = parser.parse_args()
+
+    target = args.career_dna_dir
+    # v2.18.0 修复（B2）：此前 `--help` 会被当成目录路径，输出「目录不存在」而不是帮助。
+    if target.startswith("-"):
+        parser.error(f"目录参数不得以 '-' 开头（收到 {target!r}）。")
+
+    run_check(target)
 
 
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
-# 面试准备包 (Interview Pack v2.6.1)
+# 面试准备包 (Interview Pack)
 
+> Aligns to: v2.19.0
 <!-- 目标岗位：[公司] - [岗位] -->
 <!-- 生成日期：[YYYY-MM-DD] -->
 

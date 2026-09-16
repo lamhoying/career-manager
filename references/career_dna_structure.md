@@ -1,6 +1,30 @@
 # Career DNA Structure Reference（职业基因库结构参考）
 
-Career DNA 是用户职业经历的唯一事实源，由 10 个文件组成，存放在 `career-dna/` 目录下。以下为每个文件的字段定义、填写规范和示例格式。
+Career DNA 是用户职业经历的唯一事实源（Single Source of Truth），文件清单**以 `assets/career_dna_manifest.json` 为唯一定义源**：9 个核心文件（01-09）+ 4 个派生资产（04b / 11 / 12 / 13）+ 1 个目录型模块（`10_career_tracks/`）。以下为每个文件的字段定义、填写规范和示例格式。
+
+---
+
+## 写入契约（Write Contract v2.10.0）
+
+`career-dna/` 根目录**只允许存在 manifest 中已登记的文件**。约束对象是「未登记文件」，不是「禁止新增」——职业资产本应持续成长（Core Principle #4），但新增必须走正规登记。
+
+| 场景 | 正确落点 | 说明 |
+|------|----------|------|
+| 单次投递产物（JD 分析 / 简历 / 面试包 / 差距分析） | `resume-outputs/{YYYYMMDD}-{company}-{role}/` | 一次性，不进 SSOT |
+| 某次提问生成的临时分析、草稿、策略稿 | `career-dna/_inbox/` | 下划线前缀 = 非 SSOT，不计完整度，可随时清理 |
+| 确需长期保留的新资产 | `career-dna/` 根目录 **+ 四件套登记** | 见下 |
+| 已有资产的更新 | 直接改对应文件 | 改完跑 `validate_career_dna.py` |
+
+**新增文件的四件套登记**（缺一不可，且随 skill 版本号发布）：
+
+1. 在 `assets/career_dna_manifest.json` 增加条目（`filename` / `name` / `desc` / `weight` / `kind`）
+2. 在 `assets/templates/career-dna/` 提供同名模板
+3. 给出权重（派生资产档 4-6；纯生成物填 `weight: 0` 并在 `desc` 注明理由，如 09）
+4. 同步 `SKILL.md` 的目录树、Mode A 产物计数与 Resources 清单
+
+**自检**：`python3 scripts/validate_career_dna.py <career-dna目录>` —— 只报告不修改；有 P0/P1 时退出码 1。检出项：P0 orphan（未登记文件）/ P0 duplicate-content（跨文件长段落逐字重复）/ P1 missing / P1 unregistered-dir / P2 派生资产缺时间戳。
+
+---
 
 ---
 
@@ -160,7 +184,7 @@ Career DNA 是用户职业经历的唯一事实源，由 10 个文件组成，�
 
 ---
 
-## 04b_transferable_capabilities.md — 可迁移能力映射 (v2.3)
+## 04b_transferable_capabilities.md — 可迁移能力映射
 
 将 Skill Graph 的能力条目转换为各目标 Track 的岗位语言。不是新的能力库，是 Skill Graph → 岗位语言的解释器。
 
@@ -237,7 +261,7 @@ Career DNA 是用户职业经历的唯一事实源，由 10 个文件组成，�
 
 ---
 
-## 07_career_identity.md — 职业身份定义 (v2.5 重构)
+## 07_career_identity.md — 职业身份定义
 
 定义用户的职业人格与市场定位。不是简历摘要，而是强制覆盖经历的「身份定义层」。5 层结构：
 
@@ -317,17 +341,16 @@ Career DNA 是用户职业经历的唯一事实源，由 10 个文件组成，�
 
 ## 10_career_tracks/ — 职业赛道库 (v1.3 目录模式)
 
-v1.3 起从单文件 `10_career_tracks.md` 拆分为目录模式。每个 Track 一个独立 `.md` 文件。
+v1.3 起从「单文件」拆分为「目录模式」（原先所有赛道写在同一个 10_career_tracks.md 里）。每个 Track 一个独立 Markdown 文件。
 
 ### 目录结构
 
 ```
 career-dna/10_career_tracks/
 ├── README.md                    # 赛道总览：列出所有 Track 及其 Confidence
-├── project_manager.md           # 项目经理赛道
-├── implementation_consultant.md # 实施顾问赛道
-├── [track_name].md                # [Track名称] 赛道
-└── ...                          # 更多赛道文件
+├── {track_name}.md              # 赛道文件（文件名 = Track 受控取值）
+│                                #   示例：game_tech_pm / rd_pm / pmo / ai_product_pm
+└── ...                          # 每条赛道一个文件（赛道由 Mode A 实际构建，skill 侧不预置）
 ```
 
 ### README.md — 赛道总览
@@ -356,10 +379,17 @@ Evidence:        # 支持证据表格
 Core Strengths:  # 核心优势 (3-5)
 Recommended Projects: # 推荐展示项目
 Recommended Stories:  # 推荐面试故事
+Track Strategy:  # 赛道策略段（v2.12.0）— S1 定位变体 / S2 Self-Intro 框架 / S3 Project Priority / S4 Story Mapping
 Known Gaps:      # 已知差距
 Improvement Priorities: # 提升优先级 (短期/中期/长期)
 Target Roles:    # 目标岗位列表
 ```
+
+> **`## Track Strategy` 段（v2.12.0）**：由 Mode C Step 7 生成，**写在本文件内**（废除独立文件写法）。
+> 与上方 `Recommended Projects` / `Recommended Stories` **分工不重叠**：上方是「可用清单」（哪些可用），
+> 本段是「排序与场景绑定」（怎么用）—— 其项目 / 故事栏**只写条目标题，禁止粘贴正文**。
+> `Gap Mitigation` **不在本段建列**（避免与 `Known Gaps` / `Improvement Priorities` 双份维护），改为指向那两段。
+> 该段自带 `Last Generated`；文件头 `Last Updated` 语义不同（赛道置信度重评时间），不随之改动。
 
 ### v1.3 职责说明
 
@@ -372,7 +402,7 @@ Career Track（`10_career_tracks/`）与 Role Snapshot（`knowledge/role_snapsho
 
 ---
 
-## 11_online_profile.md — 在线职业档案 (Online Career Profile v1.5)
+## 11_online_profile.md — 在线职业档案 (Online Career Profile)
 
 ### 概念
 
@@ -399,6 +429,67 @@ Online Profile 是 Career DNA 的派生资产（Derived Asset），不直接维�
 - LinkedIn Profile
 - 脉脉个人页
 - 猎头推荐语
+
+---
+
+## 12_portfolio_candidates.md — 作品集候选池 (Portfolio Candidates)
+
+**派生资产**。从 `03_projects.md` 中筛选可对外展示的案例并按展示价值排序；生成 `XX_portfolio.md` 时优先取材于此。
+
+| 字段 | 说明 |
+|------|------|
+| Candidate | 候选案例名（对应 03_projects 条目） |
+| Display Value | 对目标 Track 的展示价值（High / Medium / Low） |
+| Evidence Strength | 证据强度（与 04b 口径一致） |
+| Target Track | 适用赛道 |
+| Format | 适合的呈现形式（文档 / 图表 / 演示） |
+
+---
+
+## 13_interview_narrative_strategy.md — 面试叙事战略手册
+
+**派生 + 手写分区资产 · 面试表达层 SSOT**。整合 07 的身份叙事、05 的故事评分、02 的时间线事实与 03 的量化证据，形成一份跨 JD 通用的面试作战手册。
+
+| Part | 内容 | 主要来源 | 区 |
+|------|------|----------|:--:|
+| Part 1 | 核心叙事主线 / 三大支柱 / 底层视角 / 叙事弧线 | 07 Layer 1-3 | 派生 |
+| Part 2 | 离职故事话术（逐段话术 + 叙事逻辑 + 核心原则） | 02 时间线事实 | 派生 |
+| Part 3 | 职业赛道转变叙事（主转变 / 次转变 / 应对结构） | 07 Layer 1/5 + 04b | 派生 |
+| Part 4 | 面试三阶段：自我介绍结构 / STAR + 升维收束 / 反问清单 | 05 + 04b | 手写 |
+| Part 5 | 通用战术：数字引用卡 / 语言切换 / 状态管理 | 03 | 手写 |
+| Part 6 | 口径一致性与追问纵深（三层纵深模型 / 核心主张纵深卡 / 交叉校验表 / 追问防御） | 03 / 04_skill_graph / 04b / 07 | 手写 |
+| Part 7 | 分轮次与分题型打法（7.1 谁面我 / 7.2 跨轮次一致性 / 7.3 每轮三件事 / 7.4 考什么形式） | 方法论 | 手写 |
+| Part 8 | 面试后跟进与推进（时间轴 / 感谢信 ×3 / 催进度公式 / 失联处置 / 口头 Offer） | 方法论 | 手写 |
+| Part 9 | 复盘回路（复盘四问 / 沉淀规则 / 卡壳点归因 / 落点） | 方法论 | 手写 |
+| Part 10 | 反向尽调（三维度 / 情报→反问转化公式 / 结论落点 / 红线） | 方法论 | 手写 |
+| Part 11 | 录用阶段（Offer 谈判四原则 / 三场景示范句 / 背调四份材料 / 红线） | 方法论 | 手写 |
+| Part 12 | 英文面试准备（四件套材料规格 / 语言能力表述 / 卡壳处置 / 口径要求） | 方法论 | 手写 |
+
+### 分区规则（v2.11.0 · 不得违反）
+
+| 区 | Part | 写入规则 |
+|:--:|------|------|
+| **派生区** | Part 1-3 | 由上游文件推导。源文件变化即重生成，**禁止手写** |
+| **手写区** | Part 4-12 | 方法论与战术，**推不出来**。只在用户显式要求时编辑，**任何自动刷新不得覆盖** |
+
+- `validate_career_dna.py` 以 manifest 的 `regeneration` 字段为准，**双向护栏**：
+  P1 `derived-part-drift` 校验声明的 12 个 Part 标题是否齐全（防「丢」—— 手写区被自动刷新覆盖，此事故肉眼不可见）；
+  P1 `undeclared-part` 校验文中是否多出未声明的 Part（防「偷偷加」—— 新增 Part 忘记登记）。
+- Mode B Step 4.5 刷新 13 时**只重生成 Part 1-3**。
+
+**内容填充契约**：本手册每一节只允许三种形态 —— **实体内容**（可直接用的话术/模板/表）、**规则**（禁止/必须/判定）、**指针**（内容按生命周期住在别处）。第四种「空指示」（叫你准备 X，既无方法也无落点）**是缺陷**。判据：这次投递结束后会作废的内容，就不该住在本手册。详见 13 尾部「内容填充契约」小节。
+
+**职责边界**：
+
+- 本文件是**跨 JD 长期资产**（面试战术与行业无关），因此归位 career-dna 而非单次投递目录；单次 JD 的定制策略仍由 `resume-outputs/{JD}/04_interview_pack.md` + `resume-outputs/{JD}/05_answer_cards.md` 承担。
+- 引用关系：13 是**底料**，04/05 是**切片**。Mode D 生成 04/05 时必须先读 13 **全 12 Parts**，禁止绕过它从 07/05 重新拼装通用话术。
+- Part 2 的离职话术是唯一 SSOT；`02_timeline.md` 只保留时间线事实与指针。
+- **生成与修改权限**：Mode A Step 8.5 首次生成（派生区自动 + 手写区一次成型）；Mode B Step 4.5 增量刷新（**仅派生区**）；Mode D **可回写手写区 Part 4-12**（跨 JD 通用战术），**不可覆盖派生区、不可新建文件、不可新增未登记的 Part**（见 `references/mode_d_job_application.md` Step 8 写入契约）。
+- **数字必须可溯源**：Part 5 数字引用卡的每一项都要能在 03 / 05 找到出处，禁止估算或夸大；Part 6 纵深卡「出处」列指向的文件必须真实存在（validate P2 `unresolved-anchor` 校验）。
+- **口径唯一**：Part 6.3 交叉校验表是全库规模类数字的统一口径来源；与 core（03 / 05）冲突时**只改本手册**，不得反向改 core。
+- **不重复原则**：Part 7 是**打法视角**，与 `01_jd_match_report.md` Part 6 的**风险视角**分工不同，不得互相复制；Part 7（含 7.4 分题型）/ 8 的通用方法不在 `04` 重复，`04` §7.1 / §8 只填本轮实际。
+- **后续阶段的分工**：Part 10 反向尽调（尽调**输入**）与 Part 4 阶段三（反问**输出**）互补；Part 11 录用阶段（通用谈判原则与背调口径）只落 `application-tracker/archives/`，`04` 只记本轮实际；Part 12 英文面试只定义**规格与规则**，本轮英文稿落 `04` §10。
+- **记录落点**：Part 9 的单次面试记录写在 `application-tracker/archives/{Company}_{Role}.md`，本文件只存方法论。
 
 ---
 
@@ -432,22 +523,60 @@ knowledge/
     └── {domain_name}.md       #   v1.4: 含 Typical Evidence（典型证据） / Business Meaning（业务价值） / Related Hiring Intent（关联招聘意图）
 ```
 
-### role_snapshots/{role_name}.md — 岗位快照 (v1.4 Talent Intelligence)
+### role_snapshots/{role_name}.md — 岗位快照 (v2.14.0)
+
+> **模板真源**：`assets/templates/knowledge/role_snapshot.md` —— 本段与模板保持同步，生成 / 更新前以模板为准。
+> 全篇共 **8 段**（下方全列）。此前本 spec 只列 `Hiring Intelligence` + `Trend Intelligence` 两段，**漏了 6 段** ——
+> 这是 2026-07-20 ~ 09-02 期间 7 个旧实例缺段的直接上游原因（生成器读 spec 就会产出漂移实例）。
+> `Track` 为**受控取值**（赛道文件名 或 `none`），解释写 `Track Note` —— 见 `references/mode_d_job_application.md` Step 10 A。
+> `Observed Companies` 同为**受控格式**（公司名，` · `/`+` 分隔，说明写 `（）` 括注，未标注写 `unknown`）——
+> 其解析出的**不同公司数**是「新赛道发现」判据的唯一输入（见 `references/mode_d_job_application.md` §Step 10 C 第 7 条），
+> 由 P2 `role-snapshot-schema` 第 ④ 项校验。
 
 ```markdown
-# Role Snapshot: [Role Name]
+# Role Snapshot（岗位快照）: [Role Name]
+
+- **Track（职业赛道）**: [受控取值 —— `10_career_tracks/` 下赛道文件名（不含 .md）或 none]
+- **Track Note（赛道说明）**: [解释：子域限定 / 为何 none / 交叉参考]
+- **Aliases（别名）**: [该岗位的其他常见名称]
+- **Observed JD Count（已观察JD数）**: 0
+- **Observed Companies（已观察公司）**: [受控格式 —— 公司名（` · ` 分隔）；说明写 `（）` 括注，不计入计数；未标注公司写 `unknown`]
+- **Recent JD Sources（近期JD来源）**: [YYYY-MM Company Role]
+- **Core Skills（核心技能）**: [核心技能列表]
+- **Soft Skills（软技能）**: [软技能列表]
+- **Tools（工具）**: [常见工具 / 平台 / 系统]
+- **Industries（行业）**: [该岗位出现的行业]
+
+## Role Capability Model（岗位能力模型 v2.3）
+| 核心能力 | 市场权重 | 典型市场表达 | 来源 JD 数 |
+（Transferable Capability 的 Target Keywords 来源）
 
 ## Hiring Intelligence（招聘情报 v1.4）
-- **Common Hiring Intent**: [典型招聘意图]
-- **Talent Persona**: [典型人才画像特征]
-- **Typical Evidence**: [常见证据模式]
-- **Career Background Distribution**: [职业背景分布]
+- **Common Hiring Intent** / **Talent Persona** / **Typical Evidence** / **Career Background Distribution** / **Last Updated**
+
+## JD 观察记录 (JD Observation Log)
+| 日期 | 公司 | 行业 | 招聘意图 | 新增 Skills | 新增 Tools | 备注 |
+
+## 能力频率统计 (Skill Frequency)
+| 能力 | 出现次数 | 频率 |
+
+## 公司分布 (Company Distribution)
+| 公司 | 观察次数 | 行业 |
+
+## Persona Statistics（画像统计层 v1.4.2）
+（≥5 次 JD 观察后生成）
+### Experience Frequency（典型经历频率）
+### Career Background Frequency（职业背景分布频率）
+### Trait Frequency（偏好特质频率）
+
+## Common Capability Transitions（常见能力迁移路径 v1.4.4）
+| 来源背景 | 常迁移能力 | 观察次数 | 置信度 |
 
 ## Trend Intelligence（趋势观察 v1.4）
-- **Hiring Intent Trends**: [招聘意图趋势]
-- **Talent Persona Trends**: [画像要求变化]
-- **Evidence Trends**: [证据要求变化]
+- **Hiring Intent Trends** / **Talent Persona Trends** / **Evidence Trends** / **Trend Notes**
 ```
+
+**空段 ≠ 缺段**：`Observed JD Count = 0` 的新建快照允许各段只有表头或占位符，但 **8 个段标题必须齐全**（由 P2 `role-snapshot-schema` 校验；已存在的旧实例走迁移白名单，随下次 JD 观察自然补齐）。
 
 ### skill_snapshots/{domain_name}.md — 能力域快照 (v1.4 Talent Intelligence)
 
@@ -499,6 +628,10 @@ resume-outputs/{YYYYMMDD}-{company}-{role}/
 
 ### 01_jd_match_report.md — 岗位匹配报告 (v1.3 增强)
 
+> ⚠️ **版式以 `references/pack_templates/01_jd_match_report_template.md` 为唯一定义源**
+> （现行 **9-Part** + **附录 A/B**）；下方 Part 1-4 为 **v1.3 历史描述**，仅供追溯，**勿据此生成**。
+> 附录生成规则见 `references/mode_d_job_application.md` **Step 2.9**；产物合约见 `references/output_contracts.md`。
+
 新增三部分：JD Metadata / Original JD / AI Extracted Summary，保留完整 JD 上下文用于回溯。
 
 **Part 1: JD Metadata（JD元信息）** — Company（公司） / Role（岗位） / Date（日期） / Source（来源） / Track（赛道）
@@ -540,15 +673,24 @@ v1.2 起从按单个 Skill 归档改为按 Domain 归档。一个 Domain 文件�
 ...
 ```
 
-Domain 示例：
-| Domain 文件 | 包含的 Skill |
+Domain 命名示例（**示例取值，非文件引用**）：
+| Domain 名 | 包含的 Skill |
 |-------------|-------------|
-| `project_management.md` | Stakeholder Management, Risk Management, Resource Planning |
-| `testing.md` | Test Planning, Test Automation, QA Process |
-| `business_analysis.md` | Requirements Gathering, Process Mapping, Stakeholder Analysis |
-| `implementation_consulting.md` | Implementation Planning, Client Training, Go-Live Support |
+| project_management | Stakeholder Management, Risk Management, Resource Planning |
+| testing | Test Planning, Test Automation, QA Process |
+| business_analysis | Requirements Gathering, Process Mapping, Stakeholder Analysis |
+| implementation_consulting | Implementation Planning, Client Training, Go-Live Support |
 
-### job-tracks/{role_name}.md — 赛道画像 (v1.2 新增)
+> ⚠️ 上表是 **Domain 命名示范**（写入 `04_skill_graph` 的 Domain 字段值），**不是文件引用**。
+> 实际文件名一律 `{domain_name}.md`，置于 `knowledge/skill_snapshots/` 下。
+> 本处**刻意不使用反引号包文件名** —— 否则 `ghost-file-ref` 扫描扩面到 `references/` 时会
+> 把示例名误判为幽灵引用（审计报告 C6）。
+
+### [Historical] job-tracks/{role_name}.md — 赛道画像 (v1.2 新增；**v1.3 已删除该目录**)
+
+> ⚠️ **本节为历史结构说明，非现行形态**。`job-tracks/` 目录已由 **v1.3 删除**，其职责并入
+> `career-dna/10_career_tracks/{track}.md`（见上一节）。保留本节仅为追溯 v1.2 的数据模型，
+> 与同区段 `### [Historical] skill_snapshots/...` 的标记方式保持一致。
 
 Track Profile 是 Role 级别的市场画像，仅保存市场侧数据。
 

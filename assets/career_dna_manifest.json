@@ -1,0 +1,143 @@
+{
+  "manifest_version": "2.19.0",
+  "updated": "2026-09-15",
+  "purpose": "Career DNA 文件清单的唯一定义源（Single Source of Truth）。init_career_dna.py / completeness_checker.py / validate_career_dna.py 均从此文件读取，禁止在脚本或文档中另行硬编码清单。",
+  "write_contract": [
+    "career-dna/ 是用户的唯一事实源（SSOT）。任何在 career-dna/ 根目录新增的文件，必须先在本清单登记（filename + name + desc + weight + kind），并提供 assets/templates/career-dna/ 下的同名模板。",
+    "登记四件套：① 本清单条目 ② 同名模板 ③ 权重（或显式 weight=0 并说明理由）④ SKILL.md 目录树 / Resources 同步。四件套缺一不可，并随 skill 版本号发布。",
+    "未登记文件视为污染：validate_career_dna.py 报 P0，必须移出根目录或补登记，不得留在 SSOT 根目录。",
+    "以下划线开头的文件/目录属草稿区（非 SSOT）：不参与完整度计分、可随时清理，不得被其他资产引用。",
+    "kinds：core=用户提供的事实源；derived=由 core 推导的派生资产；generated=脚本生成的报告；dir=目录型模块。"
+  ],
+  "ssot_files": [
+    {
+      "filename": "01_profile.md",
+      "name": "Profile",
+      "desc": "个人职业档案",
+      "weight": 10,
+      "kind": "core"
+    },
+    {
+      "filename": "02_timeline.md",
+      "name": "Timeline",
+      "desc": "职业发展轨迹",
+      "weight": 12,
+      "kind": "core"
+    },
+    {
+      "filename": "03_projects.md",
+      "name": "Projects",
+      "desc": "项目资产库",
+      "weight": 18,
+      "kind": "core"
+    },
+    {
+      "filename": "04_skill_graph.md",
+      "name": "Skill Graph",
+      "desc": "能力图谱",
+      "weight": 16,
+      "kind": "core"
+    },
+    {
+      "filename": "04b_transferable_capabilities.md",
+      "name": "Transferable Capabilities",
+      "desc": "可迁移能力映射（派生资产）",
+      "weight": 4,
+      "kind": "derived"
+    },
+    {
+      "filename": "05_story_bank.md",
+      "name": "Story Bank",
+      "desc": "面试故事库",
+      "weight": 8,
+      "kind": "core"
+    },
+    {
+      "filename": "06_failure_story.md",
+      "name": "Failure Story",
+      "desc": "失败案例库",
+      "weight": 4,
+      "kind": "core"
+    },
+    {
+      "filename": "07_career_identity.md",
+      "name": "Career Identity",
+      "desc": "职业身份定义",
+      "weight": 8,
+      "kind": "core"
+    },
+    {
+      "filename": "08_question_backlog.md",
+      "name": "Question Backlog",
+      "desc": "待补充问题库",
+      "weight": 4,
+      "kind": "core"
+    },
+    {
+      "filename": "09_completeness_report.md",
+      "name": "Completeness Report",
+      "desc": "完整度报告（completeness_checker.py 生成，不计分）",
+      "weight": 0,
+      "kind": "generated"
+    },
+    {
+      "filename": "10_career_tracks",
+      "name": "Career Tracks",
+      "desc": "职业赛道库（目录模式，每 Track 一文件）",
+      "weight": 4,
+      "kind": "dir",
+      "is_dir": true
+    },
+    {
+      "filename": "11_online_profile.md",
+      "name": "Online Profile",
+      "desc": "在线职业档案（派生资产）",
+      "weight": 6,
+      "kind": "derived"
+    },
+    {
+      "filename": "12_portfolio_candidates.md",
+      "name": "Portfolio Candidates",
+      "desc": "作品集候选池（派生资产）",
+      "weight": 6,
+      "kind": "derived"
+    },
+    {
+      "filename": "13_interview_narrative_strategy.md",
+      "name": "Interview Narrative Strategy",
+      "desc": "面试叙事战略手册（派生区 + 手写区）",
+      "weight": 5,
+      "kind": "derived",
+      "regeneration": {
+        "mode": "partial",
+        "derived_parts": [
+          "Part 1",
+          "Part 2",
+          "Part 3"
+        ],
+        "authored_parts": [
+          "Part 4",
+          "Part 5",
+          "Part 6",
+          "Part 7",
+          "Part 8",
+          "Part 9",
+          "Part 10",
+          "Part 11",
+          "Part 12"
+        ],
+        "rule": "仅 derived_parts 随源文件变化重生成；authored_parts 承载方法与战术，只在用户显式要求时编辑，任何自动刷新不得覆盖。"
+      }
+    }
+  ],
+  "draft_markers": [
+    "_"
+  ],
+  "draft_dir": "_inbox",
+  "ignored_names": [
+    "README.md",
+    ".DS_Store",
+    ".gitkeep",
+    "Thumbs.db"
+  ]
+}

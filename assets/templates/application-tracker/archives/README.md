@@ -1,5 +1,6 @@
-# Case Archives（投递案例档案 v2.0）
+# Case Archives（投递案例档案）
 
+> Aligns to: v2.19.0
 按需建档。在 `01_application_index.md` 中任意投递记录满足以下条件之一时创建。
 
 ## 建档条件
@@ -16,24 +17,20 @@
 
 ## Case 文件模板
 
-```markdown
-# {Company} — {Role}
+模板实体见同目录 **`XX_case.md`**（单一来源，勿在别处复制结构）。
 
-## Timeline
-- YYYY-MM-DD Applied
-- YYYY-MM-DD Viewed
-- YYYY-MM-DD HR Interview
-- YYYY-MM-DD Rejected
+章节构成：
 
-## Feedback
-[HR / 面试官的原文反馈。记录原文，不做系统推理加工]
+| 章节 | 内容 | 由谁写 |
+|------|------|------|
+| Timeline | 关键节点日期 | Mode E3 |
+| **Interview Log** | 面试流水（轮次 / 面试官 / 形式 / 时长 / 结果） | 用户（每轮后） |
+| **Interview Retro** | 逐轮复盘（原题 / 我的回答 / 追问方向 / 卡壳点 / 改法 / 归因） | 用户（每轮后 24h 内） |
+| Feedback | 面试官原文反馈（不加工） | Mode E3 |
+| Personal Notes | 个人感受与观察 | 用户 |
+| Lessons Learned | 对该方向的反思 | 用户 |
 
-## Personal Notes
-[个人面试感受、过程中的观察]
-
-## Lessons Learned
-[对该方向的反思。如：需要强化身份叙事、准备某类案例、调整薪资策略等]
-```
+> Interview Retro 的归因与沉淀规则见 `career-dna/13_interview_narrative_strategy.md` Part 9。
 
 ## Case 文件由谁创建
 

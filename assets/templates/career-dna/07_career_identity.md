@@ -1,5 +1,6 @@
-# Career Identity（职业身份定义 v2.5）
+# Career Identity（职业身份定义）
 
+> Aligns to: v2.19.0
 <!--
 v2.5 重构：从简历摘要升级为职业身份定义。
 
@@ -15,6 +16,13 @@ v2.5 重构：从简历摘要升级为职业身份定义。
 - 10 = Career Track Portfolio（赛道组合）
 
 Online Profile = 07 + 10 + 04b + 03 的动态投影
+
+各层被谁消费（消费方**只读**，禁止改写 07 —— 07 是 Identity 的唯一定义源）：
+- Layer 1 → Online Profile Step 0（一句话身份）/ Mode D Resume Identity Lock / 简历首段身份核心名词
+- Layer 2 → Mode D Step 1（Career Positioning Primary）/ Online Profile Primary Positioning
+- Layer 3 → Mode D 身份锚点 / Online Profile Step 1 / Interview Pack「核心叙事」/ 13 Part 1-3 派生区
+- Layer 4 → Online Profile Step 2（Tier A/B/C 分层）/ Mode D Capability Interpretation / Mode C 评审 / Mode E 升级计划
+- Layer 5 → Online Profile 禁止表达列表 / Mode D 禁止表达 / 13「禁止自称的标签」/ Interview Pack「禁忌身份」
 -->
 
 ---
@@ -80,28 +88,32 @@ Online Profile = 07 + 10 + 04b + 03 的动态投影
 
 ## Layer 4: Capability Priority（能力优先级 v2.5 新增）
 
-<!-- Online Profile 生成的排序依据。不取代 04b，是对 04b 的权重标注。 -->
+<!-- Online Profile 生成的排序依据。不取代 04b，是对 04b 的权重标注。
+     v2.19.0 SSOT 收敛：本层**只承载 Tier 权重分层**，不再复制 TC 名称 ——
+     TC 名称 / Capability Identity 的唯一定义源 = `04b_transferable_capabilities.md`（消费方按 TC 编号去 04b 取名）。 -->
+
+> **TC 名称见 `04b_transferable_capabilities.md`（唯一定义源）**。本表只做 Tier 分层，刻意不复制名称 —— 复制过的名称已实测漂移（同一 TC 曾出现 4 种写法）。
 
 **Tier A — 职业核心（Personal Advantage 正文）**：
 
-| TC | Capability Identity | 权重说明 |
-|------|------|------|
-| TC001 | [Capability Identity 1] | [为什么是核心] |
-| TC002 | [Capability Identity 2] | [为什么是核心] |
-| TC003 | [Capability Identity 3] | [为什么是核心] |
+| TC | 权重说明 |
+|------|------|
+| TC001 | [为什么是核心] |
+| TC002 | [为什么是核心] |
+| TC003 | [为什么是核心] |
 
 **Tier B — 能力支撑（工作经历中体现）**：
 
-| TC | Capability Identity | 权重说明 |
-|------|------|------|
-| TC004 | [Capability Identity 4] | [为什么是支撑] |
-| TC006 | [Capability Identity 6] | [为什么是支撑] |
+| TC | 权重说明 |
+|------|------|
+| TC004 | [为什么是支撑] |
+| TC006 | [为什么是支撑] |
 
 **Tier C — 差异化（项目经历中展示或面试准备）**：
 
-| TC | Capability Identity | 权重说明 |
-|------|------|------|
-| TC005 | [Capability Identity 5] | [为什么是差异化] |
+| TC | 权重说明 |
+|------|------|
+| TC005 | [为什么是差异化] |
 
 ---
 

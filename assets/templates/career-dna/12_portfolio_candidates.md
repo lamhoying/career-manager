@@ -1,9 +1,13 @@
-# Portfolio Candidates（作品集候选池 v2.1）
+# Portfolio Candidates（作品集候选池）
 
+> Aligns to: v2.19.0
 <!--
 从 Career DNA 自动扫描生成。不依赖模型推理，仅基于 DNA 中已存在的信息。
 来源：03_projects.md / 05_story_bank.md / 04_skill_graph.md / 10_career_tracks/
 -->
+
+- **Last Generated（最近生成）**: [YYYY-MM-DD]
+- **Source Files Version**: 03=[填], 05=[填], 04=[填], 10=[填]
 
 ## Discovery Rules（发现规则）
 

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>简历模板设计稿 v4（标注版 · 双击查看版式）</title>
+<style>
+  :root {
+    --accent: #1564BF;
+    --accent-dark: #003B8E;
+    --line: #D9E2F0;
+    --text: #1A1A1A;
+    --block-bg: #EAF2FA;
+    --title: 17px;
+    --body: 14px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #f0f2f5;
+    font-family: "PingFang SC", "Microsoft YaHei", "微软雅黑", sans-serif;
+    color: var(--text);
+    padding: 32px 16px;
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
+  }
+  .page {
+    width: 794px;
+    min-height: 1123px;
+    background: #fff;
+    padding: 40px 56px;
+    box-shadow: 0 6px 24px rgba(0,0,0,.12);
+    border-radius: 4px;
+  }
+  /* 页头：姓名行 + 2×2 信息 + 证件照 */
+  .header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    border-bottom: 2px solid var(--accent); padding-bottom: 14px; margin-bottom: 16px;
+  }
+  .header-left { flex: 1; padding-right: 20px; }
+  .name-row { display: flex; align-items: baseline; gap: 16px; }
+  .name-row h1 { font-size: 24px; font-weight: 700; letter-spacing: 2px; }
+  .name-row .intent { font-size: 13px; color: #555; letter-spacing: .3px; }
+  .contact { margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 28px; }
+  .contact .item { font-size: 12.5px; color: #555; }
+  .contact .tag { color: var(--accent); font-weight: 700; margin-right: 6px; }
+  .avatar {
+    width: 100px; height: 133px;
+    border: 2px dashed #b8c7dd; border-radius: 4px;
+    background: repeating-linear-gradient(45deg, #f5f8fc, #f5f8fc 10px, #eef3fa 10px, #eef3fa 20px);
+    display: flex; align-items: center; justify-content: center;
+    color: #7a8aa0; font-size: 11.5px; text-align: center; line-height: 1.5;
+    flex-shrink: 0;
+  }
+  /* 节：节标题顶格左对齐 + 同行右侧横线；节内正文右平移 2 字符 */
+  .section { margin-top: 16px; }
+  .section-title {
+    display: flex; align-items: center;
+    font-size: var(--title); font-weight: 700; letter-spacing: 1px;
+  }
+  .section-title::after {
+    content: "";
+    flex: 1;
+    height: 1.2px;
+    background: var(--line);
+    margin-left: 12px;
+  }
+  .placeholder {
+    border: 1px dashed #c3cfdf;
+    background: #fafbfd;
+    color: #8a97a8;
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 4px;
+    line-height: 1.7;
+    margin: 6px 0 4px;
+  }
+  .placeholder .src { color: var(--accent); font-weight: 700; }
+  .ref-example {
+    background: #f4f7fb;
+    border-left: 3px solid var(--accent);
+    padding: 8px 12px;
+    margin: 4px 0 10px;
+    border-radius: 0 4px 4px 0;
+  }
+  .ref-example .tag {
+    font-size: 11.5px;
+    color: #64748b;
+    margin-bottom: 4px;
+  }
+  .skill-line { font-size: var(--body); line-height: 1.75; color: #333; }
+  .skill-line b { color: #111; }
+  .skill-line .sep { color: var(--accent); }
+  .entry { margin-bottom: 9px; }
+  .entry-meta { font-size: var(--body); font-weight: 700; color: var(--accent); }
+  .entry-meta .org { color: #111; margin-left: 12px; }
+  .entry-meta .role { color: #444; font-weight: 400; margin-left: 8px; }
+  .entry ul { margin: 4px 0 0 18px; font-size: var(--body); line-height: 1.65; color: #333; }
+  .entry li { margin-bottom: 1px; }
+  .proj { margin-bottom: 10px; }
+  .proj-name { font-size: var(--body); font-weight: 700; color: #111; }
+  .proj-desc { font-size: var(--body); color: #333; line-height: 1.65; margin-top: 2px; }
+  .proj-line { font-size: var(--body); color: #333; line-height: 1.6; margin-top: 1px; }
+  .proj-line b { color: #111; }
+  .spec-note {
+    width: 794px;
+    background: #fffbe6; border: 1px solid #ffe58f;
+    border-radius: 8px; padding: 14px 18px;
+    font-size: 13px; color: #614700; line-height: 1.7;
+  }
+  .spec-note b { color: #adad00; }
+  .spec-note code { background: #fff1c2; padding: 1px 6px; border-radius: 4px; font-size: 12px; }
+</style>
+</head>
+<body>
+
+  <div class="page">
+    <div class="header">
+      <div class="header-left">
+        <div class="name-row">
+          <h1>[姓名]</h1>
+          <div class="intent">求职意向：[目标岗位] ｜ [期望城市]</div>
+        </div>
+        <div class="contact">
+          <span class="item"><span class="tag">电话</span>[电话]</span>
+          <span class="item"><span class="tag">邮箱</span>[邮箱]</span>
+          <span class="item"><span class="tag">城市</span>[城市]</span>
+          <span class="item"><span class="tag">年限</span>[工作年限]</span>
+        </div>
+      </div>
+      <div class="avatar">📷 证件照<br>3.5 × 4.7 cm</div>
+    </div>
+
+    <!-- 6 节：v4 标注版（职业概述/核心技能/工作经验/项目经验/资格证书/教育经历） -->
+    <div class="section">
+      <div class="section-title">职业概述</div>
+      <div class="placeholder">[内容 —— 来自 final.md「职业定位」节，整段注入]</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">核心技能</div>
+      <div class="placeholder">[内容 —— 来自 final.md「核心能力」节，格式参考下方示例]</div>
+      <div class="ref-example">
+        <div class="tag">▸ 格式参考示例（1 行，非固定数量）：</div>
+        <div class="skill-line"><b>项目管理：</b>[能力1]<span class="sep">｜</span>[能力2]<span class="sep">｜</span>[能力3]<span class="sep">｜</span>…</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">工作经验</div>
+      <div class="placeholder">[内容 —— 来自 final.md「工作经历」节，条目数量按实际生成]</div>
+      <div class="ref-example">
+        <div class="tag">▸ 格式参考示例（仅 1 条示范）：</div>
+        <div class="entry">
+          <div class="entry-meta">[起止时间]<span class="org">[公司名]</span><span class="role">[岗位]</span></div>
+          <ul>
+            <li>[动词] + [做了什么] + [量化结果]</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">项目经验</div>
+      <div class="placeholder">[内容 —— 来自 final.md「项目经历」节，条目数量按实际生成]</div>
+      <div class="ref-example">
+        <div class="tag">▸ 格式参考示例（仅 1 条示范）：</div>
+        <div class="proj">
+          <div class="proj-name">[项目名]</div>
+          <p class="proj-desc">[项目一句话背景]</p>
+          <div class="proj-line"><b>核心成果：</b>[量化结果]</div>
+          <div class="proj-line"><b>技术栈：</b>[技术列表]</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">资格证书</div>
+      <div class="placeholder">[认证列表 —— 来自 final.md「技能与认证」节]</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">教育经历</div>
+      <div class="placeholder">[教育背景 —— 来自 final.md「教育背景」节，时间蓝色加粗]</div>
+      <div class="ref-example">
+        <div class="tag">▸ 格式参考示例（1 条）：</div>
+        <div class="entry-meta">[起止时间]<span class="org">[学校]</span><span class="role">[专业] · [学历]</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spec-note">
+    <b>v4 模板说明（标注版）：</b><br>
+    · <b>节标题由 md 决定</b>：渲染时节标题 = final.md 的 <code>##</code> 标题原样输出，模板不写死节名（上方括号为默认映射参考，非硬编码）<br>
+    · <b>节结构</b>：职业概述 / 核心技能 / <b>工作经验</b> / 项目经验 / 资格证书 / 教育经历（已删「其他相关经历」；「重点工作经验」简化→「工作经验」）<br>
+    · <b>个人信息 2×2</b>：第一行 电话 + 邮箱；第二行 城市 + 年限（grid 两栏，标签蓝色）<br>
+    · <b>姓名行</b>：姓名大字号 + 右侧小字号「求职意向：[目标岗位] ｜ [期望城市]」区分层级<br>
+    · <b>证件照</b>：<code>3.5 × 4.7 cm</code>（2:3），位于姓名正右方<br>
+    · <b>渲染来源</b>：投递版由 <code>export_resume.py</code> 从 final.md 渲染，此处示例仅供格式参考
+  </div>
+
+</body>
+</html>

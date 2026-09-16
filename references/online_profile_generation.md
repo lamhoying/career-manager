@@ -1,20 +1,10 @@
-# Online Profile Generation（Boss 在线简历生成规则 v2.5.6）
+# Online Profile Generation（Boss 在线简历生成规则）
 
-<!--
-推理链（v2.5.6 — Identity → Capability → Evidence）：
-  Step 0:   Identity Resolution — 读取 07 Layer 1,2,5 → 锁定职业身份
-  Step 0.3: Capability Resolution — 读取 07 Layer4 + 04b → 锁定核心能力体系
-  Step 0.5: Experience Reframing — 经历重构为能力形成视角（R04）
-  Step 0.7: Evidence Retrieval — 读取 03 → 以 TC 驱动检索证据（R05）
-  Step 1:   Identity Anchor — 读取 07 + Step 0.3 → 身份锚点
-  Step 2:   Capability Priority — 07 Layer4 → Tier A/B/C
-  Step 3:   TC Selection — 04b → 仅取 Tier A TCs
-  Step 4:   Evidence Filtering — 03 → 仅保留 Tier A 案例
-  Step 5:   Personal Advantage（R05-R10 强制规则）
-  Step 6:   展开工作经历 / 项目经历 / Track Coverage
-
-核心约束：Identity → Capability → Evidence 推理链不可逆序。
-Online Profile 是职业营销材料，不是经历摘要。
+> Aligns to: v2.19.0
+<!-- Pipeline 索引（**非定义** —— 唯一定义见下文 §「Online Profile Generation Pipeline」）
+   Step 0 / 0.3 / 0.5 / 0.7 / 1 / 2 / 3 / 4 / 5 / 6
+   推理链约束：Identity → Capability → Evidence，不可逆序（细则见 §Rule R07）。
+   本索引只列步骤号，不重复各步的输入/输出 —— 避免同一份 Pipeline 在本文件内出现两份定义。
 -->
 
 ---
@@ -22,6 +12,11 @@ Online Profile 是职业营销材料，不是经历摘要。
 ## Identity Resolution（身份解析 v2.5.3）
 
 **生成 Online Profile 之前，必须先完成身份解析。此阶段不读 03、04、04b。**
+
+> **K4 交叉指针（v2.19.0）**：本结构与 `references/mode_d_job_application.md` §Step 4.5b
+> `Resume Identity Lock` 是**同一身份**在两个渠道的应用（本处 = Online Profile 渠道，那里 = ATS 简历渠道）。
+> **定义在 `07`**（其头部已声明「07 是 Identity 的唯一定义源」）—— 两处均为渠道级应用，刻意不合并。
+> ⚠️ 本文件的 `R01`–`R07` 是「**怎么用**」的使用规则，与 07 的「**是什么**」不是重复，**不得当重复删除**。
 
 ### 解析步骤
 
@@ -88,7 +83,11 @@ Role Interpretation:
     - [能力维度 3]
 ```
 
-规则：真实岗位始终保留（事实不可修改）；Role Interpretation 优先使用 Capability Identity 关键词；禁止将岗位名称直接改写为更高级的头衔。
+规则：真实岗位始终保留（事实不可修改）；Role Interpretation 优先使用 Capability Identity 关键词。
+
+**角色标签白名单**：Role Interpretation 的「角色级标签」必须取自 04b 该 TC 在**本赛道** `Position Constraint.推荐` 的既有措辞。
+**禁令的准确边界**：禁止的是**凭空升级头衔**（04b 中不存在、无出处的更高头衔）；**不禁止**使用 04b `Position Constraint.推荐` 中**已登记且有出处**的角色标签。
+**fail-safe**：若该 TC 在**本赛道**无 `Position Constraint` 段、或 `推荐` 为**空** → **不得使用任何角色标签**，退回职责层表达。**禁止向「无来源」处补写标签。**
 
 ---
 
@@ -229,7 +228,7 @@ Capability Resolution:
 
 ### Step 5: Personal Advantage Generation（个人优势生成）
 
-基于 Step 0–4 输出，R01-R10 强制规则生成。
+基于 Step 0–4 输出，R01-R07 强制规则生成。
 
 ### Step 6: Experience & Project Expansion
 
@@ -282,7 +281,7 @@ Capability Resolution:
 - [量化结果 2]
 ```
 
-### 工作内容规则（R06+R07 约束）
+### 工作内容规则（R05+R06 约束）
 
 每条内容必须回答三个问题（R04）且映射到至少一个 TC（R05）。无法映射的内容 → 删除。
 

@@ -1,5 +1,6 @@
-# Boss Greeting（Boss 直聘打招呼语 v1.6.3）
+# Boss Greeting（Boss 直聘打招呼语）
 
+> Aligns to: v2.19.0
 ## JD Summary（JD 摘要）
 - **岗位**: [JD Role]
 - **公司**: [Company]

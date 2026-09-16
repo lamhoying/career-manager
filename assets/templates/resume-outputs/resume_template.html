@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>简历模板 v1（抽象模板 — 占位符 + 样式，用户可编辑）</title>
+<!--
+  v2.8.1 模板驱动架构：
+  - 本文件是「设计源」：用户修改 CSS 变量 / 结构 / 类 = 修改设计，无需改渲染脚本
+  - 占位符语法（mini_template.py 渲染）：
+      [姓名变量] [意向变量] [证件照变量]
+      [信息循环]...[/信息循环]            → 2×2 联系信息（含 [标签变量] [值变量]）
+      [节循环]...[/节循环]                → 全部章节（含 [标题变量]）
+          [段落循环]<p>[当前项]</p>[/段落循环]  → 节内正文段落
+          [条目循环]...[/条目循环]        → 节内条目（工作/项目经历等，含 [meta变量] [行循环]）
+   - 渲染引擎支持的结构类（约定，勿改名）：
+      .header / .photo / .name / .intent / .contact / .section / .section-title
+      .entry / .entry-meta / ul / p
+-->
+<style>
+  /* ===== 配色调色板（换皮肤只改这里 —— 9 个颜色值集中管理） ===== */
+  :root {
+    --accent: #1564BF;            /* 强调色：公司行/日期/标签 */
+    --accent-rgb: 21, 100, 191;   /* 强调色 RGB 三分量（供装饰层 rgba() 用；改 --accent 时须同步） */
+    --accent-dark: #003B8E;       /* 深色辅助 */
+    --line: #99c4ee;              /* 分隔线/横线 */
+    --block-bg: #99c4ee;          /* 节标题条淡色底 */
+    --text: #1A1A1A;              /* 正文 */
+    --header-text-color: #FFFFFF; /* header 文字色（姓名/意向/信息值；深色背景时设 #FFFFFF） */
+    --header-tag-color: #FFFFFF;  /* header 标签色（电话/邮箱/城市 小标签） */
+    --shape-base-color: #4A7BC2;  /* header 底层梯形色 */
+    --shape-top-color: #1A3A6E;   /* header 顶层梯形色 */
+
+    /* ===== 设计变量（布局/字号/字体，一般不动；颜色勿在此重复定义） ===== */
+    --font: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    --title-size: 20pt;       /* 姓名 */
+    --heading-size: 14pt;     /* 节标题 */
+    --body-size: 10.5pt;      /* 正文 */
+    --line-spacing: 1.5;      /* 行距 */
+    --photo-width: 3.5cm;     /* 证件照宽 */
+    --page-margin-top: 18mm;  /* 页边距上下 */
+    --page-margin-side: 16mm; /* 页边距左右 */
+    /* ===== 布局变量（渲染引擎从这里读取，改这里 = 改 PDF/DOCX 版式） ===== */
+    --body-indent: 20px;      /* 节内正文右平移（2 字符；4 字符=56px） */
+    --bullet-indent: 13px;    /* bullet 再右平移 */
+    --heading-space-before: 2px;  /* 节标题前间距 */
+    --heading-space-after: 0px;    /* 节标题后间距 */
+    --entry-space: 4px;       /* 条目（工作/项目经历）间距 */
+    /* ===== Header 布局变量（照片边距 / 信息间距 / 字号） ===== */
+    --header-pad-top: 12px;   /* header 块上内边距（信息顶距 header 上边） */
+    --header-pad-bottom: 12px;/* header 块下内边距 */
+    --header-pad-left: 14px;  /* header 块左内边距（信息左边界） */
+    --header-pad-right: 0px; /* header 块右内边距（照片距右边界） */
+    --photo-margin-top: -20px;  /* 照片额外上偏移（0=与信息顶平齐；负值=上移贴边） */
+    --photo-gap: 12px;        /* 照片与左侧信息的水平间距 */
+    --name-to-info: 18px;     /* 姓名行与 2×2 信息之间间距 */
+    --info-line-gap: 2px;     /* 2×2 信息两行之间间距 */
+    --intent-size: 12pt;      /* 求职意向字号 */
+    --info-size: 10.5pt;      /* 电话/邮箱字号 */
+    /* ===== 背景变量（v2.8.2） ===== */
+    --page-bg-type: none;     /* 整页背景：none(白) | color | image */
+    --page-bg-value: #FFFFFF; /* 页面背景色 或 图片路径(assets/backgrounds/) */
+    --page-bg-opacity: 100%;  /* 背景透明度（水印场景用低值） */
+    --header-bg-type: shape;  /* header 背景：color(纯色块) | image | shape(形状组合，默认双梯形堆叠 dark+light) */
+    --header-bg-value: var(--block-bg);  /* header 背景色 或 图片路径 */
+    --header-shape: rounded;  /* 单形状（兼容旧版）：rounded|square|wave|slant 主形状 + block|dots|stripe 装饰 */
+    --header-bg-height: 108pt; /* header 背景区域高度：auto=跟随照片高度 | 固定 pt（如 130pt） */
+    --header-bg-stroke: ;     /* 主形状描边色（留空=无描边；填色值如 #D9E2F0=淡蓝描边） */
+    /* --header-text-color / --header-tag-color → 已上移至「配色调色板」 */
+
+    /* ===== 多形状堆叠（v2.8.4，优先于单形状）：--header-shapes 层名列表 + 每层 --shape-名称-参数 ===== */
+    --header-shapes: base,top; /* 逗号分隔层名（v2.8.7 起默认 base,top 双梯形；空=用上方 --header-shape 单形状） */
+    --shape-base-type: trapezoid;    /* 底层形状类型：trapezoid|rounded|square|slant */
+    /* --shape-base-color → 已上移至「配色调色板」 */
+    --shape-base-height: 108pt;       /* 底层高度：auto=跟随背景高度（完整包裹照片）| 固定 pt */
+    --shape-base-insets: 0 0 20 0;   /* 梯形 4 顶点缩进 pt：顶左 顶右 底左 底右（负数=外扩） */
+    --shape-base-offset-x: 0;        /* 底层横向偏移 pt */
+    --shape-base-offset-y: 0;        /* 底层纵向偏移 pt（正=上移，负=下移，相对 header 背景底边） */
+    --shape-base-align: bottom;      /* 层垂直对齐：bottom=配合 offset-y（默认）| top=顶对齐（自动算 offset，忽略 offset-y） */
+    --shape-top-type: square;
+    /* --shape-top-color → 已上移至「配色调色板」 */
+    --shape-top-height: 97pt;        /* 顶层高度 pt（auto=跟随背景高度） */
+    --shape-top-insets: 0 0 0 0;     /* 梯形 4 顶点缩进 pt：顶左 顶右 底左 底右（负数=外扩；如 -25 0 90 30=顶左伸出/底边收窄） */
+    --shape-top-offset-x: 0;         /* 顶层横向偏移 pt */
+    --shape-top-offset-y: 0;         /* 顶层纵向偏移 pt（正=上移；如 45=叠到底层上半部；align: top 时忽略） */
+    --shape-top-align: top;       /* 层垂直对齐：bottom=配合 offset-y（默认）| top=顶对齐（顶部与区域顶平齐，改 height 无需再算 offset-y） */
+    /* -- 形状参数（只影响 shape 类型） -- */
+    --shape-wave-amplitude: 10px;   /* wave 波浪高度 */
+    --shape-wave-segments: 40;      /* wave 平滑度：PDF 贝塞尔段数 */
+    --shape-wave-line: #D9E2F0;     /* wave 描边色（留空=无；优先用 --header-bg-stroke） */
+    --shape-slant-angle: 45deg;     /* slant 斜切角度 */
+    --deco-block-alpha: 0.13;       /* block 装饰块透明度 */
+    --deco-dots-alpha: 0.30;        /* dots 圆点透明度 */
+    --deco-stripe-angle: 45deg;     /* stripe 斜条角度 */
+    --deco-stripe-alpha: 0.22;      /* stripe 斜条透明度 */
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--font);
+    color: var(--text);
+    font-size: var(--body-size);
+    line-height: var(--line-spacing);
+    background: var(--page-bg-value);   /* 页面背景（v2.8.2：--page-bg-type/value） */
+  }
+
+  /* ===== 页头：淡蓝圆角块 ===== */
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    background: var(--block-bg);
+    border-radius: 8px;
+    padding: var(--header-pad-top) var(--header-pad-right) var(--header-pad-bottom) var(--header-pad-left);
+    margin-bottom: 16px;
+  }
+  .header-left { flex: 1; padding-right: 12px; }
+  .name {
+    font-size: var(--title-size);
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--header-text-color);
+  }
+  .intent {
+    font-size: var(--intent-size);
+    color: var(--header-text-color);
+    margin-left: 16px;
+    font-weight: 400;
+  }
+  .contact {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--info-line-gap) 24px;
+    margin-top: var(--name-to-info);
+  }
+  .contact .item { font-size: var(--info-size); color: var(--header-text-color); }
+  .contact .tag { color: var(--header-tag-color); font-weight: 700; margin-right: 6px; } /* 标签"电话："后的值间距（PDF/DOCX 引擎以 &nbsp;/空格等效模拟） */
+  .photo {
+    width: var(--photo-width);
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: var(--photo-margin-top);   /* 照片额外上偏移 */
+    margin-left: var(--photo-gap);         /* 照片与左侧信息水平间距 */
+  }
+
+  /* ===== 节：节标题顶格左对齐 + 同行右侧横线；节内正文统一右平移 2 字符 ===== */
+  .section { margin-top: 14px; }
+  .section-title {
+    display: flex;
+    align-items: center;
+    font-size: var(--heading-size);
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text);
+  }
+  .section-title::after {
+    content: "";
+    flex: 1;
+    height: 1.2px;
+    background: var(--line);
+    margin-left: 12px;
+  }
+  /* 节内正文（段落 / entry / ul）统一右平移 28px（约 2 字符） */
+  .section > p { margin: 6px 0 6px 28px; }
+  .section > .entry { margin: 8px 0 8px 28px; }
+  .section > ul { margin-left: 46px; }
+
+  /* ===== 条目：日期/公司蓝色加粗 + bullet ===== */
+  .entry { margin: 8px 0; }
+  .entry-meta {
+    font-size: var(--body-size);
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .entry ul {
+    margin: 4px 0 0 18px;
+    list-style: disc;
+  }
+  .entry li { margin-bottom: 2px; }
+  /* ===== 背景层（v2.8.2：header 形状组合叠加，内容浮最上） ===== */
+  .header {
+    position: relative;               /* 形状层绝对定位锚点 */
+    overflow: hidden;
+  }
+  .header .shape-layer {
+    position: absolute; left: 0; top: 0;
+    width: 100%; height: 100%; z-index: 0;
+    pointer-events: none;
+  }
+  .header .shape-layer svg { width: 100%; height: 100%; display: block; }
+  .header .shape-layer .deco-block {
+    position: absolute; right: 8px; top: 10px;
+    width: 96px; height: 30px;
+    background: rgba(var(--accent-rgb), var(--deco-block-alpha));
+    border-radius: 10px 2px 10px 2px;
+  }
+  .header .shape-layer .deco-dots { position: absolute; left: 30px; bottom: 10px; }
+  .header .shape-layer .deco-dots span {
+    display: inline-block; border-radius: 50%;
+    background: rgba(var(--accent-rgb), var(--deco-dots-alpha));
+    margin-right: 6px;
+  }
+  .header .shape-layer .deco-stripe {
+    position: absolute; right: 18%; bottom: 8px;
+    width: 90px; height: 6px; border-radius: 3px;
+    background: repeating-linear-gradient(calc(var(--deco-stripe-angle) * -1),
+      rgba(var(--accent-rgb), var(--deco-stripe-alpha)) 0 6px, transparent 6px 12px);
+  }
+  .header .header-left, .header .photo { position: relative; z-index: 2; }
+</style></head>
+<body>
+
+  <!-- ===== 页头 ===== -->
+  <div class="header">
+    <!-- 形状层（v2.8.4 多形状：--header-bg-type: shape 时注入每层 path/color/viewbox；color/image 时为空不渲染） -->
+    {{#each header_shape_layers}}
+    <div class="shape-layer">
+      <svg viewBox="{{viewbox}}" preserveAspectRatio="none">
+        <path d="{{path}}" fill="{{color}}"/>
+      </svg>
+    </div>
+    {{/each}}
+    <!-- 装饰层（单形状模式 block/dots/stripe；多形状模式为空） -->
+    {{#each header_decos}}
+    <div class="{{cls}}">{{{html}}}</div>
+    {{/each}}
+    <div class="header-left">
+      <span class="name">{{姓名}}</span><span class="intent">{{意向}}</span>
+      <div class="contact">
+        {{#each 信息}}
+        <div class="item"><span class="tag">{{标签}}：</span>{{值}}</div>
+        {{/each}}
+      </div>
+    </div>
+    <img class="photo" src="{{证件照}}" alt="证件照">
+  </div>
+
+  <!-- ===== 章节（工作经历/项目/教育等统一结构） ===== -->
+  {{#each 节}}
+  <section class="section">
+    <div class="section-title">{{标题}}</div>
+    {{#each 段落}}<p>{{this}}</p>{{/each}}
+    {{#each 条目}}
+    <div class="entry">
+      <div class="entry-meta">{{meta}}</div>
+      <ul>{{#each 行}}<li>{{this}}</li>{{/each}}</ul>
+    </div>
+    {{/each}}
+  </section>
+  {{/each}}
+
+</body>
+</html>
+

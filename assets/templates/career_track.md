@@ -7,6 +7,7 @@
 
 v1.4 新增: Market Validation / Matched Hiring Intent / Market Demand Signals / Evidence Strength
 v1.4.2 新增: Track Confidence Breakdown（三分量分解）/ Market Validation Status / Validation Explanation
+v2.12.0 变更: Track Strategy 由独立策略文件改为本文件内的实体段（S1-S4）—— 修复幽灵引用
 -->
 
 - **Track**: [赛道名称]
@@ -98,13 +99,37 @@ v1.4.2 新增: Track Confidence Breakdown（三分量分解）/ Market Validatio
 - **Secondary Track（副赛道）**: [Track Name] — Confidence: [XX]
 - **Supporting Track（支持赛道）**: [Track Name] — Confidence: [XX]
 
-## Track Strategy（赛道策略 v2.7.1）
-
-<!-- 由 Mode C Step 7 Track Strategy Generation 自动生成 -->
-<!-- 存储于 career-dna/10_career_tracks/{track}_strategy.md -->
-<!-- 包含：Recommended Positioning / Top Stories / Self-Intro / Project Priority -->
-
-- **Strategy File**: `{track_name}_strategy.md`
-- **Last Generated**: [YYYY-MM-DD]
-
 > 系统自动按 Confidence 排序。Primary 用于 Boss 标题；Secondary/Supporting 补充展示。
+
+## Track Strategy（赛道策略 v2.12.0）
+
+<!-- Mode C Step 7 生成；v2.12.0 起写在本文件内，废除独立文件（原声明为 {track}_strategy.md） -->
+
+> 与上方 `Recommended Projects` / `Recommended Stories` **分工不重叠**：
+> 上方是「可用清单」（哪些项目 / 故事可用），本段是「排序与场景绑定」。
+> 本段的项目 / 故事栏**只写条目标题，禁止粘贴正文**；已存在则**原地刷新本段**，不动同文件其他段落。
+
+- **Last Generated**: [YYYY-MM-DD]
+- **Source**: 07 / 04b / 本文件上方段落
+
+### S1. Recommended Positioning（本赛道的定位变体）
+
+[一句话 —— 对招聘方说的版本，区别于上方 `## Positioning` 的自我描述版]
+
+### S2. Self-Intro Script（30 秒框架）
+
+[骨架：身份锚点 → 2 个量化锚点 → 与本赛道的关系；正文模板见 13 Part 4 阶段一]
+
+### S3. Project Priority（项目展示顺序）
+
+| 顺序 | 项目（引上方 Recommended Projects） | 对这个赛道强调什么 |
+|:--:|------|------|
+| 1 | [项目名] | [强调点] |
+
+### S4. Story Mapping（故事绑定）
+
+| 场景 | 选用故事（引上方 Recommended Stories） | 为什么 |
+|------|------|------|
+| [开场 / 跨部门 / 技术深度 / 失败复盘] | [故事名] | [为什么选它] |
+
+> `Gap Mitigation`（缺口应对）**不在本段建列** —— 见上方 `## Known Gaps` 与 `## Improvement Priorities`，避免双份维护。

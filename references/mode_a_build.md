@@ -18,7 +18,7 @@
 - 优先快速完成职业资产建档。
 - 缺失信息进入 Question Backlog，不阻塞建档流程。
 
-## Workflow（10 步工作流）
+## Workflow（12 步工作流）
 
 ### Step 1: 初始化目录结构
 
@@ -107,6 +107,41 @@ python3 scripts/init_career_dna.py [目标目录]
 | Capability Priority | 04b 的 Tier A/B/C 权重标注 | 哪些能力写进个人优势 |
 | Non-Positioning Statement | 经历来源 ≠ 职业定位 | 我不是什么 |
 
+### Step 8.5: 生成面试叙事战略手册（Interview Narrative Strategy v2.11.0）
+
+**目标**：以 `07_career_identity`（身份与叙事主线）+ `05_story_bank`（故事编号与 Narrative Strength 评分）+ `02_timeline`（时间线事实）+ `03_projects`（量化证据）+ `04b`（能力措辞）为输入，生成 `career-dna/13_interview_narrative_strategy.md`。
+
+模板：`assets/templates/career-dna/13_interview_narrative_strategy.md`（**12 Parts，分派生区 / 手写区**）。模板尾部另含「**内容填充契约**」—— 定义每一节只允许三种形态（实体内容 / 规则 / 指针），并禁止「空指示」。
+
+**分区规则（v2.11.0 · 必须遵守）**：
+
+| 区 | Part | 生成方式 |
+|:--:|------|------|
+| **派生区** | Part 1-3 | 由上游文件推导，**自动生成** |
+| **手写区** | Part 4-12 | 方法论与战术，**推不出来** —— 首次生成时按模板骨架落地，此后任何刷新都不得覆盖 |
+
+> ⚠️ 手写区被自动刷新吃掉是**肉眼不可见**的事故类型，故 `validate_career_dna.py` 用 P1 `derived-part-drift`
+> 检查 12 个 Part 标题是否齐全，并用 P1 `undeclared-part` 检查有没有多出未登记的 Part。收尾必须跑。
+
+| Part | 要做什么 | 硬性约束 |
+|------|----------|----------|
+| Part 1 核心叙事主线 | 提炼一句话核心叙事 + 三大支柱（各配 TC）+ 底层差异化视角 + 叙事弧线 | 支柱必须映射到 TC；弧线里的"路径"不得写成"身份" |
+| Part 2 离职故事话术 | 为每一次变动写话术 + 叙事逻辑，统一落到「阶段完成 → 主动选择 → 能力升级」 | **本 Part 是离职话术的唯一 SSOT**；`02_timeline` 只留时间线事实与指针，禁止两处各写一份 |
+| Part 3 赛道转变叙事 | 主转变 / 次转变 / 通用应对结构 | 「禁止自称的标签」必须与 07 Layer 5 完全一致 |
+| Part 4 面试三阶段 | 自我介绍结构 + STAR 升维收束 + 四类问题策略 + 反问清单 | 故事编号与评分只能引自 05，**禁止在本文件改分** |
+| Part 5 通用战术 | 数字引用卡 / 语言切换 / 状态管理 | 每个数字必须能在 03 或 05 找到出处，禁止估算或夸大 |
+| Part 6 口径一致性与追问纵深 | 三层纵深模型 + 核心主张纵深卡 + 口径交叉校验表 + 追问防御 | 规模类数字**必须区分主语**（项目整体 vs 直属团队）；与 core 冲突时一律以 03/05 为准，**只改本手册** |
+| Part 7 分轮次与分题型打法 | 分轮次打法总表（谁面 / 考什么 / 必带 / 禁忌 / 收尾）+ 跨轮次叙事一致性 + **7.4 分题型应对**（案例 / 白板 / take-home / 群面 / 压力面 / 技术对等） | **不得与 `01` 报告 Part 6 重复**（那份是风险视角）；7.1 列结构不得改，`04` §7.1 按它对齐 |
+| Part 8 面试后跟进 | 时间轴与动作 + 感谢信模板 ×3 + 催进度公式 + 失联处置 + 口头 Offer 应对 | 单轮记录写 `04` §8，**本 Part 只放通用方法** |
+| Part 9 复盘回路 | 复盘四问 + 沉淀规则 + 卡壳点归因 + 落点说明 | 记录落点在 `application-tracker/archives/`，**本 Part 只存方法与规则** |
+| Part 10 反向尽调 | 尽调三维度（业务产品 / 组织工程 / 风险信号）+ 情报→反问转化公式 + 结论落点 + 红线 | 与 Part 4 阶段三分工：Part 4 = 反问**输出**，本 Part = 尽调**输入**；只用公开信息 |
+| Part 11 录用阶段 | Offer 谈判四原则 + 三场景应对与示范句 + 禁忌 + 背调四份材料 + 推荐人不足应对 + 红线 | 与 Part 8.5 衔接（8 管跟进、11 管定案）；收入 / 离职口径必须与 Part 2 / 11.1 一致 |
+| Part 12 英文面试准备 | 四件套材料规格 + 语言能力表述方式 + 听不懂/卡壳处置 + 英文版口径要求 | **本 Part 只定义规格与规则**；本轮英文稿写 `04` §10；数字口径不得因换语言放大 |
+
+**生成后**：填写头部 `Last Generated` 与 `Source Files Version`（07/05/02/03/04b），否则报 P2；随后跑 `validate_career_dna.py` 确认无 P1 `derived-part-drift` 与 P1 `undeclared-part`。
+
+**禁止**：把本步骤做成"再写一份简历摘要"——本文件定位是**面试表达层**（逐字可说的话术），不复述经历。单次 JD 的定制策略仍归 `resume-outputs/{JD}/04_interview_pack.md`。
+
 ### Step 9: 发现职业方向并生成 Career Track 文件（Career Track Discovery）
 
 **目标**：识别 2-4 个潜在职业方向，并为每个方向生成完整的 `career-dna/10_career_tracks/{track}.md` 文件，而不是只写一句话。
@@ -159,6 +194,13 @@ Track Confidence 不再是一个静态数值，而是三分量加权计算：
 | **Known Gaps** | 从 Skill Graph Gaps 提取该 Domain 相关的缺失能力，标注当前状态和重要性 |
 | **Improvement Priorities** | 基于 Known Gaps，按重要性分级为短期/中期/长期提升建议 |
 | **Target Roles** | 该赛道下可投递的具体岗位名称 |
+| **Track Strategy — S1 Positioning 变体** | 从 07 Career Positioning 改写为「对招聘方说」的版本（区别于本文件 `## Positioning` 的自我描述版） |
+| **Track Strategy — S2 Self-Intro 框架** | 身份锚点 + 2 个量化锚点 + 与本赛道的关系（**骨架**，正文模板见 13 Part 4 阶段一） |
+| **Track Strategy — S3 Project Priority** | 从上方 `Recommended Projects` 排序（**只写条目标题，禁止粘贴正文**） |
+| **Track Strategy — S4 Story Mapping** | 从上方 `Recommended Stories` 绑定场景（开场 / 跨部门 / 技术深度 / 失败复盘） |
+
+> **`## Track Strategy` 段（v2.12.0）**：由 Mode C Step 7 生成，**写在本文件内**（废除独立文件写法）；
+> 该段自带 `Last Generated`，**不动文件头 `Last Updated`**（后者 = 赛道置信度重评时间，语义不同）。
 
 **示例输出**：
 
@@ -234,33 +276,19 @@ python3 scripts/completeness_checker.py [career-dna目录路径]
 
 **推理链**：Career DNA → Profile Positioning Engine → Universal Strengths → Online Career Profile
 
-**Online Profile Generation Pipeline**（v2.5.6，R01-R10 强制规则 + Identity→Capability→Evidence）：
+**Online Profile Generation Pipeline**：**唯一定义见 `references/online_profile_generation.md` 的 §「Online Profile Generation Pipeline」**（含每步的输入/输出表）。
 
-| 步骤 | 操作 | 输入 | 输出 |
-|------|------|------|------|
-| 0 | Identity Resolution | `07_career_identity` Layer 1,2,5 | 职业身份 + 禁止表达 |
-| 0.3 | Capability Resolution | Step 0 + `07_career_identity` Layer4 + `04b_transferable_capabilities` | 核心能力体系（Core Value Proposition） |
-| 0.5 | Experience Reframing | Step 0 + 0.3 + `03_projects` TC 映射 + `04b` | Reframed Experience（能力视角） |
-| 0.7 | Evidence Retrieval | Step 0.3 + `03_projects` + `02_timeline` | 按 TC 关联度筛选后的证据列表 |
-| 1 | Identity Anchor | Step 0 + 0.3 + 0.5 + 0.7 + `07_career_identity` Layer 3 | 身份锚点 + 市场定位 + 价值主张 |
-| 2 | Capability Priority | `07_career_identity` Layer 4 + `04b_transferable_capabilities` | Tier A/B/C 排序后的 TC |
-| 3 | TC Selection | Step 2 输出 | Tier A TCs（优先） |
-| 4 | Evidence Filtering | Step 3 输出 + `03_projects`（含 TC 映射） | 筛选后的案例列表 |
-| 5 | 生成个人优势 | Step 0–4 + R01-R10 规则 | ≤300 字能力摘要（非经历摘要） |
-| 6 | 展开工作经历/项目经历/Track Coverage | Step 0.5 + Step 4 输出 + `02_timeline` + `12_portfolio_candidates` | 完整 Online Profile |
+本手册**不重复该表** —— 步骤索引：Step 0 → 0.3 → 0.5 → 0.7 → 1 → 2 → 3 → 4 → 5 → 6（Identity → Capability → Evidence，不可逆序）。
 
-**规则**：
-- R05 → 全 Pipeline：能力优先于经历。个人优势是能力摘要，不是经历摘要。禁止经历驱动生成。
-- R06 → Step 0.5+6：经历必须回答能力形成三问（形成什么能力 / 解决什么问题 / 体现什么价值）。
-- R07 → Step 0.5+0.7+6：每个职责段落必须映射 TC。无关内容删除/合并/降级。
-- R08 → Step 0.5：保留真实岗位 + 增加角色解释层。禁止修改岗位事实。
-- R09 → Step 5+6：Capability 密度 ≥ 70%。「负责…」占比超 30% → 判定失败。
-- R10 → 全 Pipeline：固定 Identity→Capability→Evidence 推理链。禁止跳过 Capability Resolution。
+**规则**（编号对齐 `online_profile_generation.md` v2.7 后的正式编号 R01-R07）：
+
 - R01 → Step 0+1 执行：07 是唯一身份来源。禁止统计岗位频次作为职业身份。
-- R02 → Step 5 检查：经历仅作为证据，不得作为身份定义。
-- R03 → Step 5 检查：主语来自 Career Positioning，不得来自原始岗位名。
-- R04 → Step 0.5+5+6 执行：经历角色名和工作内容重构为能力形成视角。
-- R03 → Step 5 检查：主语来自 Career Positioning，不得来自原始岗位名。
+- R02 → Step 5 检查：经历仅作为证据，不得作为身份定义；主语来自 Career Positioning，不得来自原始岗位名。
+- R03 → Step 0.5 执行：保留真实岗位 + 增加角色解释层，禁止修改岗位事实，禁止将岗位名改写为更高级头衔；经历角色名与工作内容重构为能力形成视角。
+- R04 → Step 0.5+5+6 执行：能力优先于经历；经历必须回答能力形成三问（形成什么能力 / 解决什么问题 / 体现什么价值）；允许高抽象，动词可升级（参与→建立/推动、负责→主导/统筹）。
+- R05 → Step 0.5+0.7+6 执行：每个职责段落必须映射 TC；无法映射的内容删除/合并/降级。
+- R06 → Step 5+6 检查：Capability 密度 ≥ 70%。「负责…」占比超 30% → 判定失败。
+- R07 → 全 Pipeline：固定 Identity→Capability→Evidence 推理链，禁止跳过 Capability Resolution。
 
 ## Important Rules（重要规则）
 
@@ -271,6 +299,7 @@ python3 scripts/completeness_checker.py [career-dna目录路径]
 5. **Track 文件必须生成**。Step 9 必须为每个识别的 Track 生成完整的 `{track}.md` 文件，而不是只写摘要。
 6. **Backlog 问题必须关联 Track**。Step 9 产生的 Known Gaps 转化为 Backlog 问题时，必须标注 Track / Gap / Skill / Impact 关联字段。
 7. **完成后向用户展示完整度报告和 Track 总览**，并告知 Backlog 中有哪些待补充问题，鼓励用户在 Mode B 中逐步补充。
+8. **写入契约（v2.11.0）**：只允许写入 `assets/career_dna_manifest.json` 中已登记的文件。任何临时分析、草稿、单次提问产物一律写入 `career-dna/_inbox/`（下划线前缀 = 非 SSOT）或 `resume-outputs/`，**不得**落到 `career-dna/` 根目录。收尾时运行 `python3 scripts/validate_career_dna.py <career-dna目录>` 自检——若报 P0 `orphan`，先移出或补登记再结束；若报 P1 `derived-part-drift`（13 号手册的派生区 / 手写区标题缺失），须先从模板重建缺失的 Part 骨架再结束；若报 P1 `undeclared-part`（13 号手册多出未登记的 Part），须补登记 manifest 的 `regeneration.*_parts` 或删除该 Part。
 
 ### Step 12: Portfolio Discovery & Output（作品集发现与生成 v2.1）
 

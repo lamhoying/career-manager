@@ -1,10 +1,11 @@
-# Transferable Capability Generation（可迁移能力生成规则 v2.3）
+# Transferable Capability Generation（可迁移能力生成规则）
 
+> Aligns to: v2.19.0
 ## 触发条件
 
 - Mode A Step 9.5：Skill Graph 构建完成后自动触发
 - Mode B Step 4.5：Skill Graph 能力条目变更后触发
-- Mode D Step 4.5：JD 分析时作为映射源调用
+- Mode D Step 4.5a：JD 分析时作为映射源调用
 
 ## Capability Identity 推导规则（v2.3.1）
 

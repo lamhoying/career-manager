@@ -146,7 +146,7 @@ Evidence Gap（来自 01_jd_match_report.md Part 5.4 Evidence Risks）
 
 | 字段 | 来源 | 示例 |
 |------|------|------|
-| Triggered By JD（触发JD） | 当前 `resume-outputs/{YYYYMMDD}-{company}-{role}/` 目录名 | 20260720-[某公司]-[role] |
+| Triggered By JD（触发JD） | 当前 `resume-outputs/{YYYYMMDD}-{company}-{role}/` 目录名 | [YYYYMMDD]-[某公司]-[role] |
 | Triggered By Role（触发岗位） | JD Match Report Part 2 Role 字段 | [某岗位名称] |
 | Triggered By Company（触发公司） | JD Match Report Part 2 Company 字段 | [某公司] |
 | Triggered By Track（触发赛道） | JD Match Report Part 2 Track 字段 | [某Track名称] |
