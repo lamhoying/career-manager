@@ -8,6 +8,25 @@
 
 ---
 
+## 目录
+
+- [为什么需要它](#为什么需要它)
+- [这是什么：Career DNA](#这是什么career-dna)
+- [系统架构](#系统架构)
+- [四层架构](#四层架构)
+- [核心原则](#核心原则)
+- [五大工作模式](#五大工作模式)
+- [关键能力](#关键能力)
+- [触发场景](#触发场景)
+- [跨平台兼容性](#跨平台兼容性)
+- [安装方式](#安装方式)
+- [目录结构](#目录结构)
+- [首次使用](#首次使用)
+- [版本与更新](#版本与更新)
+- [License](#license)
+
+---
+
 ## 为什么需要它
 
 大多数人的职业资产是**碎片化、不可复用**的：
@@ -21,21 +40,62 @@ Career Manager 不帮你「美化一份简历」，而是帮你建立一个**可
 
 ---
 
-## 这是什么
+## 这是什么：Career DNA
 
 Career Manager 是一个 **AI 助手技能包（Skill）**，可运行于 WorkBuddy、Claude Code、OpenAI Codex、Cursor 等多种支持自定义指令 / 技能的 agent 环境。它围绕一个核心思想设计：
 
 > **Career DNA = 你职业经历、能力、项目、故事与成长轨迹的唯一事实源（Single Source of Truth）。简历只是 Career DNA 的一种输出形式。**
 
-传统做法是「每次看到 JD 就重写一遍简历」，信息是碎片化的、不可复用的。本技能把职业资产沉淀成一个可持续演进的系统：
+传统做法是「每次看到 JD 就重写一遍简历」，信息是碎片化的、不可复用的。本技能把职业资产沉淀成一个可持续演进的系统——你真实做过的事写入 Career DNA 一次，其余产物全部由此自动派生：
 
 ```
-你真实做过的事 ──写入──▶ Career DNA（事实源）
+你真实做过的事 ──写入──▶ Career DNA（事实源 / SSOT）
                             │
             ┌───────────────┼───────────────┐
             ▼               ▼               ▼
        中文 / 英文简历    JD 匹配报告    面试包 / 回答卡片
        在线档案(Boss等)   缺口分析/补强    转岗可行性评估
+```
+
+---
+
+## 系统架构
+
+本技能把「个人资产 / 市场情报 / 单次产物 / 投递追踪」拆分为四条清晰边界。Career DNA 作为唯一事实源，向上派生所有投递物料；外部 JD 经分析后沉淀进 Knowledge 层反哺后续匹配，投递结果则独立记录在 Application Tracker——形成「建设 → 分析 → 投递 → 反馈」的闭环。
+
+```mermaid
+flowchart TB
+    subgraph SSOT["Career DNA · 唯一事实源 (Single Source of Truth)"]
+        direction LR
+        P["经历 / 项目<br/>Profile · Projects"]
+        S["能力图谱<br/>Skill Graph (04)"]
+        I["职业身份<br/>Career Identity (07)"]
+        T["赛道 / 故事 / 作品集<br/>Tracks · Stories · Portfolio"]
+    end
+
+    JD["外部 JD / 招聘链接"] -->|Mode D 分析| MR["JD 匹配报告"]
+    SSOT -->|身份锁定 07| RES["中 / 英 ATS 简历"]
+    SSOT -->|能力映射 04b| MR
+    SSOT -->|叙事对齐| IP["面试包 / 回答卡片"]
+    SSOT -->|档案派生| OP["在线档案 (Boss 等)"]
+    SSOT -->|缺口分析| UP["竞争力升级计划"]
+
+    MR -->|Knowledge Update| K["Knowledge 层<br/>Role / Skill Snapshot"]
+    K -.->|反哺匹配| MR
+    TR["Application Tracker<br/>投递反馈闭环"] -.->|仅记录·不反向修改| SSOT
+```
+
+职业资产随使用持续演进，市场信号与投递反馈各自累积、互不污染：
+
+```mermaid
+flowchart LR
+    A["Build 构建 DNA"] --> B["Review 发展分析"]
+    B --> C["Apply 岗位投递"]
+    C --> D["Discover 市场信号"]
+    D --> E["Update 增量更新"]
+    E --> B
+    D -. 累积 .-> K[("Knowledge 层")]
+    C -. 记录 .-> T[("Application Tracker")]
 ```
 
 ---
@@ -70,38 +130,48 @@ v1.3 起职责收敛，v2.0 进一步扩展为清晰的四层，彻底分离「�
 
 技能根据用户目标自动路由（先检查当前目录是否存在 `career-dna/`，再决定模式）：
 
+```mermaid
+flowchart TD
+    U["用户意图"] --> Q{"目标?"}
+    Q -->|"梳理经历 / 盘点能力 / 方向"| MA["Mode A 构建"]
+    Q -->|"补充新项目 / 能力"| MB["Mode B 更新"]
+    Q -->|"适合什么 / 该不该转型"| MC["Mode C 分析"]
+    Q -->|"粘贴 JD / 岗位要求"| MD["Mode D 投递"]
+    Q -->|"录入投递 / 更新状态"| ME["Mode E 追踪"]
+```
+
 | 模式 | 名称 | 触发场景 | 产出 |
 |------|------|----------|------|
 | **A** | **Career DNA 构建** | 首次梳理经历 / 盘点能力 / 分析职业方向 | 完整个人职业基因库（`career-dna/`） |
 | **B** | **职业资产更新** | 补充新项目 / 新能力 / 回答 Backlog 问题 | DNA 增量更新，不重复建设 |
 | **C** | **职业发展分析** | 我适合什么岗位 / 该不该转型 / 竞争力在哪 / 缺什么 | 能力盘点、成长路径、转型可行性 |
-| **D** | **岗位投递** | 粘贴 JD / 招聘链接 / 岗位要求 | 匹配报告、中英简历、面试包、缺口分析与补强路线 |
+| **D** | **岗位投递** | 粘贴 JD / 招聘链接 / 岗位要求 | 匹配报告、中英简历、面试包、缺口分析与补强路线（两阶段门控，默认停在决策门） |
 | **E** | **投递追踪** | 录入投递 / 更新面试状态 / 记录反馈 / 看统计 | 投递主表、状态流转、Case 档案、转化看板 |
 
 ---
 
 ## 关键能力
 
-- **可解释匹配引擎（Explainable Match Engine）**：JD 匹配度按 4 个维度量化——
-  - 硬性要求 **40%** / 经验 **30%** / 能力映射 **20%** / 行业 **10%**
-  - 并给出**匹配置信度拆解**（Count Quality / Quality / Consistency / Recency 四维）与证据来源，而非黑盒打分。
-- **证据强度（Evidence Strength）**：每条证据按 5 维度评分（Ownership / Scope / Impact / Recency / Relevance），总分映射到 Strength 0–5，决定它该写进**主简历**、放进**面试包**，还是仅作**内部参考**——杜绝「什么都敢往简历上写」。
-- **职业决策引擎（Career Decision Engine）**：用 Evidence Distance（D0–D4）、Role Authenticity（A–D）、Recruiter Risk Funnel 与 Decision Score，把「该不该投这个岗位」变成可解释的判断，而非拍脑袋。
-- **市场知识库（Knowledge Layer）**：Role Snapshot / Skill Snapshot 把 JD 里的市场信号沉淀为可复用行业情报，越投越准。
-- **在线职业档案派生**：从 Career DNA 自动生成 Boss / 猎聘等平台的在线简历文案（`11_online_profile.md`）。v2.2 重构为严格映射 Boss 字段的「Boss 在线简历」，由 Profile Positioning Engine（Primary/Secondary/Adjacent Track + Universal Strengths）驱动；v2.3 接入可迁移能力层。
-- **可迁移能力映射（Transferable Capability Mapping，v2.3）**：在 Skill Graph 与 Role Snapshot 之间插入能力转换层（`04b_transferable_capabilities.md`），回答「同一个能力在不同岗位应如何不同表达」。新增 `transferable_capability_generation.md`（Source A 自发现 / Source B JD 反馈增强），配合 Expression Intent + Position Constraint，确保生成文案「该写什么、不该写什么」。
-- **职业身份重构（Career Identity Reframe，v2.5）**：`07_career_identity.md` 升级为 5 层 Identity-First 结构（Professional Identity / Career Positioning / Career Narrative / Capability Priority / Non-Positioning Statement），明确「起点经历是能力形成路径，不是身份」。Pipeline 新增 Identity Resolution 步骤锁定身份，配合 R01–R04 硬规则（07 为唯一身份来源、经历仅作证据、Experience Reframing 把原始岗位/动词重写为能力视角表达）。
-- **能力迁移翻译（Capability Translation）**：把你的经历映射到目标岗位要求，区分 Direct / Adjacent / Missing 三类，禁止编造不存在的匹配。
-- **岗位沟通产物生成（Outreach / Boss Greeting Generation）**：由匹配报告驱动的 JD 级即时沟通文案，不只是简历。核心是一套**决策 + 人味化**管线——
-  - **打招呼目标（Greeting Objective）**：按岗位与匹配度选 Type A 建联 / Type B 证明价值 / Type C 化解顾虑 / Type D 激发好奇，不同目标对应不同结尾策略；
-  - **证据路由（Evidence Routing）**：从 Strength≥4 的证据池按「距离优先 / 角色相关 / 新奇注入」三条规则分层为 Primary / Secondary / Curiosity，杜绝把 AI 项目误选为 PM 岗位钩子；
-  - **平台策略（Platform Variants）**：同一匹配结论在 Boss 直聘（诱导 HR 回复，60–120 字）、猎聘（建立专业感，150–250 字）、邮件（正式投递，300+ 字附简历）、LinkedIn（建立关系，80–120 字不提求职）四平台各自生成不同目标版本；
-  - **人味化（Humanization）**：7 条规则（短句 / 不用 AI 词 / 自然问句 / 不堆材料 / 不模板开头等）让文案更像真人；每平台仅出「推荐 + 备选」两个版本，附 Why / Tone Notes / Do Not Say。
-- **作品集发现与生成（Portfolio Discovery & Output，v2.1）**：从 Career DNA 自动发现、验证并生成作品集案例——不再只写简历，而是把「最值得讲的项目」沉淀为结构化 Portfolio Case。
-  - **候选池（Portfolio Candidates）**：4 项 Discovery Rules 筛选项目，7 维 Validation（背景 / 角色 / 问题 / 方案 / 行动 / 成果 / 能力）判定 Readiness ≥ 70% Ready / < 70% Need More Evidence；5 维 Potential Score 排序。
-  - **案例模板（Portfolio Case）**：8 字段结构化（概览 / 背景 / 角色 / 问题 / 方案 / 行动 / 成果 / 能力体现），从 DNA 严格映射、不自由发挥；Mode A 构建 / Mode B 更新 / Mode D 投递时自动联动（投递时按 JD 推荐 Top 3 最佳案例）。
-- **投递追踪系统（Application Tracker，v2.0）**：v1.x 解决「我该怎么投」，v2.0 解决「我投了以后发生了什么」。录入投递（Index）、更新状态（Stage 0 Planned → Stage 7 Offer / Stage 8 Rejected）、登记面试反馈 / 拒绝原因（archives/）、查看转化与 Offer 率看板——形成「分析 → 决策 → 投递 → 反馈」的完整闭环。
-- **简历 / 面试证据管线（ATS Evidence Pipeline，v2.6–v2.7）**：把「重写整份简历」拆成可审计、可解释的步骤——Mode D 先从 `07` 锁定职业身份（Resume Identity Lock, Step 4.5）、用 `04b` 做能力映射（Capability Mapping）选经历；每条经历经 Experience Reframing 拆分为 **Profile Reframing**（在线档案，高抽象允许）与 **ATS Reframing**（简历，受 **E01–E04 证据保全规则**约束，禁止夸大职级 / 权限）；ATS 输出为三层结构（Capability Interpretation → JD Mapping → ATS Evidence Output）；最终由 **Step 9.1 Resume QA Layer**（QA-1 身份漂移 / QA-2 能力缺失 / QA-3 D3 过度包装 / QA-4 身份回退）把关，并由 **Step 9.0 逐经历重构循环**逐项生成。面试材料（故事 / 回答卡片）同样从 `07` Career Narrative + `04b` 能力优先级派生（Step 8.12 Narrative Alignment）。
+### 匹配与决策
+- **可解释匹配引擎（Explainable Match Engine）**：JD 匹配度按 4 维量化（硬性要求 40% / 经验 30% / 能力映射 20% / 行业 10%），并给出**匹配置信度拆解**（Count Quality / Quality / Consistency / Recency）与证据来源，而非黑盒打分。
+- **职业决策引擎（Career Decision Engine）**：用 Evidence Distance（D0–D4）、Role Authenticity（A–D）、Recruiter Risk Funnel 与 Decision Score，把「该不该投这个岗位」变成可解释的判断。
+- **能力迁移翻译（Capability Translation）**：把经历映射到目标岗位要求，区分 Direct / Adjacent / Missing 三类，禁止编造不存在的匹配。
+
+### 证据体系
+- **证据强度（Evidence Strength）**：每条证据按 5 维评分（Ownership / Scope / Impact / Recency / Relevance），总分映射到 Strength 0–5，决定它写进主简历、放进面试包，还是仅作内部参考——杜绝「什么都敢往简历上写」。
+- **简历 / 面试证据管线（ATS Evidence Pipeline，v2.6–v2.7）**：把「重写整份简历」拆成可审计步骤——先用 `07` 锁定职业身份、用 `04b` 做能力映射；每条经历经 Experience Reframing 拆分为 Profile Reframing（在线档案）与 ATS Reframing（简历，受 E01–E04 证据保全规则约束）；最终由 Step 9.1 Resume QA Layer（QA-1 身份漂移 / QA-2 能力缺失 / QA-3 过度包装 / QA-4 身份回退）把关。
+
+### 身份与能力
+- **职业身份重构（Career Identity Reframe，v2.5）**：`07_career_identity.md` 升级为 5 层 Identity-First 结构，明确「起点经历是能力形成路径，不是身份」；Pipeline 新增 Identity Resolution 步骤锁定身份，配合 R01–R04 硬规则。
+- **可迁移能力映射（Transferable Capability Mapping，v2.3）**：在 Skill Graph 与 Role Snapshot 之间插入能力转换层（`04b_transferable_capabilities.md`），回答「同一个能力在不同岗位应如何不同表达」。
+- **在线职业档案派生**：从 Career DNA 自动生成 Boss / 猎聘等平台在线简历文案（`11_online_profile.md`），由 Profile Positioning Engine（Primary/Secondary/Adjacent Track + Universal Strengths）驱动。
+
+### 内容生成
+- **作品集发现与生成（Portfolio Discovery & Output，v2.1）**：从 Career DNA 自动发现、验证并生成作品集案例（8 字段结构化），投递时按 JD 推荐 Top 3 最佳案例。
+- **岗位沟通产物生成（Outreach / Boss Greeting，v1.6）**：由匹配报告驱动的 JD 级即时沟通文案——按岗位与匹配度选打招呼目标（建联 / 证明价值 / 化解顾虑 / 激发好奇），从 Strength≥4 证据池按规则分层路由，四平台（Boss / 猎聘 / 邮件 / LinkedIn）各自生成不同目标版本，并附 Why / Tone / Do Not Say。
+
+### 闭环与追踪
+- **投递追踪系统（Application Tracker，v2.0）**：v1.x 解决「我该怎么投」，v2.0 解决「我投了以后发生了什么」。录入投递、更新状态（Stage 0 Planned → Stage 7 Offer / Stage 8 Rejected）、登记反馈，查看转化与 Offer 率看板——形成完整闭环。
 
 ---
 
@@ -133,7 +203,7 @@ v1.3 起职责收敛，v2.0 进一步扩展为清晰的四层，彻底分离「�
 ### 方式一：WorkBuddy
 
 ```bash
-git clone <本仓库地址> career-manager
+git clone ⟨本仓库地址⟩ career-manager
 cp -R career-manager ~/.workbuddy/skills/career-manager
 ```
 
@@ -148,9 +218,9 @@ cp -R career-manager ~/.workbuddy/skills/career-manager
 Claude Code 同样以 `SKILL.md` 的 `name` / `description` 作为技能声明，可直接识别本技能包：
 
 ```bash
-git clone <本仓库地址> career-manager
+git clone ⟨本仓库地址⟩ career-manager
 cp -R career-manager ~/.claude/skills/career-manager    # 用户级
-# 或放到项目级：<你的项目>/.claude/skills/career-manager
+# 或放到项目级：⟨你的项目⟩/.claude/skills/career-manager
 ```
 
 ### 方式三：OpenAI Codex / 通用 agent
@@ -172,6 +242,9 @@ Codex 等没有原生的「技能包」概念，两种用法皆可：
 
 ## 目录结构
 
+<details>
+<summary>展开查看完整目录树（Skill 包结构）</summary>
+
 ```
 career-manager/
 ├── SKILL.md                      # 技能入口与核心指令（必含）
@@ -179,7 +252,9 @@ career-manager/
 ├── README.md                     # 本文件
 ├── scripts/                      # 可执行脚本（确定性逻辑，仅标准库）
 │   ├── init_career_dna.py        # 初始化 Career DNA 目录结构
-│   └── completeness_checker.py   # 完整度评分检查
+│   ├── completeness_checker.py   # 完整度评分检查
+│   ├── validate_career_dna.py    # Career DNA 写入闸门（manifest 校验）
+│   └── export_resume.py          # 投递定稿导出（HTML→PDF/DOCX）
 ├── references/                   # 按需加载的详细参考文档
 │   ├── career_dna_structure.md   # DNA 结构与字段说明
 │   ├── mode_a_build.md           # 模式 A 流程
@@ -191,9 +266,10 @@ career-manager/
 │   ├── transferable_capability_generation.md # 可迁移能力生成（v2.3）
 │   ├── output_contracts.md       # 产物格式契约
 │   ├── question_backlog.md       # 待澄清问题库
-│   └── targeted_discovery.md     # 定向挖掘提问库
+│   ├── targeted_discovery.md     # 定向挖掘提问库
+│   └── pack_templates/           # 01-08 产物版式唯一定义源
 └── assets/templates/             # 输出用模板（不进 context）
-    ├── career-dna/               # DNA 各模块模板（01~12）
+    ├── career-dna/               # DNA 各模块模板（01~13）
     │   ├── 01_profile.md         #   个人职业档案
     │   ├── 02_timeline.md        #   职业发展轨迹
     │   ├── 03_projects.md        #   项目资产库
@@ -206,7 +282,8 @@ career-manager/
     │   ├── 09_completeness_report.md # 完整度报告
     │   ├── 10_career_tracks/     #   职业赛道库（每赛道一文件）
     │   ├── 11_online_profile.md  #   在线职业档案（派生资产）
-    │   └── 12_portfolio_candidates.md # 作品集候选池（v2.1 派生资产）
+    │   ├── 12_portfolio_candidates.md # 作品集候选池（v2.1 派生资产）
+    │   └── 13_interview_narrative_strategy.md # 面试叙事战略手册（面试表达 SSOT）
     ├── knowledge/                # 市场知识库模板
     │   ├── role_snapshot.md      #   岗位快照
     │   └── skill_snapshot.md     #   能力域快照
@@ -221,7 +298,7 @@ career-manager/
         ├── 04_interview_pack.md  #   面试准备包
         ├── 05_answer_cards.md    #   回答卡片库
         ├── 06_upgrade_plan.md     #   竞争力升级计划
-        ├── 07_boss_greeting.md   #   Boss 直聘 / 平台打招呼语（策略+双版本）
+        ├── 07_boss_greeting.md   #   Boss 直聘 / 平台打招呼语
         ├── XX_gap_analysis.md     #   能力差距分析
         ├── XX_transition_resume_cn.md   # 转岗中文简历
         ├── XX_transition_resume_en.md   # 转岗英文简历
@@ -229,11 +306,13 @@ career-manager/
         └── XX_portfolio.md        #   作品集案例（v2.1 派生资产）
 ```
 
+</details>
+
 > **隐私说明**：本技能只包含「指令 + 空白模板 + 脚本」，不含任何个人职业数据。你的真实 Career DNA、Knowledge、Resume Outputs 会在你本地工作区生成，不会随技能包外泄。
 
 ---
 
-## 使用流程（首次）
+## 首次使用
 
 1. 在任意支持的 AI 助手中开启一个新任务，说：「帮我构建 Career DNA」。
 2. 技能会调用 `init_career_dna.py` 在当前工作区生成 `career-dna/`、`knowledge/`、`resume-outputs/` 目录。
@@ -252,30 +331,20 @@ career-manager/
 
 ## 版本与更新
 
-完整变更记录与逐版本能力变动见 [GitHub Release notes](https://github.com/lamhoying/career-manager/releases)。当前版本 **v2.19.0**。近期重点：
+完整逐版本变更记录见 [GitHub Release notes](https://github.com/lamhoying/career-manager/releases)。当前版本 **v2.19.0**。
 
-- **v2.19.0**：发布包不再内含内部变更日志（CHANGELOG），改为在 GitHub Release notes 提供精炼公开摘要；完成多轮架构治理与模板中性化——身份（07）/ 能力（04b）/ 证据（03）三层推理链收敛、面试表达层 SSOT（13）、Mode D 两阶段门控与 G5 冲突检测；并系统性去除模板与参考文档中的个人化痕迹，使 skill 默认通用可复用。
-- **v2.7.1**：P0–P3 全面升级——新增 Step 9.1 Resume QA Layer（QA-1 身份漂移 / QA-2 能力缺失 / QA-3 D3 过度包装 / QA-4 身份回退）+ Step 9.0 逐经历重构循环（Per-Experience Engine Loop）+ Step 8.12 Narrative Strength（叙事强度 0–20）+ Mode C Step 7 Track Strategy Engine；并清理残留在模板/参考文件中的 PII 痕迹。
-- **v2.7**：P3 规则合并（14→7 条：R02 身份推导禁止 / R03 角色解释 / R04 能力优先 / R05–R07）+ Mode B/C 同步读取 07(5 层)/04b + Gap Analysis / Upgrade Plan 叙事对齐 07 + Mode C Step 6 市场信号复盘。
-- **v2.6.4**：ATS 三层输出结构（Capability Interpretation → JD Mapping → ATS Evidence Output）+ 系统评估（架构 7.5/10、规则覆盖 9/10）。
-- **v2.6.2–v2.6.3**：Experience Reframing 拆分为 Profile Reframing（在线档案，高抽象允许）与 ATS Reframing（简历，证据绑定）+ **E01–E04 证据保全规则**，并接入 Pipeline 生成前强制闸门。
-- **v2.6.1**：叙事对齐——面试故事 / 回答卡片注入 07 Career Narrative + 04b 能力优先级。
-- **v2.6**：Mode D 集成 07+04b——Step 4.5 Resume Identity Lock + 能力驱动简历生成（Capability Mapping）。
-- **v2.5.5**：全量 PII 脱敏（7 个模板/参考文件中的具体岗位名、公司名、领域术语替换为 `[XX]`/`[Track名称]` 占位符）+ 拼写修复。
-- **v2.5**：职业身份重构（v2.5）— `07_career_identity.md` 5 层 Identity-First 结构 + Identity Resolution + R01–R04 硬规则 + Experience Reframing（R04）。
-- **v2.3**：可迁移能力映射（Transferable Capability Mapping）— 新增 `04b_transferable_capabilities.md` 与 `transferable_capability_generation.md`，Online Profile 接入能力转换层。
-- **v2.2**：在线档案重构（Boss 在线简历 v2.2）— `11_online_profile.md` 严格映射 Boss 字段 + 新增 `online_profile_generation.md`（Profile Positioning Engine）。
-- **v2.1.2**：全量质量审计（40 文件，修复 17 处问题：架构命名、破损模板引用、编码损坏）。
-- **v2.1.1**：作品集模板重写（STAR+ → 真 Portfolio，As-Is/To-Be 流程）+ Potential Score 5 维排序。
-- **v2.1**：作品集发现与生成（Portfolio Discovery & Output）——新增 `12_portfolio_candidates.md` + `XX_portfolio.md`，Mode A/B/D 全链路联动。
-- **v2.0**：投递追踪系统（Application Tracker）——新增 `application-tracker/` 层与 **Mode E**，记录真实市场反馈，形成「分析→决策→投递→反馈」闭环。
-- **v1.6.3**：打招呼语人味化 + 策略决策（Greeting Strategy 推荐/备选 + 7 条人味化规则 + 每平台双版本 + Why/Tone/Do-Not-Say）。
-- **v1.6.2**：证据路由 + 平台策略（Evidence Routing 三层输出 + 四平台变体，新增 LinkedIn；Greeting 不再自己选证据）。
-- **v1.6.1**：打招呼语目标驱动重写（4 种 Objective + 证据自动选择 + 三平台变体）。
-- **v1.6**：新增 Boss 直聘打招呼语生成（07_boss_greeting.md，由匹配报告与 Decision Score 驱动）。
-- **v1.5.6**：输出质量收敛（摘要-正文值统一、匹配置信度口径收紧、决策评分因子分类）。
-- **v1.5.5**：证据强度升级（5 维度评分 + 材料投放策略）。
-- **v1.5.4**：可解释匹配引擎（4 维匹配 + 置信度拆解 + 三角验证）。
+### 版本里程碑
+
+- **v2.19.0**（最新）：发布包不再内含内部变更日志（CHANGELOG），改为在 GitHub Release notes 提供精炼公开摘要；完成多轮架构治理与模板中性化——身份（07）/ 能力（04b）/ 证据（03）三层推理链收敛、面试表达层 SSOT（13）、Mode D 两阶段门控与 G5 冲突检测；系统性去除模板与参考文档中的个人化痕迹，使 skill 默认通用可复用。
+- **v2.7.1**：新增 Step 9.1 Resume QA Layer（QA-1~QA-4 四检）+ Step 9.0 逐经历重构循环 + Step 8.12 叙事强度；并清理模板 / 参考文件中的 PII 痕迹。
+- **v2.6**：Mode D 集成 07+04b（Step 4.5 身份锁定 + 能力驱动简历生成）；随后 v2.6.2 引入 E01–E04 证据保全规则，v2.6.4 确立 ATS 三层输出结构。
+- **v2.5**：职业身份重构——`07_career_identity.md` 5 层 Identity-First 结构 + Identity Resolution + R01–R04 硬规则。
+- **v2.3**：可迁移能力映射——新增 `04b_transferable_capabilities.md` 与生成规则，Online Profile 接入能力转换层。
+- **v2.2**：在线档案重构——`11_online_profile.md` 严格映射 Boss 字段 + Profile Positioning Engine。
+- **v2.1**：作品集发现与生成——新增 `12_portfolio_candidates.md` + `XX_portfolio.md`，Mode A/B/D 全链路联动。
+- **v2.0**：投递追踪系统——新增 `application-tracker/` 层与 **Mode E**，形成「分析→决策→投递→反馈」闭环。
+
+> 更早版本（v1.x 系列的匹配引擎、证据强度、打招呼语等人味化能力）的逐条记录，请查阅上述 GitHub Release notes。
 
 ---
 
