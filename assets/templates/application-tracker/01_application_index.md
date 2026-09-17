@@ -1,6 +1,6 @@
 # Application Tracker（投递追踪表）
 
-> Aligns to: v2.19.0
+> Aligns to: v2.21.0
 <!--
 v2.0 Application CRM — 只记录真实市场反馈，不自动学习，不自动优化。
 快速浏览全部投递状态，类似飞书表格。

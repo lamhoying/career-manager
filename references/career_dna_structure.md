@@ -271,7 +271,7 @@ Career DNA 是用户职业经历的唯一事实源（Single Source of Truth）�
 | Career Positioning | Primary/Secondary/Emerging 市场定位 |
 | Career Narrative | 核心职业问题 + 解决方式 + 价值主张 |
 | Capability Priority | 04b 的 Tier A/B/C 权重标注（Online Profile 排序依据） |
-| Non-Positioning Statement | 声明经历来源 ≠ 职业定位（Online Profile 必须遵守） |
+| Non-Positioning Statement | 声明经历来源 ≠ 职业定位（**条件化 + 收录标注**：每条带 `（收录于 Layer 2: 条目名 / none）`；Online Profile 必须遵守） |
 
 ---
 
@@ -410,7 +410,7 @@ Online Profile 是 Career DNA 的派生资产（Derived Asset），不直接维�
 
 | 来源文件 | 推导内容 |
 |----------|----------|
-| `07_career_identity.md` | Pipeline Step 2 Personal Positioning（Primary Positioning + Non-Positioning 约束） |
+| `07_career_identity.md` | Pipeline Step 2 Personal Positioning（Layer 2 每条带 `Track`〔赛道映射〕 + Layer 5 每条带 `收录于 Layer 2`〔方向同一性〕） |
 | `01_profile.md` + `02_timeline.md` | Timeline 提取（年限/公司/岗位序列） |
 | `04_skill_graph.md` | Part 3 Core Competencies（Confidence ≥ 60 的能力） |
 | `03_projects.md` + `10_career_tracks/` | Part 4 Highlight Projects |

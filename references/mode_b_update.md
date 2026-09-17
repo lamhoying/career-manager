@@ -63,6 +63,9 @@
 
 **Career Identity（职业身份）**：
 - 检查新信息是否影响 07 的 5 层结构（Professional Identity / Career Positioning / Career Narrative / Capability Priority / Non-Positioning Statement）
+- **Layer 2 增量追问（v2.21.0）**：用户提及新方向、投递意向变化、或明确表示「也在考虑 X」时，**主动询问**是否将 X 纳入 Layer 2（复用 Mode B+ 形态：**≤3 问/轮，一轮一写盘**）。**问不出 → 留 `[待声明]` + 记 Backlog，禁止代填**（`R01`）。
+- **收录标注同步钩子（v2.21.0 · 强制）**：Layer 2 发生任何增 / 删 / 改 ⇒ **必须同步刷新 Layer 5 各条的「收录于 Layer 2」标注** —— 新增条目 ⇒ 对应 Layer 5 方向由 `none` 改为**该条目名**；删除条目 ⇒ 反向改回 `none`；条目改名 ⇒ 同步改引用。**漏同步 ⇒ 跨 JD 漂移**。
+- **方向变更钩子（v2.20.0）**：若用户将某方向从 Layer 5 纳入 Layer 2（并行 / 转轨），**必须同步复核 `04b` / 赛道文件的 per-track `禁止`**，否则「07 允许 / 04b 禁止」跨 JD 漂移
 - Layer 4 Capability Priority 如有变化 → 同步更新
 
 **04b Transferable Capabilities**：
@@ -200,5 +203,5 @@ python3 scripts/completeness_checker.py [career-dna目录路径]
 2. **保持证据驱动**。新补充的能力必须有对应的项目证据。
 3. **Backlog 问题被回答后必须标记为 Answered**，不能遗漏。
 4. **每次更新后重新计算完整度**，让用户看到成长进度。
-5. **不追问**。用户补充什么就更新什么，不主动盘问。深挖需求走 Mode B+（opt-in），不进本模式。
+5. **不追问**（**例外 v2.21.0**：Layer 2 定位声明的增量确认与收录标注同步，见 Step 3 Career Identity 段 —— 该例外受 `≤3 问/轮` 配额约束，且**只问声明、不推断**）。用户补充什么就更新什么，不主动盘问。深挖需求走 Mode B+（opt-in），不进本模式。
 6. **写入契约（v2.11.0）**：只写入 `assets/career_dna_manifest.json` 中已登记的文件；用户的补充信息若不属于任何已登记文件，进 `08_question_backlog.md` 或 `career-dna/_inbox/`，**不得**在根目录新建文件。收尾时运行 `python3 scripts/validate_career_dna.py <career-dna目录>`；若刷新了 `13_interview_narrative_strategy.md`，**只允许重生成派生区 Part 1-3**，并同步更新其头部 `Last Generated` 与 `Source Files Version` —— 报 P1 `derived-part-drift` 即说明手写区被吃掉（须先从模板重建骨架、再提示用户补内容）；报 P1 `undeclared-part` 即说明有 Part 未登记入 manifest（须补登记或删除）。两者都不得静默放过。

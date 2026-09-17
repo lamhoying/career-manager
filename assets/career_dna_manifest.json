@@ -1,6 +1,6 @@
 {
-  "manifest_version": "2.19.0",
-  "updated": "2026-09-15",
+  "manifest_version": "2.21.0",
+  "updated": "2026-09-17",
   "purpose": "Career DNA 文件清单的唯一定义源（Single Source of Truth）。init_career_dna.py / completeness_checker.py / validate_career_dna.py 均从此文件读取，禁止在脚本或文档中另行硬编码清单。",
   "write_contract": [
     "career-dna/ 是用户的唯一事实源（SSOT）。任何在 career-dna/ 根目录新增的文件，必须先在本清单登记（filename + name + desc + weight + kind），并提供 assets/templates/career-dna/ 下的同名模板。",

@@ -1,6 +1,6 @@
 # Case Archives（投递案例档案）
 
-> Aligns to: v2.19.0
+> Aligns to: v2.21.0
 按需建档。在 `01_application_index.md` 中任意投递记录满足以下条件之一时创建。
 
 ## 建档条件

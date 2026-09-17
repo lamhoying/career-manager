@@ -29,7 +29,7 @@
 
 基于 Career Identity 5 层结构分析：
 - **当前定位**：07 Layer 1 Professional Identity + Layer 2 Career Positioning
-- **非定位声明**：07 Layer 5 — 哪些经历属于来源而非定位
+- **非定位声明**：07 Layer 5 — 哪些经历属于来源而非定位（**剔除 Layer 2 已收录的方向**）
 - **核心能力体系**：基于 04b + 07 Layer 4 Capability Priority（Tier A/B/C）
 
 ### Step 3: 分析职业方向（Career Track Analysis）

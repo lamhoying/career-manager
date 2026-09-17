@@ -74,6 +74,20 @@ PLACEHOLDERS = [
     "[能力1]",
     "（待填写）",
     "（暂无",
+    # v2.21.0：07 各层占位符形态（原词表不含 ⇒ 未填写的 07 被计入「已填」，报 100%）
+    "[待声明]",
+    "[一句话市场身份",
+    "[定位方向",
+    "[新兴定位",
+    "[原始岗位",
+    "[原始职能",
+    "[起点经历]",
+    "[能力维度",
+    "[状态 A]",
+    "[核心动作",
+    "[为什么是核心]",
+    "[为什么是支撑]",
+    "[为什么是差异化]",
 ]
 
 
@@ -172,6 +186,18 @@ def check_file_completeness(filepath: Path) -> tuple:
         else:
             completeness = 50
 
+    # Special handling for 07_career_identity - Layer 2 未声明检测（v2.21.0 · F18）
+    # 仅靠 PLACEHOLDERS 扣分不足（penalty 上限 0.3）。Layer 2 是身份锚点，
+    # 其空值会让 Mode D / Online Profile 的硬身份锚点无兜底降级 ⇒ 单独设上限。
+    layer2_reason = None
+    if filepath.name == "07_career_identity.md":
+        layer2_missing = ("[待声明]" in content) or (
+            "[一句话市场身份" in content and "[定位方向" in content
+        )
+        if layer2_missing:
+            completeness = min(completeness, 60)
+            layer2_reason = "Layer 2（Career Positioning）未声明 —— 须走 Mode A Step 8 采集协议"
+
     details = {
         "total_fields": total_fields,
         "filled_fields": filled_fields,
@@ -179,6 +205,8 @@ def check_file_completeness(filepath: Path) -> tuple:
         "sections": numbered_sections,
         "reason": "OK" if completeness > 30 else "内容不足",
     }
+    if layer2_reason:
+        details["reason"] = layer2_reason
 
     return round(completeness), details
 

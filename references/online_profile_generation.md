@@ -1,6 +1,6 @@
 # Online Profile Generation（Boss 在线简历生成规则）
 
-> Aligns to: v2.19.0
+> Aligns to: v2.21.0
 <!-- Pipeline 索引（**非定义** —— 唯一定义见下文 §「Online Profile Generation Pipeline」）
    Step 0 / 0.3 / 0.5 / 0.7 / 1 / 2 / 3 / 4 / 5 / 6
    推理链约束：Identity → Capability → Evidence，不可逆序（细则见 §Rule R07）。
@@ -24,15 +24,18 @@
 2. 提取：
    - Layer 1 Professional Identity → 一句话身份
    - Layer 2 Career Positioning → Primary Positioning
-   - Layer 5 Non-Positioning Statement → 禁止表达列表
+   - Layer 5 Non-Positioning Statement → 禁止表达列表（**剔除 Layer 2 已收录的方向**）
 3. 确定：
 
 ```yaml
 Identity Resolution:
   职业身份: [07 Layer 2 Primary Positioning]
-  禁止表达: [07 Layer 5 全部条目]
+  禁止表达: [07 Layer 5 中未被 Layer 2 收录的条目]
   身份锚点来源: 07，非工作经历
 ```
+
+> **Fail-safe（v2.21.0 · F18）**：若 `07` Layer 2 **缺失、为空、或含 `[待声明]`** ⇒
+> **停下询问用户**，**禁止从 `03` / `04` / `04b` 或 JD 代填身份锚点**（违 `R01` / `R02`），禁止静默降级。
 
 ### 硬约束
 
@@ -53,6 +56,12 @@ Identity Resolution:
 - 从 02 的岗位历史中统计出现频次最高的岗位，作为职业身份
 - 从 03 的项目角色中推断「这是一个XX的人」
 - 在 Profile 生成后，用经历反推身份解释
+
+**正向义务（v2.21.0）**：`07` Layer 2 **缺失、为空或含 `[待声明]` 时，必须停下询问用户**，**禁止代填、禁止静默降级**。
+
+> **边界澄清（不削弱本规则）**：R01 禁止的是「把经历**自动**当作身份」，
+> **不禁止「以经历 / 行为作为提问的触发」** —— 触发后可询问用户，但**写入必须由用户显式声明**。
+> 此边界即 Mode D「方向冲突探针」I1–I4 意图四态与 Mode C「定位偏离检查（仅建议）」的规则依据。
 
 ### Rule R02 — Identity Derivation Prohibition（v2.7 合并 R02+R03）
 

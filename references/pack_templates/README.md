@@ -1,6 +1,6 @@
 # Pack Templates（产出包实体模板）
 
-> Aligns to: v2.19.0
+> Aligns to: v2.21.0
 > 解决 mode_d 对产物版式的"虚引用"（报告模板无实体文件）与编号漂移（Boss Greeting 在 Pack A/B 下编号不同）。
 > 每个模板 = 该产物的**章节骨架 + 固定表格列头 + 字段占位**。内容填充一律由 Mode D 管线 + Career DNA 驱动，模板只锁版式、不锁内容。
 

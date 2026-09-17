@@ -1,6 +1,6 @@
 # Output Contracts（产出合约）
 
-> Aligns to: v2.19.0
+> Aligns to: v2.21.0
 ## 概念
 
 Output Contracts 定义每个求职策略（Pack A/B/C/D）对应的文件产出清单和数据来源。确保不同策略下产出一致、可预期、不遗漏。

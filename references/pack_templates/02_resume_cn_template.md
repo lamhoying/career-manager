@@ -3,7 +3,7 @@
  适用：Pack A/B → 落盘 02_resume_cn.md（Pack C 用 transition 变体，不落此名）
  归纳自：[某真实投递包A] / [某真实投递包B] / [某真实投递包C] 交叉验证（结构三版一致）
  生成时机：Mode D Step 9（Step 4.5b Identity Lock 后，Step 9.0 引擎循环 + Step 9.1 QA）
- 数据来源：07 Identity（职业定位/禁止表达）+ 04b TC（核心能力）+ JD（求职意向行/关键词）
+ 数据来源：07 Identity（职业定位 / 禁止表达〔∖ Layer 2〕）+ 04b TC（核心能力）+ JD（求职意向行/关键词）
            + 03 Projects（证据）+ 02 Timeline（公司/时间线）+ 04_skill_graph（技能/认证）
  注意：本文件为 working 版 —— 保留 TC/D 标注与 <!-- 注释 -->，投递前走 Step 9.5 净化
 ============================================================ -->

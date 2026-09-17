@@ -8,7 +8,7 @@ Career DNA 资产 v2.12.0 · 跨 JD 长期资产（不是单次投递产物）
       离职 / 转变话术的正文统一在此维护，不得两处各写一份。
 
 数据来源（均需先于本文件更新）：
-  07_career_identity.md            ── 身份陈述 / 核心叙事 / 禁止表达
+  07_career_identity.md            ── 身份陈述 / 核心叙事 / 禁止表达（∖ Layer 2）
   05_story_bank.md                 ── 故事编号与 Narrative Strength 评分
   02_timeline.md                   ── 时间线事实（公司 / 时间 / 岗位序列）
   03_projects.md                   ── 项目量化证据
@@ -122,7 +122,7 @@ Career DNA 资产 v2.12.0 · 跨 JD 长期资产（不是单次投递产物）
 
 **话术公式**："[承认旧身份是起点 → 说明它给了哪三样可迁移的东西 → 说明在此基础上长成了什么]"
 
-**禁止**：[不得主动自称的标签 —— 必须与 07_career_identity Layer 5 保持一致]
+**禁止**：[不得主动自称的标签 —— 必须与 07_career_identity Layer 5 **∖ Layer 2 已收录方向** 保持一致]
 
 ### 3.2 次转变：[A] → [B] → [C]
 

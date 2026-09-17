@@ -1,6 +1,6 @@
 # Mode E: Application Tracker（投递追踪模式）
 
-> Aligns to: v2.19.0
+> Aligns to: v2.21.0
 ## Trigger（触发条件）
 
 用户执行以下任一操作：

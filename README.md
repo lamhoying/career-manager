@@ -3,7 +3,7 @@
 > 把你的 AI 助手变成私人 Career Manager：以 **Career DNA（职业基因库）** 为唯一事实源，持续建设、管理、升级你的职业资产，而不是每次看到 JD 都从零重写简历。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-v2.19.0-green.svg)](https://github.com/lamhoying/career-manager/releases)
+[![Version](https://img.shields.io/badge/version-v2.21.0-green.svg)](https://github.com/lamhoying/career-manager/releases)
 [![Cross-Agent](https://img.shields.io/badge/agent-agnostic-brightgreen.svg)](#跨平台兼容性)
 
 ---
@@ -331,11 +331,12 @@ career-manager/
 
 ## 版本与更新
 
-完整逐版本变更记录见 [GitHub Release notes](https://github.com/lamhoying/career-manager/releases)。当前版本 **v2.19.0**。
+完整逐版本变更记录见 [GitHub Release notes](https://github.com/lamhoying/career-manager/releases)。当前版本 **v2.21.0**。
 
 ### 版本里程碑
 
-- **v2.19.0**（最新）：发布包不再内含内部变更日志（CHANGELOG），改为在 GitHub Release notes 提供精炼公开摘要；完成多轮架构治理与模板中性化——身份（07）/ 能力（04b）/ 证据（03）三层推理链收敛、面试表达层 SSOT（13）、Mode D 两阶段门控与 G5 冲突检测；系统性去除模板与参考文档中的个人化痕迹，使 skill 默认通用可复用。
+- **v2.21.0**：身份层（07）重构——Layer 2 定位与赛道映射拆分为受控字段（`Track` / `Positioning` 语义分离），新增方向冲突探针与 Layer 5 条件化收录机制，进一步收紧身份→能力→证据推理链的稳定性与可治理性。
+- **v2.19.0**：发布包不再内含内部变更日志（CHANGELOG），改为在 GitHub Release notes 提供精炼公开摘要；完成多轮架构治理与模板中性化——身份（07）/ 能力（04b）/ 证据（03）三层推理链收敛、面试表达层 SSOT（13）、Mode D 两阶段门控与 G5 冲突检测；系统性去除模板与参考文档中的个人化痕迹，使 skill 默认通用可复用。
 - **v2.7.1**：新增 Step 9.1 Resume QA Layer（QA-1~QA-4 四检）+ Step 9.0 逐经历重构循环 + Step 8.12 叙事强度；并清理模板 / 参考文件中的 PII 痕迹。
 - **v2.6**：Mode D 集成 07+04b（Step 4.5 身份锁定 + 能力驱动简历生成）；随后 v2.6.2 引入 E01–E04 证据保全规则，v2.6.4 确立 ATS 三层输出结构。
 - **v2.5**：职业身份重构——`07_career_identity.md` 5 层 Identity-First 结构 + Identity Resolution + R01–R04 硬规则。

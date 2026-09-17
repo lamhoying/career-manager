@@ -30,7 +30,7 @@
 | **JD 适配角度** | {{JD 要什么样的人 → 我的哪个故事能证明}} |
 | **叙事主线** | {{核心叙事 + JD 适配的一句话}} |
 | **面试身份框架** | {{Professional Identity 一句话变体 — 适配 JD 语境}} |
-| **禁忌身份** | {{07 Layer 5 条目 / 弱者姿态}} |
+| **禁忌身份** | {{07 Layer 5 中未被 Layer 2 收录的条目 / 弱者姿态}} |
 
 ### Tier A Stories（按 Narrative Strength + JD 相关性排序）
 

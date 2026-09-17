@@ -1,6 +1,6 @@
 # Transferable Capability Generation（可迁移能力生成规则）
 
-> Aligns to: v2.19.0
+> Aligns to: v2.21.0
 ## 触发条件
 
 - Mode A Step 9.5：Skill Graph 构建完成后自动触发

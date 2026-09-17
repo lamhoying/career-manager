@@ -32,6 +32,15 @@ validate_career_dna.py - Career DNA 写入闸门（Write Gate）
                           ④ Observed Companies 受控格式（公司名可解析 —— 「新赛道发现」判据的唯一输入）
                           —— knowledge/ 是唯一「无闸门、无索引、无生命周期」的增长型资产，
                              此前 Track 写成散文 → 人/脚本都归不了组
+  P2  identity-layer-schema `07_career_identity.md` 的层契约被破坏：
+                          ① 层完整性（5 层标题须齐）
+                          ② Layer 2 非空（模板占位 / `[待声明]` ⇒ 未完成声明）
+                          ③ Layer 2 的 Track 标注取值 ∈ 赛道文件名 ∪ {none}
+                          ④ Layer 5 的收录标注取值 ∈ 本文 Layer 2 条目名 ∪ {none}
+                          ⑤ Layer 4 引用的 TC 编号必须存在于 04b
+                          —— 07 此前**无任何闸门覆盖**（本脚本 13 项校验均不碰它），
+                             而它是全系统唯一「自由声明 + 无来源约束」的字段；
+                             Layer 2 空值会让 Mode D / Online Profile 的硬身份锚点无兜底降级
   P2  write-target-drift  「写入 01 报告 Part N」类落点声明指向 canonical 不存在的章节
                           —— 01 报告的 Part 骨架会随版本演进（如 Part 4.5 已合并进 Part 4），
                              但下游「写入 X Part N」的声明不会自动跟着改 → 落点悬空：
@@ -50,6 +59,9 @@ validate_career_dna.py - Career DNA 写入闸门（Write Gate）
   - role-snapshot-schema     → 补段（或按模板重建）；Track 改为受控取值（解释移入 Track Note）；
                                别名冲突须人工判定归属，不得两边都留；
                                Observed Companies 只放公司名，说明移入 `（）` 括注（未标注公司写 unknown）
+  - identity-layer-schema    → 补层（或按模板重建）；Layer 2 未声明须走 Mode A Step 8 采集协议
+                               （**不得代填** —— 违 R01）；Track / 收录标注改受控取值；
+                               Layer 4 的 TC 编号回 04b 核对
   - write-target-drift       → 把落点改为 canonical 01 报告的现行章节
                                （真源 = references/pack_templates/01_jd_match_report_template.md 的标题骨架）
 
@@ -222,6 +234,57 @@ PART_REF_RE = re.compile(r"Part\s+(\d+)(?:\.(\d+))?")
 # 01 目标与 Part 之间允许的「间隔」：仅标记符/空白，且有长度上限
 PART_REF_GAP_RE = re.compile(r"^[\s`*:：>_\-—（）()【】\[\]]*$")
 PART_REF_GAP_MAX = 14
+# ---- P2 identity-layer-schema 相关 ----
+# 07_career_identity.md 此前无任何闸门覆盖（13 项校验均不检查它）。
+# 本项覆盖可机械化的五类：层完整性 / Layer 2 非空 / Track 取值 / 收录标注引用 / TC 编号存在性。
+IDENTITY_LAYERS = (
+    "Layer 1: Professional Identity",
+    "Layer 2: Career Positioning",
+    "Layer 3: Career Narrative",
+    "Layer 4: Capability Priority",
+    "Layer 5: Non-Positioning Statement",
+)
+ID_TRACK_RE = re.compile(r"（Track:\s*(.+?)\s*）")
+ID_LISTED_RE = re.compile(r"（收录于 Layer 2:\s*(.+?)\s*）")
+ID_TC_RE = re.compile(r"(?<![A-Za-z0-9])TC(\d{3})(?![0-9])")
+# 未填写的模板占位（`[赛道文件名 | none]` 等）不报「取值非法」——由 Layer 2 非空检查统一报。
+ID_PLACEHOLDER_PREFIX = ("[", "{", "<")
+
+
+def _extract_layer2_names(body: str) -> set:
+    """Layer 2 条目名 = `## Layer 2` 段落内，每条定位在 `—` / `（` 之前的英文主名。
+
+    边界（诚实的范围）：只取 Layer 2 段内、非注释 / 非表格 / 非加粗小标题的行；
+    模板占位（以 `[` 开头）不计入。
+    """
+    names = set()
+    in_l2 = False
+    in_comment = False
+    for raw in body.split("\n"):
+        s = raw.strip()
+        if in_comment:
+            if "-->" in s:
+                in_comment = False
+            continue
+        if s.startswith("<!--"):
+            if "-->" not in s:
+                in_comment = True
+            continue
+        if s.startswith("## "):
+            in_l2 = s.startswith("## Layer 2")
+            continue
+        if not in_l2 or not s:
+            continue
+        if s.startswith(("-->", "**", ">", "|", "- [")):
+            continue
+        if s.startswith("- "):
+            s = s[2:]
+        name = re.split(r"\s*[—（(]", s)[0].strip().strip("`*")
+        if name and not name.startswith("[") and len(name) < 60:
+            names.add(name)
+    return names
+
+
 PART_TOP_RE = re.compile(r"^##\s*Part\s+(\d+)\b", re.MULTILINE)
 PART_SUB_RE = re.compile(r"^###\s*(\d+)\.(\d+)\b", re.MULTILINE)
 
@@ -747,8 +810,8 @@ def validate(career_dna_dir: str = "./career-dna"):
                             f"不得平铺进公司名（可疑片段: {' | '.join(bad[:3])}）"
                         )
 
-            # ③ 别名冲突 —— 整词比对（子串比对会把「测试工程师（AI Agent 方向）」
-            #    误判为与「测试工程师」冲突 → 假阳性）
+            # ③ 别名冲突 —— 整词比对（子串比对会把「[角色]（[方向] 方向）」
+            #    误判为与「[角色]」冲突 → 假阳性）
             m_alias = RS_ALIAS_RE.search(body)
             if m_alias:
                 for alias in m_alias.group(1).replace("，", ",").split(","):
@@ -776,6 +839,75 @@ def validate(career_dna_dir: str = "./career-dna"):
                     f"{len(conflicts)} 个别名跨快照冲突 → {'；'.join(conflicts)}"
                     " —— 须人工判定归属，不得两边都留",
                 )
+            )
+
+    # ---- P2: 07 Career Identity 层契约（层完整性 / Layer 2 非空 / 字段取值 / TC 编号） ----
+    identity_path = base / "07_career_identity.md"
+    if identity_path.is_file():
+        try:
+            body = identity_path.read_text(encoding="utf-8")
+        except Exception:
+            body = ""
+        problems = []
+
+        # ① 层完整性
+        heads = "\n".join(ln for ln in body.split("\n") if ln.startswith("## "))
+        missing = [s for s in IDENTITY_LAYERS if s not in heads]
+        if missing:
+            problems.append(f"缺层 {' / '.join(missing)}")
+
+        # ② Layer 2 非空（未声明 / 待声明）
+        if "[待声明]" in body:
+            problems.append("Layer 2 含 `[待声明]` —— 未完成声明（见 08_question_backlog）")
+        elif "[一句话市场身份" in body or "[定位方向" in body:
+            problems.append("Layer 2 仍为模板占位符 —— 未采集（须走 Mode A Step 8 采集协议）")
+
+        # ③（F15）Layer 2 的 Track 取值 ∈ 赛道文件名 ∪ {none}
+        tracks_root = base / "10_career_tracks"
+        id_track_names = set()
+        if tracks_root.is_dir():
+            id_track_names = {
+                q.stem
+                for q in tracks_root.glob("*.md")
+                if q.is_file() and q.stem.lower() != "readme"
+            }
+        for val in ID_TRACK_RE.findall(body):
+            v = val.strip()
+            if v.startswith(ID_PLACEHOLDER_PREFIX):
+                continue
+            if v.lower() != "none" and v not in id_track_names:
+                problems.append(
+                    f"Track 取值 `{v}` 非法 —— 只允许 "
+                    f"{'/'.join(sorted(id_track_names)) or '(无赛道文件)'} 或 none"
+                )
+
+        # ④（F14）Layer 5 的收录标注 ∈ Layer 2 条目名 ∪ {none}
+        l2_names = _extract_layer2_names(body)
+        for val in ID_LISTED_RE.findall(body):
+            v = val.strip()
+            if v.startswith(ID_PLACEHOLDER_PREFIX):
+                continue
+            if v.lower() != "none" and v not in l2_names:
+                problems.append(
+                    f"收录标注 `{v}` 悬空 —— 必须是本文 Layer 2 的条目名或 none"
+                )
+
+        # ⑤（F10）Layer 4 的 TC 编号必须存在于 04b
+        cb = base / "04b_transferable_capabilities.md"
+        if cb.is_file():
+            try:
+                have = {
+                    f"TC{m}" for m in ID_TC_RE.findall(cb.read_text(encoding="utf-8"))
+                }
+            except Exception:
+                have = set()
+            for m in sorted(set(ID_TC_RE.findall(body))):
+                if f"TC{m}" not in have:
+                    problems.append(f"Layer 4 引用 `TC{m}` 在 04b 中不存在")
+
+        if problems:
+            findings.append(
+                ("P2", "identity-layer-schema", identity_path.name, "；".join(problems[:4]))
             )
 
     # ---- 输出 ----

@@ -7,7 +7,7 @@ description: "AI Career Manager (AI职业经理人) - 帮助用户持续建设�
 
 ## Overview（概述）
 
-本技能将 AI 助手 转化为一名 AI Career Manager（AI职业经理人），以 Career DNA（职业基因库）为核心，帮助用户持续建设、管理、升级职业资产。Career DNA 是用户职业经历、能力、项目、故事和成长轨迹的唯一事实源（Single Source of Truth）。简历只是 Career DNA 的一种输出形式。
+本技能作为一个 AI Career Manager（AI职业经理人），以 Career DNA（职业基因库）为核心，帮助用户持续建设、管理、升级职业资产。Career DNA 是用户职业经历、能力、项目、故事和成长轨迹的唯一事实源（Single Source of Truth）。简历只是 Career DNA 的一种输出形式。
 
 ## Four-Layer Architecture（四层架构 v2.0）
 
@@ -95,7 +95,7 @@ career-dna/                    # 个人职业资产库（Personal Assets · Sing
 > 分区声明在 manifest 的 `regeneration` 字段；`validate_career_dna.py` 双向护栏：P1 `derived-part-drift`（防「丢」）+ P1 `undeclared-part`（防「偷偷加」）。
 > 13 尾部另有「**内容填充契约**」—— 每节只允许「实体内容 / 规则 / 指针」三种形态，禁止空指示。
 > **三层导航（v2.12.0）**：13 是唯一入口 —— `13`（L1 通用底料）→ `10_career_tracks/{track}.md` 的 `## Track Strategy`（L2 赛道打法）→ `resume-outputs/{JD}/04+05`（L3 本轮切片）。
-> **版本标注（v2.12.1 · F5 方案甲）**：模块文件**不再声明自身版本号**，一律在标题下标注 `> Aligns to: <skill 版本>`（表示「内容对齐到该 skill 版本」）；skill 版本以本文件顶部版本标注为准（发布包不含 CHANGELOG，变更摘要见 GitHub Release notes）。新增文件同样只写 Aligns to，**禁止自造模块版本号**（此前 16 个文件各写一份，已出现 v2.3.3 vs v2.0 的自相矛盾）。
+> **版本标注（v2.12.1 · F5 方案甲）**：模块文件**不再声明自身版本号**，一律在标题下标注 `> Aligns to: <skill 版本>`（表示「内容对齐到该 skill 版本」）；skill 版本以 `CHANGELOG.md` 顶部为准。新增文件同样只写 Aligns to，**禁止自造模块版本号**（此前 16 个文件各写一份，已出现 v2.3.3 vs v2.0 的自相矛盾）。
 
 knowledge/                     # 职业市场知识库（Market Intelligence · 跨JD累积）
 ├── role_snapshots/            # 岗位快照 (Role Snapshot) — 按 Role 归档的 JD 提炼

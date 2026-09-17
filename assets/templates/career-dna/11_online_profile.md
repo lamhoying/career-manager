@@ -1,6 +1,6 @@
 # Online Career Profile（在线职业档案 I→C→E Pipeline）
 
-> Aligns to: v2.19.0
+> Aligns to: v2.21.0
 <!--
 Online Career Profile — v2.5.6 I→C→E Pipeline
 可直接复制填写到 Boss 直聘「在线简历」的对应字段。
@@ -167,6 +167,8 @@ TC001, TC002, TC006
 ## Multi-Track Coverage（多赛道覆盖 v2.2）
 
 <!-- 确保一份在线简历同时覆盖多个 Track -->
+<!-- ⚠️ 本表的 Primary / Secondary = 赛道侧 Track 层级（按 **Confidence 排序**），
+     与 07 Layer 2 的 Positioning 层级（按**用户声明**）**同名不同义**，不得混用（F16 · v2.21.0）。 -->
 
 | Track | Coverage（覆盖率） | 状态 |
 |------|:--:|------|

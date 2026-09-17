@@ -94,6 +94,8 @@ v2.12.0 变更: Track Strategy 由独立策略文件改为本文件内的实体�
 
 <!-- 用于 11_online_profile.md Part 5 的分级展示 -->
 <!-- 所有 Track 文件中 Confidence 最高的 Track 作为 Primary -->
+<!-- ⚠️ 与 `07_career_identity` Layer 2 的 Primary / Secondary / Emerging **Positioning** 同名不同义（F16 · v2.21.0）：
+     本处层级由 **Confidence 排序**决定；07 处层级由**用户声明**决定。两者无对应关系，读取时不得混用。 -->
 
 - **Primary Track（主赛道）**: [Track Name] — Confidence: [XX]
 - **Secondary Track（副赛道）**: [Track Name] — Confidence: [XX]

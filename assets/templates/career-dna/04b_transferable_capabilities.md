@@ -1,6 +1,6 @@
 # Transferable Capability Mapping（可迁移能力映射）
 
-> Aligns to: v2.19.0
+> Aligns to: v2.21.0
 <!--
 可迁移能力映射层 — Skill Graph → 岗位语言的解释器。
 v2.3.3 升级：Expression Rules → Expression Intent（存意图不存句子）+ 新增 Position Constraint。
