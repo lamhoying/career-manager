@@ -17,19 +17,13 @@
       .entry / .entry-meta / ul / p
 -->
 <style>
-  /* ===== 配色调色板（换皮肤只改这里 —— 9 个颜色值集中管理） ===== */
-  :root {
-    --accent: #1564BF;            /* 强调色：公司行/日期/标签 */
-    --accent-rgb: 21, 100, 191;   /* 强调色 RGB 三分量（供装饰层 rgba() 用；改 --accent 时须同步） */
-    --accent-dark: #003B8E;       /* 深色辅助 */
-    --line: #99c4ee;              /* 分隔线/横线 */
-    --block-bg: #99c4ee;          /* 节标题条淡色底 */
-    --text: #1A1A1A;              /* 正文 */
-    --header-text-color: #FFFFFF; /* header 文字色（姓名/意向/信息值；深色背景时设 #FFFFFF） */
-    --header-tag-color: #FFFFFF;  /* header 标签色（电话/邮箱/城市 小标签） */
-    --shape-base-color: #4A7BC2;  /* header 底层梯形色 */
-    --shape-top-color: #1A3A6E;   /* header 顶层梯形色 */
+  /* ===== 配色调色板 → 唯一定义源：assets/templates/_shared/palette.css =====
+     本模板不再自带颜色定义；下一行的共享片段标记（｛｛> palette｝｝，实际为半角）
+     由 scripts/export_resume.py 的 _inline_palette() 在渲染前内联注入。
+     改配色请改 palette.css（简历与合册同时生效）。 */
+  {{> palette}}
 
+  :root {
     /* ===== 设计变量（布局/字号/字体，一般不动；颜色勿在此重复定义） ===== */
     --font: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
     --title-size: 20pt;       /* 姓名 */
@@ -86,7 +80,6 @@
     /* -- 形状参数（只影响 shape 类型） -- */
     --shape-wave-amplitude: 10px;   /* wave 波浪高度 */
     --shape-wave-segments: 40;      /* wave 平滑度：PDF 贝塞尔段数 */
-    --shape-wave-line: #D9E2F0;     /* wave 描边色（留空=无；优先用 --header-bg-stroke） */
     --shape-slant-angle: 45deg;     /* slant 斜切角度 */
     --deco-block-alpha: 0.13;       /* block 装饰块透明度 */
     --deco-dots-alpha: 0.30;        /* dots 圆点透明度 */
@@ -177,6 +170,12 @@
     list-style: disc;
   }
   .entry li { margin-bottom: 2px; }
+  /* ===== 行内强调（v2.24.0 · F57）：md 的 ==文本== → 加粗 + 主题色 =====
+     ⚠️ 唯一色源 = --accent（**不新增色板**，守住「配色唯一定义源」）；
+     ⚠️ **不用斜体** —— 本项目 CJK 字体（NotoSansSC）无 italic 变体，reportlab 会静默忽略 <i>
+        （2026-09-26 实测：`<i>斜体中文</i>` 渲染后 italic=False）⇒ 「强调」只能靠**加粗 + 色**。
+     用量约束：每页 ≤ 3 处（过多即噪声；owner 明确要求「不要过多」）。 */
+  .em-accent { color: var(--accent); font-weight: 700; }
   /* ===== 背景层（v2.8.2：header 形状组合叠加，内容浮最上） ===== */
   .header {
     position: relative;               /* 形状层绝对定位锚点 */
@@ -222,7 +221,7 @@
     {{/each}}
     <!-- 装饰层（单形状模式 block/dots/stripe；多形状模式为空） -->
     {{#each header_decos}}
-    <div class="{{cls}}">{{{html}}}</div>
+    <div class="{{cls}}">{{html}}</div>
     {{/each}}
     <div class="header-left">
       <span class="name">{{姓名}}</span><span class="intent">{{意向}}</span>

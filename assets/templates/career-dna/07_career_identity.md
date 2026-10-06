@@ -1,6 +1,6 @@
 # Career Identity（职业身份定义）
 
-> Aligns to: v2.21.0
+> Aligns to: v2.24.0
 <!--
 v2.5 重构：从简历摘要升级为职业身份定义。
 

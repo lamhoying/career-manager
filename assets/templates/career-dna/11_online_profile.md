@@ -1,6 +1,6 @@
 # Online Career Profile（在线职业档案 I→C→E Pipeline）
 
-> Aligns to: v2.21.0
+> Aligns to: v2.24.0
 <!--
 Online Career Profile — v2.5.6 I→C→E Pipeline
 可直接复制填写到 Boss 直聘「在线简历」的对应字段。

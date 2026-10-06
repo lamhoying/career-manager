@@ -102,14 +102,15 @@ knowledge/                     # 职业市场知识库（Market Intelligence · 
 │   ├── README.md              #   索引表 (Role / Track / Observed JD Count / **Observed Companies 已观察公司数** / 文件 / 段完整性) + 按赛道归组 + **新赛道候选** — v2.14.0 新增 / v2.17.0 加公司数列与候选节
 │   └── {role_name}.md         #   8 段全貌：Role Capability Model / Hiring Intelligence / JD 观察记录 / Persona Statistics / Trend Intelligence 等
 └── skill_snapshots/           # 能力域快照 (Skill Domain Snapshot) — 按 Domain 组织
-    └── {domain_name}.md       #   含 Observed JD Count / Related Roles / Trend Notes
+    ├── README.md              #   索引表 (Domain / 能力数 / Observed JD Count / 文件 / 段完整性) + 未建档 Domain + 缺段待刷新 — v2.22.0 新增
+    └── {domain_name}.md       #   `{domain_name}` 为受控命名（`04_skill_graph.md` 总览表驱动）；**建档 = Mode A Step 9.6**
 
 resume-outputs/                # 单次JD投递产物库（Per-JD Output — 按策略分层生成）
 └── {YYYYMMDD}-{company}-{role}/
     ├── 01_jd_match_report.md  # 岗位匹配报告 + Capability Translation + 附录 A/B（术语速查 / 公司背景尽调，v2.15.0）；**P1 唯一产物**，落盘后即停于 Phase Gate（v2.17.0）
     ├── 02_resume_cn.md        # 中文ATS简历
     ├── 03_resume_en.md        # 英文ATS简历
-    ├── XX_portfolio.md          # 作品集案例 (Portfolio Case)
+    ├── 09_portfolio_book.md     # 合册草稿（Step 9.6 Phase A → Portfolio Gate 交付物）
     ├── XX_interview_pack.md   # 面试准备包
     ├── XX_answer_cards.md     # 回答卡片库
     ├── XX_upgrade_plan.md     # 竞争力升级计划
@@ -123,9 +124,20 @@ resume-outputs/                # 单次JD投递产物库（Per-JD Output — 按
         ├── 02_resume_cn_final.html  #   v2 完整版（模板样式+内容，预览用，v2.8.1）
         ├── 02_resume_cn_final.docx  #   定稿 Word（export_resume.py，最简转换）
         ├── 02_resume_cn_final.pdf   #   定稿 PDF（HTML 驱动，主投递格式）
-        ├── cover_letter_final.docx/.pdf  # 求职信附件 (Pack A/B)
-        └── portfolio_final.pdf      # 作品集附件 (Pack A)
+        #  注（v2.24.0 · F48）：**求职信不由本 skill 产出** —— 全库无渲染路径（pack_templates/ 无
+        #  cover 种子 · export_resume.py --profile 无 cover 档）⇒ 原声明属「声明了产物却跑不出来」。
+        #  求职信改由**用户自拟**（可参考 07/08_boss_greeting.md 的「邮件版」）。
+        └── 09_portfolio_book_final.{md,html,pdf,docx}  # 作品集合册附件 (Step 9.6 · Pack A/B)
 ```
+
+```
+portfolio-outputs/            # 作品集案例库（跨 JD 长期库 · 非 career-dna SSOT）
+├── README.md                #   案例总览索引（kind / Project / Variant / Disclosure）+ 维护钩子
+├── {case}.md                #   案例（3 受控字段 + 必备节；schema 见 references/portfolio_outputs.md）
+└── {name}_template.md       #   模板（须在索引登记 kind=template）
+```
+
+> `portfolio-outputs/` 是**跨 JD 长期库**（与 `resume-outputs/{JD}/` 的一次性产物**不同生命周期**）；**规则真源 = `references/portfolio_outputs.md`**；写入 = **Mode A Step 12.3** / **Mode B Step 4.5**，消费 = **Mode D §Portfolio Selection** / **Step 9.6**；闸门 = P2 **`portfolio-output-schema`**。
 
 ```
 application-tracker/           # 投递追踪库（Application CRM · 按需建档）
@@ -147,7 +159,7 @@ application-tracker/           # 投递追踪库（Application CRM · 按需建�
 
 **工作流**：初始化目录 → 解析简历 → 提取职业轨迹 → 提取项目经历 → 构建能力图谱 → 构建故事库（含失败案例）→ 构建职业身份 → **发现职业方向并生成 Career Track 文件**（为每个识别到的 Track 生成完整 `{track}.md`） → 生成完整度报告 + Backlog（Backlog 问题关联 Track/Gap/Skill/Impact）
 
-**产物**：`career-dna/` 下 13 个单文件（01-09 + `04b_transferable_capabilities.md`（v2.3）+ `11_online_profile.md`（Boss 在线简历 v2.2）+ `12_portfolio_candidates.md` + `13_interview_narrative_strategy.md`（面试叙事战略手册 v2.11.0，12 Parts，Step 8.5 生成））+ `10_career_tracks/` 目录（每 Track 一文件）+ `XX_portfolio.md`（作品集案例 v2.1）
+**产物**：`career-dna/` 下 13 个单文件（01-09 + `04b_transferable_capabilities.md`（v2.3）+ `11_online_profile.md`（Boss 在线简历 v2.2）+ `12_portfolio_candidates.md` + `13_interview_narrative_strategy.md`（面试叙事战略手册 v2.11.0，12 Parts，Step 8.5 生成））+ `10_career_tracks/` 目录（每 Track 一文件）+ `portfolio-outputs/`（作品集案例库：`{case}.md` = 受控字段 + 索引；规则真源 = `references/portfolio_outputs.md`）
 
 详细工作流指引见 `references/mode_a_build.md`。
 
@@ -157,7 +169,7 @@ application-tracker/           # 投递追踪库（Application CRM · 按需建�
 
 **主动访谈子流程（Mode B+ v2.7.2）**：用户显式要求深挖时，以 opt-in 引导式访谈（≤3 问/轮 × ≤2 轮/session）补全 Career DNA 中"已建档但稀薄"的 entry；一轮问答结束统一写盘一次。详细规则见 `references/mode_b_update.md` §Mode B+。
 
-**工作流**：读取现有 Career DNA → 更新 Projects/Skill Graph/Story Bank/Career Identity/Career Tracks → 重新计算 Completeness → 更新 Question Backlog → 刷新派生资产（含 Online Profile + Portfolio Candidates + Portfolio Case v2.1）
+**工作流**：读取现有 Career DNA → 更新 Projects/Skill Graph/Story Bank/Career Identity/Career Tracks → 重新计算 Completeness → 更新 Question Backlog → 刷新派生资产（含 Online Profile + Portfolio Candidates + **案例库索引 `portfolio-outputs/` + 变体 `stale` 标记**）
 
 **产物**：更新对应的 `career-dna/` 文件
 
@@ -181,6 +193,8 @@ application-tracker/           # 投递追踪库（Application CRM · 按需建�
 
 **投递定稿（Delivery Finalization v2.8）**：Step 9.5 将 working 版简历净化 → 审核 → 导出 Word/PDF（`deliverables/` 子目录，仅中文版；净化不改内容只剥离标注；导出由脚本执行不经过 LLM）。详细规则见 `references/mode_d_job_application.md` §Step 9.5。
 
+**作品集合册（Portfolio Book v2.23.0）**：Step 9.6 将 `portfolio-outputs/` 案例库中与本 JD 匹配的案例组装成 **JD 定向合册**（**两阶段 + Portfolio Gate**：先落草稿 md + 试渲染页数 → 停 → 确认才渲染 `deliverables/09_portfolio_book_final.{md,html,pdf,docx}`）。属 **P2 内部第 2 个 opt-in**，与 Step 9.5 并列。详细规则见 `references/mode_d_job_application.md` §Step 9.6。
+
 **Talent Intelligence Pipeline（人才智能分析管线 v2.18.0 — 两阶段）**：
 
 ```
@@ -194,7 +208,7 @@ Step 10.A-C: Knowledge Update（Role / Skill Snapshot + Track Market Validation 
   └── 产物：01_jd_match_report.md（9 Part + 附录 A/B，完整自足）
 ═════ Phase Gate（决策门）═════  决策摘要 + 三选项（生成材料 / 只留报告 / 换策略）
 ═════ Phase 2: Build（材料生成 · token 主体）═════
-Step 4.5b / 8.5-8.6 / 8.8-8.10 / 8.12 / 9（9.0 逐经历重构 + 9.1 QA 四检） / 9.5 / X / 10.D
+Step 4.5b / 8.5-8.6 / 8.8-8.10 / 8.12 / 9（9.0 逐经历重构 + 9.1 QA 四检） / 9.5 / **9.6** / X / 10.D
   └── 产物：Pack A/B/C/D 全部文件 + deliverables/
 ```
 
@@ -234,7 +248,7 @@ Knowledge Layer 是外部市场情报的积累层，与 Career DNA（个人资�
 | 快照类型 | 文件位置 | 内容 | 关键字段 |
 |----------|----------|------|----------|
 | Role Snapshot（岗位快照） | `knowledge/role_snapshots/{role_name}.md` | 某 Role 的核心技能、软技能、工具、行业分布、JD来源、趋势 | Observed JD Count（观察数）, Observed Companies（观察公司）, Recent JD Sources（近期JD来源）, Trend Notes（趋势备注） |
-| Skill Domain Snapshot（能力域快照） | `knowledge/skill_snapshots/{domain_name}.md` | 按 Domain 组织的能力市场情报，含趋势观察 | Observed JD Count（观察数）, Related Roles（关联岗位）, Recent Observations（近期观察）, Trend Notes（趋势备注） |
+| Skill Domain Snapshot（能力域快照） | `knowledge/skill_snapshots/{domain_name}.md` | 按 Domain 组织的能力市场情报，含趋势观察。`{domain_name}` 为**受控命名**（`04_skill_graph.md` 的「Domain 分布总览」表驱动）；**建档责任 = Mode A Step 9.6**（v2.22.0 前全库无建档责任 ⇒ 该层长期空转） | Observed JD Count（观察数）, Related Roles（关联岗位）, Recent Observations（近期观察）, Trend Notes（趋势备注） |
 
 **使用场景**：
 - Mode D Career Track Match：JD Role → Role Snapshot 获取市场基线 → Career Track 匹配用户 → DNA Skill Graph 交叉比对
@@ -293,9 +307,11 @@ Build → Review → Apply → Discover → Update → Review → Apply → ...
 
 - `init_career_dna.py` — 初始化 `career-dna/` 目录结构，创建 10_career_tracks/ 子目录及 README.md。在 Mode A 开始时执行。
 - `completeness_checker.py` — 扫描 `career-dna/` 目录下所有文件，计算整体完整度评分和各模块完整度，输出信息缺口列表。
-- `validate_career_dna.py` — **Career DNA 写入闸门（v2.9.1 新增，v2.10.0 / v2.11.0 / v2.12.0 / v2.12.1 / v2.13.0 / v2.14.0 扩充）**。对照 manifest 校验 `career-dna/`：P0 `orphan` / `duplicate-content`，P1 `missing` / `unregistered-dir` / **`derived-part-drift`** / **`undeclared-part`**，P2 `no-timestamp` / `unresolved-anchor` / `ghost-file-ref` / **`stale-rule-ref`** / **`track-constraint-coverage`** / **`role-snapshot-schema`**（末者扫 `knowledge/role_snapshots/` 而非 `career-dna/`）。**只报告、绝不修改**；存在 P0/P1 时退出码 1。调用点：Mode A Step 0 与 Step 8.5 收尾、Mode B/C/D 收尾。
-- `export_resume.py` — 投递定稿导出（v2.8.8 HTML 模板驱动）：final.md → v1 抽象模板渲染 → v2 完整版 HTML → PDF（主）/ DOCX（辅）。支持 `--template` / `--photo` / `--theme`；版式全读模板 :root CSS 变量（配色调色板集中颜色；页宽/照片宽/间距等无硬编码）；页面背景 + Header 多形状堆叠背景由 onPage canvas 绘制。
+- `validate_career_dna.py` — **Career DNA 写入闸门（v2.9.1 新增，v2.10.0–v2.24.0 持续扩充）**。对照 manifest 校验 `career-dna/`：P0 `orphan` / `duplicate-content`，P1 `missing` / `unregistered-dir` / **`derived-part-drift`** / **`undeclared-part`**，P2 `no-timestamp` / `unresolved-anchor` / `ghost-file-ref` / **`stale-rule-ref`** / **`track-constraint-coverage`** / **`role-snapshot-schema`** / **`identity-layer-schema`** / **`write-target-drift`** / **`skill-snapshot-schema`**（另扫 `knowledge/role_snapshots/` 与 `knowledge/skill_snapshots/`）/ **`weight-sum`**（manifest 权重合计）/ **`portfolio-output-schema`**（`portfolio-outputs/` 案例库：索引一致性 / 必备节 / 受控字段 / 规模主谓）/ **`pdf-glyph-coverage`**（**PDF 静默丢字**：扫「会被渲染的文本源」× 字体 cmap —— 字体无字形 ∧ 降级表也没有 ∧ **非符号类**（非 `So`/`Sm`/`Sk`/`Sc`）∧ 非不可见 ⇒ 报（**真丢字**）；另兼扫「字体是否仍覆盖 `build_cn_font.py` 必保字形清单」与 **U+FFFD 数据损坏**）/ **`pdf-glyph-degraded`**（**v2.24.0 新增 · 与上者同族**：同为「字体无字形 ∧ 降级表无」，但字符属**符号类** ⇒ 渲染器已**按类降级为 `·`**（**不丢字、语义有损**）⇒ 单列报警、建议**改用文字**。⚠️ **与 `pdf-glyph-coverage` 同时常亮是设计意图** —— 不丢字 + 让人知道）/ **`format-source-consistency`**（**产出包种子 ↔ canonical ↔ 产物** 三点：种子三类标记完整性 / 薄壳 H2 ⊆ canonical / 落盘名映射与 `mode_d` §Pack 清单双向一致 / 产物 H2 ⊇ 真源 —— v2.23.4 起扫 skill 侧 `assets/templates/resume-outputs/` 与用户侧 `resume-outputs/{JD}/`）。**只报告、绝不修改**；存在 P0/P1 时退出码 1。调用点：Mode A Step 0 与 Step 8.5 收尾、Mode B/C/D 收尾。
+- `export_resume.py` — 投递定稿导出（v2.8.8 HTML 模板驱动）：final.md → v1 抽象模板渲染 → v2 完整版 HTML → PDF（主）/ DOCX（辅）。支持 `--template` / `--photo` / `--theme`；版式全读模板 :root CSS 变量（配色调色板集中颜色；页宽/照片宽/间距等无硬编码）；页面背景 + Header 多形状堆叠背景由 onPage canvas 绘制。**v2.24.0 起支持 `--format png` / `png-long`（F25）**：PDF → PNG 再派生（分页图 + 无缝长图），`--png-width`（默认 1160）控宽。
+- `render_png.py` — **PDF → PNG 栅格化（v2.24.0 新增 · F25）**：`pdf_pages_to_png`（逐页）/ `pdf_long_to_png`（长图 · 裁尾）/ `long_page_height`（长图页高；超 14400pt 返回 `None` ⇒ 调用方降级分页）。依赖**可选** `pypdfium2`（Apache-2.0，可随发布包分发）+ `Pillow`；缺失 ⇒ ImportError **友善提示、不崩**。**只读 PDF、只写 PNG**；不引入 PyMuPDF（AGPL）/ poppler。
 - `mini_template.py` — 零依赖递归模板引擎（v2.8.1）：`{{变量}}` + `{{#each 列表}}`（支持嵌套）。
+- `check_pdf_kinsoku.py` — **PDF 行首标点探针（v2.24.0 新增 · F53）**：逐行取首个非空白字符，命中**禁则标点集**即报（含两类已知假阳性过滤：平铺水印片段 / 目录引导线）。**只读检漏、不改文件**；需 `pymupdf`，**不进** `validate_career_dna.py` 的闸门链（闸门须在 `python3 -S -E` 纯标准库下运行）。**为何是探针而非机制**：`reportlab` 对 CJK 逐字符断行、**无禁则**，且 `U+2060` / `U+00A0` **均无法抑制断行**（分页法正样本实测）⇒ 机制级修复**不可行**，只能「文本层规避 + 出包后检漏」。调用点：Mode D Step 9.5 / 9.6 出 PDF 之后。
 
 ### assets/
 
@@ -304,14 +320,14 @@ Build → Review → Apply → Discover → Update → Review → Apply → ...
 ### references/
 
 - `career_dna_structure.md` — Career DNA 全部文件的字段定义、填写规范，以及 Knowledge Layer / Resume Outputs 说明。构建或更新任何文件前加载此文件。
-- `mode_a_build.md` — Mode A 详细工作流：9 步流程、每步操作指引、追问限制、完整度目标。含 Track Discovery（职业赛道识别）。Online Profile Pipeline **不在此重复定义**（降为指针 → `online_profile_generation.md`）。
+- `mode_a_build.md` — Mode A 详细工作流：12 步流程（含半步 8.5 / 9.5 / 9.6）、每步操作指引、追问限制、完整度目标。含 Track Discovery（职业赛道识别）。Online Profile Pipeline **不在此重复定义**（降为指针 → `online_profile_generation.md`）。
 - `mode_b_update.md` — Mode B 详细工作流：增量更新策略、回写规则、完整度重算。含 Mode B+ 主动访谈子流程（v2.7.2，opt-in 引导式深挖）。
 - `mode_c_review.md` — Mode C 详细工作流：分析框架、Gap Analysis 方法、输出格式。
-- `mode_d_job_application.md` — Mode D 详细工作流：Career Track Match → JD Match Report → Targeted Discovery → Career DNA Update → Resume Package → Knowledge Update。含 Step 9.5 投递定稿（v2.8）；**Step 2.9 附录生成**（v2.15.0：附录 A 三级准入 + 附录 B 每次必做 Tier 1）；**Step 5.8 Decision Score 评分规则**（v2.16.0：废除 Additive 三项因子 → `0.7×Match + 0.3×HireProb`，情境因子改 Label 展示不参与判定）；**两阶段门控**（v2.17.0：§Phase Routing 分流词表 + fail-safe、§Phase Gate 三段式输出与续跑规则、Step 10 拆 A-C→P1 / D→P2）；**Step 10 C 新赛道发现**（v2.17.0：判据 = 同一快照 distinct 公司数 ≥ 3，计量单位为**公司数非 JD 数**）；Reframing 仲裁 `Rule E05`（v2.13.0：事实 > 角色解释 > 职责动词 > 能力抽象）；**v2.18.0 闭环修复**：`Step 4.5a` / `4.5b` **标题与引用双向同步**（原为两个同名 `## Step 4.5:`）、`Step 8.5-8.12` **物理位置**上移至 Phase Gate 之后（与编号一致）、`Step X` 输入表改读 **8.7**（原误读 8.5）、`Part 4.5` / `Part 6 匹配总览` 等悬空锚点修正、**Pack C 命名统一为数字前缀**（原 `XX_` 与实际模板命名混用）。
+- `mode_d_job_application.md` — Mode D 详细工作流：Career Track Match → JD Match Report → Targeted Discovery → Career DNA Update → Resume Package → Knowledge Update。含 Step 9.5 投递定稿（v2.8）；**Step 2.9 附录生成**（v2.15.0：附录 A 三级准入 + 附录 B 每次必做 Tier 1）；**Step 5.8 Decision Score 评分规则**（v2.16.0：废除 Additive 三项因子 → `0.7×Match + 0.3×HireProb`，情境因子改 Label 展示不参与判定）；**两阶段门控**（v2.17.0：§Phase Routing 分流词表 + fail-safe、§Phase Gate 三段式输出与续跑规则、Step 10 拆 A-C→P1 / D→P2）；**Step 10 C 新赛道发现**（v2.17.0：判据 = 同一快照 distinct 公司数 ≥ 3，计量单位为**公司数非 JD 数**）；Reframing 仲裁 `Rule E05`（v2.13.0：事实 > 角色解释 > 职责动词 > 能力抽象）；**v2.18.0 闭环修复**：`Step 4.5a` / `4.5b` **标题与引用双向同步**（原为两个同名 `## Step 4.5:`）、`Step 8.5-8.12` **物理位置**上移至 Phase Gate 之后（与编号一致）、`Step X` 输入表改读 **8.7**（原误读 8.5）、`Part 4.5` / `Part 6 匹配总览` 等悬空锚点修正、**Pack C 命名统一为数字前缀**（原 `XX_` 与实际模板命名混用）；**v2.23.0 作品集合册**：新增 **Step 9.6**（两阶段 + Portfolio Gate）、§Portfolio Selection 源扩「案例库本赛道变体」+ 单开「补充候选」节、三停表 → **四停表**。
 - `output_contracts.md` — 各 Mode 产物合约：结构、字段、验收标准（生成任何产物前核对）。含**共享边界表 + 抽象档位表**（v2.13.0：哪些跨渠道共享、哪些各渠道独立）+ **附录 A/B 合约**（v2.15.0：可选产物、与 Part 骨架正交、无闸门）。
 - `mode_e_application_tracker.md` — Mode E 详细工作流（v2.0 新增）：Application CRM，记录真实市场反馈。
 - `targeted_discovery.md` — Targeted Discovery 规则。
-- `online_profile_generation.md` — Online Career Profile 生成规则（v2.2 新增）。**规则真源**（`R01-R07` 合法编号集合）；**Online Profile Pipeline 唯一定义**（v2.13.0 起）；`R03` 含角色标签白名单 + fail-safe。
+- `online_profile_generation.md` — Online Career Profile 生成规则（v2.2 新增）。**规则真源**（`R01-R07` + **`R02b`（v2.25.0）** 合法编号集合）；**Online Profile Pipeline 唯一定义**（v2.13.0 起）；`R03` 含角色标签白名单 + fail-safe；**`R02b`（v2.25.0）** 定**成长表达边界**（允许侧：经历层**能力层级梯度** / **动词按段分层**｜禁止侧：**成长句作身份表达**）。
 - `transferable_capability_generation.md` — 可迁移能力生成规则（v2.3 新增）。
 - `question_backlog.md` — Question Backlog 管理规则。
 - `pack_templates/` — **01-08 全部产物的版式唯一定义源**（**v2.18.0 补入 Resources 索引**）。含 `01_jd_match_report_template.md` ~ `08_boss_greeting_template.md` 共 8 个模板 + `README.md`（模板清单 / Pack 覆盖表 / **编号映射铁律**）。每个模板 = 章节骨架 + 固定表格列头 + 字段占位，**只锁版式、不锁内容**。
@@ -319,32 +335,39 @@ Build → Review → Apply → Discover → Update → Review → Apply → ...
 ### assets/templates/
 
 - `career-dna/01_profile.md` ~ `09_completeness_report.md` — 9 个核心文件模板（01-09；另 04b / 11 / 12 / 13 见下，共 13 个）。
+- `_shared/palette.css` — **配色唯一定义源（v2.23.0 新增）**；`resume_template.html` 与 `portfolio-outputs/portfolio_book_template.html` **两模板共用**（改一处 = 两处生效）。
+- `portfolio-outputs/portfolio_book_template.html` — 作品集合册 HTML 版式（v2.23.0 新增；配 `--profile portfolio`）。
 - `career-dna/11_online_profile.md` — Online Career Profile（Boss在线简历）。
 - `career-dna/12_portfolio_candidates.md` — 作品集候选池 (v2.1 新增)。
 - `career-dna/13_interview_narrative_strategy.md` — **面试叙事战略手册（v2.10.0 新增，v2.11.0 扩至 12 Parts，v2.12.0 加三层导航；分派生区 / 手写区）**。面试表达层 SSOT；内置 **L1/L2/L3 三层导航**（13 → `10_career_tracks/{track}.md` 的 `## Track Strategy` → `resume-outputs/{JD}/04+05`）；Part 6 口径纵深 / Part 7 分轮次与分题型打法 / Part 8 面试后跟进 / Part 9 复盘回路 / Part 10 反向尽调 / Part 11 录用阶段（Offer 谈判 + 背调）/ Part 12 英文面试。尾部含「内容填充契约」。
 - `career-dna/04b_transferable_capabilities.md` — 可迁移能力映射。`Position Constraint` 赛道条目为**目录驱动**（条目数 = `10_career_tracks/` 实有赛道数，由 P2 `track-constraint-coverage` 校验）。
 - `career_track.md` — Career Track 赛道模板（v2.12.0：`## Track Strategy` 由指针段改为实体段 S1-S4）。
 - `knowledge/role_snapshot.md` — Role Snapshot 模板。`Track（职业赛道）` 为**受控取值**（`10_career_tracks/` 下的赛道文件名，或 `none`；解释写 `Track Note`）；`Observed Companies` 同为**受控格式**（公司名，说明写 `（）` 括注，未标注写 `unknown` —— v2.17.0，其解析出的公司数是「新赛道发现」判据的唯一输入）。8 段完整性 + Track 取值 + 别名冲突 + Observed Companies 格式由 P2 `role-snapshot-schema` 四项校验（v2.14.0 / v2.17.0）。
-- `knowledge/skill_snapshot.md` — Skill Domain Snapshot 模板。
-- `resume-outputs/01_jd_match_report.md` — JD Match Report 模板（**遗留副本**；v2.16.0 起 **Part 7** 已收敛进 canonical，v2.18.0 起 **Part 9** 亦已收敛，两节均降为指针）。
-  ⚠️ **现行版式（9-Part + 附录 A/B）的唯一定义源是** `references/pack_templates/01_jd_match_report_template.md`（被 `mode_d` / `output_contracts` 双引用）—— 生成产物时以它为准，不改本遗留副本。
-  **v2.16.0 复议**：原判断「canonical 一律比遗留副本完整」**至少对 Part 7 不成立** —— 遗留副本该节原载 v1.5.6 完整版（`Factor Types` 三分类 + `Decision Factors` 表），canonical 仅 9 行简版，属**版本倒挂**。已按 D8 甲把完整内容**收敛进 canonical**（规则 → `mode_d` §Step 5.8；版式 → `pack_templates/01` Part 7），遗留副本该节降为指针。**其余 Part 的收敛仍归 A-5。**
-  **v2.18.0 复议**：**Part 9 是第二例「版本倒挂」** —— 遗留副本原载 `## Part 9: Outreach Package v1.6.2`（9.1 Evidence Routing / 9.2 Platform Variants），canonical **完全没有 Part 9**，导致 `Step 8.5 / 8.6` 的输出**无处落盘**。已同法收敛（版式 → `pack_templates/01` Part 9；规则 → `mode_d` Step 8.5 / 8.6），遗留副本该节降为指针。
-- `resume-outputs/XX_portfolio.md` — 作品集案例模板 (v2.1 新增)。
-- `resume-outputs/02_resume_cn.md` — 中文 ATS 简历模板。
-- `resume-outputs/03_resume_en.md` — 英文 ATS 简历模板 (v1.5.1 新增)。
-- `resume-outputs/resume_template.html` — 投递定稿 HTML v1 抽象模板（v2.8.1 新增；v2.8.7+ 顶部「配色调色板」集中颜色，Template-as-Spec：占位符 + CSS 变量，用户改模板 = 改设计；引擎支持 .header/.section/.entry 等结构类）。
+- `knowledge/skill_snapshot.md` — Skill Domain Snapshot 模板。4 段完整性 + 文件名↔Domain 字段一致 + 索引一致性 + 未建档 Domain 由 P2 `skill-snapshot-schema` 四项校验（v2.22.0）。
+- `resume-outputs/01_jd_match_report.md` — JD Match Report **遗留副本（v2.22.0 起降为薄壳骨架）**。
+  ⚠️ **本文件不是版式定义源、也不再承载任何生成规则** —— 现行版式（**9-Part + 附录 A/B**）的唯一定义源是
+  `references/pack_templates/01_jd_match_report_template.md`（被 `mode_d` / `output_contracts` 双引用）。
+  **降级理由（F2）**：该文件原为 v1.6.2 完整旧版（357 行，含硬编码示例数值 `72/65/60/50 → 65.3`、`86/82/≈70`），
+  **随发布包外泄**、与 canonical 并存 ⇒ **第二个定义源**（v2.23.3 起同目录 `02`–`07` 已同步为**薄壳骨架**；`09_portfolio_book.md` / `XX_portfolio.md` 为**声明真源**、`XX_learning_roadmap` / `XX_transition_*` 为**内联真源**，均非副本 —— 三类判据与落盘名映射 → `references/career_dna_structure.md` §产出包种子）。
+  **v2.16.0 / v2.18.0 两次「版本倒挂」的教训**（遗留副本载完整版、canonical 反而简版）已把内容收敛进 canonical
+  （Part 7 → `pack_templates/01` Part 7 + `mode_d` §Step 5.8；Part 9 → `pack_templates/01` Part 9 + `mode_d` Step 8.5 / 8.6）；
+  **v2.22.0 起余下 Part 不再逐节收敛，直接整体降为薄壳**（删规则正文与示例数值，只留**章节标题骨架 + 指针** —— 形状与同目录 `02`–`07` 薄壳一致，逐文件见下）。
+- `resume-outputs/XX_portfolio.md` — 作品集案例模板 (v2.1 新增；**v2.23.0 加 3 受控字段** `Project` / `Variant` / `Disclosure`，schema 见 `references/portfolio_outputs.md` §3)。**声明真源（Format Source · 契约）**；必备 H2 = 作品集案例库「必备节」的判据源；**非 Pack 产物**（不进落盘名映射）。
+- `resume-outputs/09_portfolio_book.md` — 作品集合册骨架（**v2.23.0 新增**；输入契约 + Portfolio Gate 交付物）。**声明真源（Format Source · 契约）**；**非 Pack 产物**。
+- `resume-outputs/02_resume_cn.md` — 中文 ATS 简历**遗留副本（v2.23.3 起薄壳骨架）**；版式真源 = `references/pack_templates/02_resume_cn_template.md`。
+- `resume-outputs/03_resume_en.md` — 英文 ATS 简历**遗留副本（v2.23.3 起薄壳骨架）**；版式真源 = `references/pack_templates/03_resume_en_template.md`。
+- `resume-outputs/resume_template.html` — 投递定稿 HTML v1 抽象模板（v2.8.1 新增；**配色已移入 `_shared/palette.css`（v2.23.0 起两模板共用）**，Template-as-Spec：占位符 + CSS 变量，用户改模板 = 改设计；引擎支持 .header/.section/.entry 等结构类）。
 - `resume-outputs/resume_template_preview.html` — HTML 设计稿预览（版式规格参考）。
 - `resume-outputs/resume_template.docx` — 投递定稿 Word 空模板（v2.8，从用户既有简历提取样式）。
-- `resume-outputs/04_interview_pack.md` — 面试准备包模板。
-- `resume-outputs/05_answer_cards.md` — 回答卡片库模板。
-- `resume-outputs/06_upgrade_plan.md` — 竞争力升级计划模板。
-- `resume-outputs/07_boss_greeting.md` — Boss 打招呼语模板 (v1.6 新增)。
-- `resume-outputs/XX_gap_analysis.md` — 能力差距分析模板 (v1.5.1 新增)。
-- `resume-outputs/XX_transition_resume_cn.md` — 转岗中文简历模板 (v1.5.1 新增)。
-- `resume-outputs/XX_transition_resume_en.md` — 转岗英文简历模板 (v1.5.1 新增)。
-- `resume-outputs/XX_transition_feasibility.md` — 转岗可行性评估模板 (v1.5.1 新增)。
+- `resume-outputs/04_interview_pack.md` — 面试准备包**遗留副本（v2.23.3 起薄壳骨架）**；版式真源 = `references/pack_templates/04_interview_pack_template.md`。
+- `resume-outputs/05_answer_cards.md` — 回答卡片库**遗留副本（v2.23.3 起薄壳骨架）**；版式真源 = `references/pack_templates/05_answer_cards_template.md`。
+- `resume-outputs/06_upgrade_plan.md` — 竞争力升级计划**遗留副本（v2.23.3 起薄壳骨架）**；⚠️ **Pack A 编号 = 06** ⇒ 版式真源 = `references/pack_templates/07_upgrade_plan_template.md`。
+- `resume-outputs/07_boss_greeting.md` — Boss 打招呼语**遗留副本（v2.23.3 起薄壳骨架）**；⚠️ **Pack A 编号 = 07** ⇒ 版式真源 = `references/pack_templates/08_boss_greeting_template.md`。
+- `resume-outputs/XX_gap_analysis.md` — 能力差距分析**遗留副本（v2.23.3 起薄壳骨架）**；版式真源 = `references/pack_templates/06_gap_analysis_template.md`。
+- `resume-outputs/XX_transition_resume_cn.md` — 转岗中文简历**版式真源（Format Source · 内联 · 无 canonical）**（v1.5.1 引入）；落盘名 = Pack C `02_transition_resume_cn.md`。
+- `resume-outputs/XX_transition_resume_en.md` — 转岗英文简历**版式真源（Format Source · 内联 · 无 canonical）**（v1.5.1 引入）；落盘名 = Pack C `03_transition_resume_en.md`。
+- `resume-outputs/XX_transition_feasibility.md` — 转岗可行性评估**版式真源（Format Source · 内联 · 无 canonical）**（v1.5.1 引入）；落盘名 = Pack C `04_transition_feasibility.md` ｜ Pack D `03_transition_feasibility.md`。
 - `application-tracker/01_application_index.md` — 投递追踪主表模板 (v2.0 新增；v2.12.0 加 `Pack` 链接列，由 Mode D Step 10 自动登记、Mode E 维护 Status)。
 - `application-tracker/02_status_definitions.md` — 状态定义 (v2.0 新增)。
 - `application-tracker/archives/XX_case.md` — **投递案例档案模板（v2.10.0 实体化）**。Timeline / **Interview Log** / **Interview Retro** / Feedback / Personal Notes / Lessons Learned 六章节。
-- `resume-outputs/XX_learning_roadmap.md` — 学习路线图模板 (v1.5.1 新增)。
+- `resume-outputs/XX_learning_roadmap.md` — 学习路线图**版式真源（Format Source · 内联 · 无 canonical）**（v1.5.1 引入）；落盘名 = Pack C `06_learning_roadmap.md` ｜ Pack D `04_learning_roadmap.md`。

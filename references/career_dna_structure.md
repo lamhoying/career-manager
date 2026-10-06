@@ -19,10 +19,12 @@ Career DNA 是用户职业经历的唯一事实源（Single Source of Truth）�
 
 1. 在 `assets/career_dna_manifest.json` 增加条目（`filename` / `name` / `desc` / `weight` / `kind`）
 2. 在 `assets/templates/career-dna/` 提供同名模板
-3. 给出权重（派生资产档 4-6；纯生成物填 `weight: 0` 并在 `desc` 注明理由，如 09）
+3. 给出权重（派生资产档 4-6；纯生成物填 `weight: 0` 并在 `desc` 注明理由，如 09）。
+   ⚠️ **权重合计必须恰为 100**（`weight` = 该文件占整体完整度的百分比）—— 新增文件时**必须同步重分配**
+   既有权重，否则 `09` 报表分母失真、各模块「权重 %」无法据以手算复核。由 P2 `weight-sum` 兜底。
 4. 同步 `SKILL.md` 的目录树、Mode A 产物计数与 Resources 清单
 
-**自检**：`python3 scripts/validate_career_dna.py <career-dna目录>` —— 只报告不修改；有 P0/P1 时退出码 1。检出项：P0 orphan（未登记文件）/ P0 duplicate-content（跨文件长段落逐字重复）/ P1 missing / P1 unregistered-dir / P2 派生资产缺时间戳。
+**自检**：`python3 scripts/validate_career_dna.py <career-dna目录>` —— 只报告不修改；有 P0/P1 时退出码 1。检出项：P0 orphan（未登记文件）/ P0 duplicate-content（跨文件长段落逐字重复）/ P1 missing / P1 unregistered-dir / P2 各项（派生资产缺时间戳、悬空引用、`07` 层契约、快照契约、**manifest 权重合计**等，**完整清单见脚本 docstring**）。
 
 ---
 
@@ -446,6 +448,40 @@ Online Profile 是 Career DNA 的派生资产（Derived Asset），不直接维�
 
 ---
 
+## portfolio-outputs/ — 作品集案例库（Portfolio Output Library）
+
+**跨 JD 长期库**（与 `resume-outputs/{JD}/` 的一次性产物**不同生命周期**）。**规则真源 = `references/portfolio_outputs.md`**
+（目录契约 / 案例 schema / **披露分级 L3** / E19 黑名单 / 索引契约）。本段只记**结构位置与写入契约**，不复制规则。
+
+- 位置：**与 `career-dna/` 同级**（同 `knowledge/` / `resume-outputs/`）
+- 写入责任：**S1 = `mode_a_build` Step 12.3**（生成）· **S2 = `mode_b_update` Step 4.5**（刷新 / 标 `stale`）
+- 消费责任：**S3 = `mode_d` §Portfolio Selection**（选取）· **S4/S5 = `mode_d` Step 9.6**（合册）
+- 闸门：`validate_career_dna.py` P2 **`portfolio-output-schema`**（5 项）
+- ⚠️ **不入 manifest**（不是 `career-dna/` 根目录文件，无需四件套登记）；**但必须受闸门约束**（这是原 F32 的核心缺口）
+
+---
+
+## 产出包种子 — 三类与落盘名映射（v2.23.4）
+
+`assets/templates/resume-outputs/*.md` 是**产出包种子**。按**头部标记**分三类（**禁按文件名判断** —— 硬编码清单在重命名 / 新增种子时必失效）：
+
+| 类别 | 头部标记 | 含义 | 现有 |
+|---|---|---|---|
+| **薄壳**（Legacy Copy） | `遗留副本（Legacy Copy）` | 版式真源在 `references/pack_templates/*_template.md`；本文件**只留章节骨架**（H2 ⊆ canonical） | `01`–`07` + `XX_gap_analysis`（8） |
+| **内联真源** | `版式真源（Format Source · 内联）` | **无 canonical**（该产物 `mode_d` 只定落盘名与用途）⇒ **自身即版式定义**，骨架 + 表头 + 占位内联于本文件 | `XX_learning_roadmap` / `XX_transition_resume_cn` / `XX_transition_resume_en` / `XX_transition_feasibility`（4） |
+| **声明真源** | `声明真源（Format Source · 契约）` | 自身即契约 / 真源，另有规则文档 | `09_portfolio_book`（渲染映射源）/ `XX_portfolio`（→ `references/portfolio_outputs.md` §3）（2） |
+
+**落盘名映射（闸门源）**：种子在头部以 `- **落盘名（闸门映射源 · 唯一登记处）**：` 声明「本产物的数字落盘名 → 真源（薄壳 ⇒ 其 canonical；内联真源 ⇒ 本文件自身）」。
+
+- **落盘名声明行只准出现落盘名** —— 行内任何 `.md` 引用都会被闸门一并提取（说明文字须另起一行）
+- 落盘名形态 = **数字前缀**（`mode_d`「落盘命名规则（v2.18.0 定论）」；`XX_*` 只是**模板**文件名）
+- 声明集合须与 `references/mode_d_job_application.md` §Pack A–D 清单**双向一致**（当前 **19** 名）
+
+- 闸门：`validate_career_dna.py` P2 **`format-source-consistency`**（4 项：种子分类 / 薄壳 ⊆ canonical / 落盘名映射 / 产物 ⊇ 真源）
+- 旧代际豁免：`resume-outputs/{JD}/` 中**目录名前缀日期 < v2.23.4 生效日**的实例豁免 —— 判据为**规则式**，**不列举目录名**（目录名含真实公司名 = PII，写进脚本会随发布包外泄）
+
+---
+
 ## 13_interview_narrative_strategy.md — 面试叙事战略手册
 
 **派生 + 手写分区资产 · 面试表达层 SSOT**。整合 07 的身份叙事、05 的故事评分、02 的时间线事实与 03 的量化证据，形成一份跨 JD 通用的面试作战手册。
@@ -518,8 +554,10 @@ Knowledge（市场知识库）= 市场资产 → 市场需要什么、趋势是�
 ```
 knowledge/
 ├── role_snapshots/            # 岗位快照 (Role Snapshot) — 按 Role 归档
+│   ├── README.md              #   索引表 + 按赛道归组 + 新赛道候选（Mode D Step 10 A 维护）
 │   └── {role_name}.md         #   v1.4: 含 Hiring Intelligence（招聘情报） / Talent Persona（人才画像） / Evidence Trends（证据趋势）
 └── skill_snapshots/           # 能力域快照 (Skill Domain Snapshot) — 按 Domain 组织
+    ├── README.md              #   索引表 + 未建档 Domain + 缺段待刷新（v2.22.0 新增；Mode A Step 9.6 / Mode D Step 10 B 维护）
     └── {domain_name}.md       #   v1.4: 含 Typical Evidence（典型证据） / Business Meaning（业务价值） / Related Hiring Intent（关联招聘意图）
 ```
 
@@ -578,7 +616,15 @@ knowledge/
 
 **空段 ≠ 缺段**：`Observed JD Count = 0` 的新建快照允许各段只有表头或占位符，但 **8 个段标题必须齐全**（由 P2 `role-snapshot-schema` 校验；已存在的旧实例走迁移白名单，随下次 JD 观察自然补齐）。
 
-### skill_snapshots/{domain_name}.md — 能力域快照 (v1.4 Talent Intelligence)
+### skill_snapshots/{domain_name}.md — 能力域快照 (v1.4 Talent Intelligence / v1.4.1 Aliases / v2.3 Market Language)
+
+> **模板真源**：`assets/templates/knowledge/skill_snapshot.md` —— 本段与模板保持同步，生成 / 更新前以模板为准。
+> 全篇共 **4 段**：`能力列表及市场情报 (Skill Market Intelligence v1.4.1)` / `JD 观察记录 (JD Observation Log)` /
+> `关联能力矩阵 (Related Skills Matrix)` / `趋势观察 (Trend Notes)`。
+> **建档责任**：Mode A **Step 9.6**（v2.22.0 新增 —— 此前全库无任何模式负责建档）；**更新责任**：`references/mode_d_job_application.md` Step 10 B。
+> **命名规则（受控取值）**：`{domain_name}` = Domain 值的**英文部分** → 移除 `&` → 转小写 → 连续空白折叠为 `_` → 去首尾 `_`。
+> **取值域 = `career-dna/04_skill_graph.md` 的 `## Domain 分布总览` 表**（**禁自由命名**，与 `Track` 字段同纪律）。
+> **空段 ≠ 缺段**：新建骨架允许各段只有表头 / 占位符，但 **4 个段标题必须齐全**（由 P2 `skill-snapshot-schema` 校验）。
 
 ```markdown
 # Skill Domain Snapshot: [Domain Name]

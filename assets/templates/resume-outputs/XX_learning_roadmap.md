@@ -1,7 +1,15 @@
 # Learning Roadmap（学习路线图） → [Target Role]
 
-<!-- 学习路线图 (Learning Roadmap v1.5.1) — Weak Fit 专用
-基于 Gap Analysis 和 Transition Feasibility 制定可执行的学习计划。
+<!--
+版式真源（Format Source · 内联）—— 本产物**无 canonical 对应**（v2.23.4 起明示）。
+**本文件即该产物的版式定义**（章节骨架 + 表头 + 占位，内联于本文件，不外置到 `references/pack_templates/`）。
+- 生成规则真源：`references/mode_d_job_application.md` §Pack D 清单（定落盘名与用途；版式以本文件为准）
+- 产物路径：`resume-outputs/{YYYYMMDD}-{company}-{role}/04_learning_roadmap.md`
+- **落盘名（闸门映射源 · 唯一登记处）**：`06_learning_roadmap.md`（Pack C）｜`04_learning_roadmap.md`（Pack D）
+
+用途：Weak Fit 专用 —— 基于 Gap Analysis 和 Transition Feasibility 制定可执行的学习计划。
+
+⚠️ 版本标注：早期括注的 `v1.5.1` = **引入版本**、非当期版本；本文件随 skill 版本走，**无独立版本号**（防「有版本戳 = 内容是新的」误读）。
 -->
 
 ## 目标画像

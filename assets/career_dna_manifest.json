@@ -1,41 +1,42 @@
 {
-  "manifest_version": "2.21.0",
-  "updated": "2026-09-17",
+  "manifest_version": "2.24.0",
+  "updated": "2026-09-27",
   "purpose": "Career DNA 文件清单的唯一定义源（Single Source of Truth）。init_career_dna.py / completeness_checker.py / validate_career_dna.py 均从此文件读取，禁止在脚本或文档中另行硬编码清单。",
   "write_contract": [
     "career-dna/ 是用户的唯一事实源（SSOT）。任何在 career-dna/ 根目录新增的文件，必须先在本清单登记（filename + name + desc + weight + kind），并提供 assets/templates/career-dna/ 下的同名模板。",
     "登记四件套：① 本清单条目 ② 同名模板 ③ 权重（或显式 weight=0 并说明理由）④ SKILL.md 目录树 / Resources 同步。四件套缺一不可，并随 skill 版本号发布。",
     "未登记文件视为污染：validate_career_dna.py 报 P0，必须移出根目录或补登记，不得留在 SSOT 根目录。",
     "以下划线开头的文件/目录属草稿区（非 SSOT）：不参与完整度计分、可随时清理，不得被其他资产引用。",
-    "kinds：core=用户提供的事实源；derived=由 core 推导的派生资产；generated=脚本生成的报告；dir=目录型模块。"
+    "kinds：core=用户提供的事实源；derived=由 core 推导的派生资产；generated=脚本生成的报告；dir=目录型模块。",
+    "权重语义（v2.22.0）：weight = 该文件占整体完整度的百分比 ⇒ 全部条目（含 weight=0 的生成物）合计必须恰为 100。新增文件后必须同步重分配既有权重，否则 09 报表的分母失真、各模块「权重 %」无法据以手算复核（由 validate_career_dna.py 的 P2 weight-sum 兜底）。"
   ],
   "ssot_files": [
     {
       "filename": "01_profile.md",
       "name": "Profile",
       "desc": "个人职业档案",
-      "weight": 10,
+      "weight": 9,
       "kind": "core"
     },
     {
       "filename": "02_timeline.md",
       "name": "Timeline",
       "desc": "职业发展轨迹",
-      "weight": 12,
+      "weight": 11,
       "kind": "core"
     },
     {
       "filename": "03_projects.md",
       "name": "Projects",
       "desc": "项目资产库",
-      "weight": 18,
+      "weight": 17,
       "kind": "core"
     },
     {
       "filename": "04_skill_graph.md",
       "name": "Skill Graph",
       "desc": "能力图谱",
-      "weight": 16,
+      "weight": 15,
       "kind": "core"
     },
     {
@@ -63,7 +64,7 @@
       "filename": "07_career_identity.md",
       "name": "Career Identity",
       "desc": "职业身份定义",
-      "weight": 8,
+      "weight": 7,
       "kind": "core"
     },
     {

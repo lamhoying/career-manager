@@ -1,7 +1,14 @@
 # Portfolio: [项目名称]
 
+> **Project**: [项目名 —— 同一项目的所有变体共用同一个值；这是聚合键]
+> **Variant**: [none | <变体短名>]   <!-- 受控：无变体写 none；有变体须在案例库登记取值 -->
+> **Disclosure**: [对外 | 面试 | 内部]                   <!-- 受控：内部 ⇒ 拒绝渲染对外版 -->
+
 <!--
-作品集案例 (Portfolio Case v2.1.2)
+声明真源（Format Source · 契约）—— 本产物**无 canonical 对应**（v2.23.4 起明示）；
+**本文件即版式定义**（必备 H2 = 作品集案例库的"必备节"判据源，见 references/portfolio_outputs.md §3）。
+作品集案例 (Portfolio Case v2.23.0)
+> 三字段受控取值 / 披露分级 / 必备节 → 见 `references/portfolio_outputs.md` §3（指针，不复制）
 与 STAR Story 的核心区别：Portfolio 回答"为什么值得约面试"，偏书面/可独立阅读。
 每字段从 Career DNA 严格提取，不自由发挥。
 

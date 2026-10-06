@@ -1,0 +1,26 @@
+/* ==========================================================================
+   Career Manager — 设计配色调色板（唯一定义源）
+   --------------------------------------------------------------------------
+   谁在用：assets/templates/resume-outputs/resume_template.html（简历）
+           assets/templates/portfolio-outputs/portfolio_book_template.html（作品集合册）
+   怎么用：模板内写共享片段标记（半角 ｛｛> palette｝｝ 即「大于号 + 片名」）；
+           scripts/export_resume.py 的 _inline_palette() 会在 mini_render 之前
+           把本文件全文内联进 <style>。注入后 CSS 变量
+           才能被 extract_css_vars() 读到 ⇒ HTML 与 PDF/DOCX 同时生效。
+   ⚠️ 注入时机：必须在 extract_css_vars() 之前（否则 PDF 读不到变量、
+      静默回退到脚本内的 default 色值 —— 那正是「漂移」）。
+   纪律：颜色只在这里定义一次。模板的「设计变量」区禁止重复定义颜色。
+   ========================================================================== */
+:root {
+  --accent: #1564BF;            /* 强调色：公司行 / 日期 / 标签 / 表头 / 案例标题 */
+  --accent-rgb: 21, 100, 191;   /* 强调色 RGB 三分量（供 rgba() 装饰层；改 --accent 时须同步） */
+  --accent-dark: #003B8E;       /* 深色辅助 */
+  --line: #99c4ee;              /* 分隔线 / 节标题横线 / 表格框线 */
+  --block-bg: #99c4ee;          /* 节标题条 / 浅色底块 / 表头底 / 流程块底 */
+  --text: #1A1A1A;              /* 正文 */
+  --header-text-color: #FFFFFF; /* header（简历）/ 封面（合册）文字色 */
+  --header-tag-color: #FFFFFF;  /* header 标签色（电话 / 邮箱 / 城市） */
+  --shape-base-color: #4A7BC2;  /* header 底层梯形色 */
+  --shape-top-color: #1A3A6E;   /* header 顶层梯形色 */
+  --shape-wave-line: #D9E2F0;   /* wave 描边色（留空=无；优先用 --header-bg-stroke） */
+}

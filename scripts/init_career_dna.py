@@ -103,6 +103,49 @@ CAREER_TRACKS_README = """# Career Tracks Overview（赛道总览）
 每个 Track 的详细内容（Positioning / Career Narrative / Evidence / Core Strengths / Known Gaps 等）见对应文件。
 """
 
+
+# Skill Snapshots 索引 README 模板（v2.22.0 新增）
+# 为何 init 也建（role 侧 init 不建、靠 mode_d 10.A 建）：新用户初始化后立即可见「这里应该有什么」——
+# Knowledge 层唯一的索引缺口正在此（skill_snapshots 自 v1.4 起从无建档责任、无索引、无闸门）。
+# mode_d 10.B 第 7 条保留「README 不存在时初始化」作双保险。
+SKILL_SNAPSHOTS_README = """# Skill Domain Snapshots（能力域快照索引）
+
+<!--
+用途：回答「我有哪些能力域快照 / 哪个还没建档 / 哪个缺段」—— 30 秒全局视图。
+不是定义层：只登记现状，快照内容以各 {domain_name}.md 为准（索引 ≠ 抽象层）。
+维护钩子：Mode A Step 9.6 建档后必须回写本表；Mode D Step 10 B 更新后必须回写本表。
+闸门：P2 skill-snapshot-schema 四项（段完整性 / 文件名↔Domain 字段 / 索引一致性 / 未建档 Domain）。
+命名规则（受控）：Domain 英文部分 → 移除 & → 小写 → 空白折叠为 _；取值域 = career-dna/04_skill_graph.md 的「Domain 分布总览」表。
+-->
+
+> **Last Updated（最近更新）**: （待 Mode A Step 9.6 建档）
+
+## 索引
+
+| Domain（能力域） | 能力数 | Observed JD Count | 文件 | 段完整性 |
+|---|:--:|:--:|---|---|
+| （待 Mode A Step 9.6 建档） | - | - | - | - |
+
+## 未建档 Domain（总览表有、快照缺）
+
+| Domain（能力域） | 说明 |
+|---|---|
+| （待 Mode A Step 9.6 建档） | - |
+
+## 缺段待刷新
+
+> 建于模板升级之前的旧快照，段标题未齐时登记于此。**随下次 JD 观察自然补齐，不手工补** —— 手工补属造数据。
+
+| 文件 | 缺失段 |
+|---|---|
+| （无） | - |
+
+## 命名规则（受控）
+
+Domain 值 → 文件名：取**英文部分** → 移除 `&` → 转小写 → 连续空白折叠为 `_` → 去首尾 `_`。
+例：`AI & Automation（AI与自动化）` → `ai_automation`。**禁自由命名**（与 `Track` 字段同纪律）。
+"""
+
 # Career DNA 草稿区说明（v2.9.1+）—— 下划线前缀 = 非 SSOT
 DRAFT_README = """# _inbox — Career DNA 草稿区（非 SSOT）
 
@@ -198,6 +241,13 @@ def init_career_dna(target_dir: str = "."):
             gitkeep.write_text("", encoding="utf-8")
         print(f"✅ 创建目录: {dir_name}/")
 
+    # Skill Snapshots 索引 README（v2.22.0）
+    skill_snapshots_dir = target_path / "knowledge" / "skill_snapshots"
+    ss_readme = skill_snapshots_dir / "README.md"
+    if not ss_readme.exists():
+        ss_readme.write_text(SKILL_SNAPSHOTS_README, encoding="utf-8")
+        print(f"✅ 创建文件: knowledge/skill_snapshots/README.md (索引)")
+
     # Create Career Tracks directory (v1.3+)
     career_tracks_dir = target_path / CAREER_TRACKS_DIR
     career_tracks_dir.mkdir(parents=True, exist_ok=True)
@@ -241,7 +291,7 @@ def init_career_dna(target_dir: str = "."):
     print(f"\n🎉 Career DNA 初始化完成！")
     print(f"   目录: {career_dna_dir}")
     print(f"   文件数: {len(CAREER_DNA_FILES)} + 10_career_tracks/")
-    print(f"   知识层: knowledge/role_snapshots/, knowledge/skill_snapshots/")
+    print(f"   知识层: knowledge/role_snapshots/, knowledge/skill_snapshots/ (skill_snapshots 含 README.md 索引)")
     print(f"   赛道库: {CAREER_TRACKS_DIR}/")
     print(f"   投递追踪: {TRACKER_DIR}/ (含 archives/)")
     print(f"\n下一步: 开始填写 Career DNA 文件，或上传简历让 AI 帮你解析。")

@@ -1,51 +1,26 @@
 # Gap Analysis（能力差距分析）: [Role] — [Company]
 
 <!--
-能力差距分析 (Gap Analysis v1.5.1)
-Moderate Fit / Stretch Fit / Weak Fit 均生成。Weak Fit 不生成简历但保留此文件。
+⚠️ 遗留副本（Legacy Copy）—— **v2.23.3 起已降为薄壳骨架**。
 
-数据来源：
-- resume-outputs/01_jd_match_report.md Part 8.2 Gap Priority Matrix → Missing Match 列表
-- resume-outputs/01_jd_match_report.md Part 2.3 Skill Weight Analysis → 权重排序
-v2.7 Narrative Alignment：
-- 每条 Gap 解释注入 07 Career Narrative：「当前我的核心能力是 [Tier A TCs]，此 Gap 补齐后叙事主线将从 [当前状态] 增强至 [目标状态]」
+**本文件不承载任何生成规则**；只保留该产物的**章节标题骨架**（形状同 `01_jd_match_report.md`；`{…}` 为 canonical 骨架占位原样，本文件不填充）。
+- 版式唯一定义源：`references/pack_templates/06_gap_analysis_template.md`
+- 生成规则唯一定义源：`references/mode_d_job_application.md`（Step 3.5 Skill Weight + Step 5.5 D3/D4 缺口 → Step 9 后落盘）
+- 产物路径：`resume-outputs/{YYYYMMDD}-{company}-{role}/06_gap_analysis.md`
+- **落盘名（闸门映射源 · 唯一登记处）**：`06_gap_analysis.md`（Pack B）｜`05_gap_analysis.md`（Pack C）｜`02_gap_analysis.md`（Pack D）；**Pack A 无此产物**
+
+**降级历史（留档，防再形成第二定义源）**
+- v1.5.1 – v2.7.1：曾为完整**旧版式**（当前匹配状态 / 关键缺失表 / 补齐优先级 / 补齐影响预估）⇒ 与 canonical（总览表 + 每 Gap 现状/影响/速补/验证）并存构成第二定义源。
+- v2.23.3（刀 F）：整体降为薄壳 —— 删规则正文与占位示例。**全库唯一规则已先迁移**：**Fit 生成条件**（Moderate / Stretch / Weak 均生成；**Weak Fit 不生成简历但保留本文件**）→ `references/pack_templates/06_gap_analysis_template.md` 头部「生成条件」（**唯一出处**）。
+  其余（数据来源（01 报告 8.2 / 2.3）→ canonical `06` 头部已有；`v2.7` Narrative Alignment → `mode_d` + `07` 已有；旧版式 → canonical 已明文宣告取代）已有等价定义、不迁移；逐条迁移表见 `CHANGELOG.md` v2.23.3。
 -->
 
-## Current State（当前匹配状态）
+## Gap 总览（按 Impact × Cost 排序）
 
-- **Direct Match（直接匹配）**: [N] 项
-- **Adjacent Match（迁移匹配）**: [N] 项
-- **Missing（缺失）**: [N] 项
-- **Capability Score**: [XX]
+## Gap 1: {{缺口名}}（P{{N}} · {{类型}}）
 
-## Critical Gaps（关键缺失）
+## Gap 2: {{缺口名}}（P{{N}} · {{类型}}）
 
-<!-- 按 Skill Weight 降序排列 -->
+## Gap {{N}}: {{信息/经验类缺口}}（P{{N}} · {{类型}}）
 
-| 缺失能力 | Skill Weight | 重要性 | 当前状态 | 补齐难度 |
-|----------|-------------|--------|----------|----------|
-| [能力1] | 35% | Critical | 无证据 | High / Medium / Low |
-| [能力2] | 25% | High | 有 Adjacent 但 Confidence 低 | Medium |
-
-## Gap Priority（补齐优先级）
-
-### 短期（1-3 月）— 高权重 + 低难度
-
-1. [能力A] → 行动：[建议行动] → 目标证据：[建议项目或练习]
-
-### 中期（3-6 月）— 高权重 + 中难度
-
-1. [能力B] → 行动：[建议行动]
-
-### 长期（6-12 月）— 低权重或高难度
-
-1. [能力C] → 行动：[建议行动]
-
-## Impact Assessment（补齐影响预估）
-
-| 补齐项 | 当前 Capability Score | 补齐后预估 | 提升 |
-|--------|----------------------|-----------|------|
-| 补齐 [能力A] | [XX] | [XX] | +[N] |
-| 补齐 [能力B] | [XX] | [XX] | +[N] |
-
-> 全部补齐后 → Capability Score 预估：[XX] → [XX]
+## 投递前 Check List

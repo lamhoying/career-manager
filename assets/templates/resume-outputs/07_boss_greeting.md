@@ -1,59 +1,29 @@
 # Boss Greeting（Boss 直聘打招呼语）
 
-> Aligns to: v2.21.0
-## JD Summary（JD 摘要）
-- **岗位**: [JD Role]
-- **公司**: [Company]
-- **平台**: Boss 直聘 / 猎聘 / 邮件 / LinkedIn
-- **匹配结论**: Strong Fit / Moderate Fit / Stretch Fit
+> Aligns to: v2.24.0
 
----
+<!--
+⚠️ 遗留副本（Legacy Copy）—— **v2.23.3 起已降为薄壳骨架**。
 
-## Greeting Strategy（打招呼策略 v1.6.3）
+**本文件不承载任何生成规则**；只保留该产物的**章节标题骨架**（形状同 `01_jd_match_report.md`；`{…}` 为 canonical 骨架占位原样，本文件不填充）。
+- 版式唯一定义源：`references/pack_templates/08_boss_greeting_template.md`
+- 生成规则唯一定义源：`references/mode_d_job_application.md`（Step 8.5–8.10（Evidence Routing → Platform Strategy → Greeting Strategy → **8.9 Humanization** → 8.10 双版本））
+- 产物路径：`resume-outputs/{YYYYMMDD}-{company}-{role}/07_boss_greeting.md`
+- **落盘名（闸门映射源 · 唯一登记处）**：`07_boss_greeting.md`（Pack A）｜`08_boss_greeting.md`（Pack B）
+- ⚠️ **编号映射铁律**：本文件 **Pack A 编号 = 07**（Pack B 编号 = 08）⇒ 版式真源按**产物类型**取上述「版式唯一定义源」，**不按编号**
 
-| 维度 | 值 |
-|------|-----|
-| **Recommended Type（推荐类型）** | Type [A/B/C/D]: [中文名] |
-| **Alternative Type（备选类型）** | Type [A/B/C/D]: [中文名] |
-| **Platform（平台）** | Boss 直聘 |
+**降级历史（留档，防再形成第二定义源）**
+- v1.6 / v1.6.3 – v2.23.2：曾为完整**单平台（Boss 直聘）**版式，含 JD Summary / Greeting Strategy 三 basis / Recommended + Alternative 逐字稿 / **Tone Notes 词表** / **Do Not Say 禁止清单**。
+- v2.23.3（刀 F）：整体降为薄壳 —— 删规则正文与占位示例。**全库唯一规则已先迁移**：**Tone 词表增量**（推荐词「有相关经验」「想了解下」· 避免词「大量」「系统评估」）→ 并入 `mode_d` **Step 8.9**「不用过度自夸」行（**唯一出处**；「比较接近 / 之前做过 / 主导 / 高度匹配」「开头不模板」「自然问句结尾」原已在同表）。
+  其余（Do Not Say 禁止清单 → canonical `08` 头部「关键禁出」+ `mode_d` Step 8.9/8.10 已有；单平台旧版式 → 已被 canonical **多平台**（Boss / 猎聘 / 邮件）+ 决策摘要取代）已有等价定义、不迁移；逐条迁移表见 `CHANGELOG.md` v2.23.3。
+-->
 
-### Why Recommended（推荐理由）
+## 决策摘要（Why Recommended）
 
-- **Match Basis（匹配基础）**: Decision Score [XX]，Role Authenticity [A/B/C/D] — [一句话判断]
-- **Evidence Basis（证据基础）**: Primary 证据 Distance [D0-D4]，Strength [0-5] — [可直接引用 / 需克制使用]
-- **Risk Basis（风险基础）**: HR 风险 [Low/Medium/High] — [稳妥 / 直接 / 克制]
+## Boss 直聘（60-120 字 · 1 句价值 + 1 个反问）
 
-### Why Alternative（为何备选）
+## 猎聘（~200 字 · 半正式 · 匹配 + 行动邀请）
 
-- **Switch Condition（切换条件）**: [什么情况下推荐用备选]
-- **Difference（与推荐的差异）**: [语气 / 证据 / 策略层面的核心区别]
+## 邮件版（~300 字 · 正式 · 用于 04 附件求职信扩展）
 
----
-
-## Recommended Greeting（推荐方案）
-
-> [人味化文案 — 60-120 字，自然问句结尾。不说"我有 X 年经验"模板开头，先说岗位相关性再带证据，用"比较接近""之前做过"替代"主导""高度匹配"]
-
----
-
-## Alternative Greeting（备选方案）
-
-> [人味化文案 — 60-120 字，与推荐方案语气/证据有明显差异]
-
----
-
-## Tone Notes（语气备注 v1.6.3）
-
-- 推荐方案语气：[直接 / 稳妥 / 克制 / 好奇心]
-- 备选方案语气：[直接 / 稳妥 / 克制 / 好奇心]
-- **避免词**: 主导、大量、高度匹配、系统评估
-- **推荐词**: 比较接近、有相关经验、之前做过、想了解下
-- **不写模板开头**: 不用"我有 X 年经验，在 X 做过 X"起手
-
-## Do Not Say（禁止清单 v1.6.3）
-
-- 不要提 Match Score / Decision Score / Confidence / Risk Funnel
-- 不要写"我有 X 年经验，在 X 做过 X"模板开头
-- 不要堆砌超过 2 个证据
-- 不要用"期待您的回复"结尾（改成诱导性问题）
-- 不要写成简历摘要
+## 使用规则（Do / Don't）

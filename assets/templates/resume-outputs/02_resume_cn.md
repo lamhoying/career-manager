@@ -1,73 +1,34 @@
 # [姓名] - [目标岗位]
 
-<!-- ATS优化简历：用于 Workday / Greenhouse / Lever / Moka / 北森 等 ATS 系统
-关键原则：
-1. 关键词密度：从 JD Match Report 的 ATS Keywords 融入简历
-2. 格式简洁：无复杂排版，纯文本友好
-3. 结果导向：每条经历用"动词 + 量化结果"格式
-4. 匹配优先：优先展示与 JD 匹配的项目和能力
-5. Track定位：引用 career-dna/10_career_tracks/{track}.md 的 Positioning 优化职业定位
-6. 长度控制：1-2 页
+<!--
+⚠️ 遗留副本（Legacy Copy）—— **v2.23.3 起已降为薄壳骨架**。
+
+**本文件不承载任何生成规则**；只保留该产物的**章节标题骨架**（形状同 `01_jd_match_report.md`；`{…}` 为 canonical 骨架占位原样，本文件不填充）。
+- 版式唯一定义源：`references/pack_templates/02_resume_cn_template.md`
+- 生成规则唯一定义源：`references/mode_d_job_application.md`（Step 3.5 关键词 → 4.5b Identity Lock → 9 三阶段生成 → 9.0 引擎循环 → 9.1 QA Layer）
+- 产物路径：`resume-outputs/{YYYYMMDD}-{company}-{role}/02_resume_cn.md`
+- **落盘名（闸门映射源 · 唯一登记处）**：`02_resume_cn.md`（Pack A/B）
+- ⚠️ Pack C 的转岗变体**不在本行登记** —— 由内联真源 `XX_transition_resume_cn.md` 声明。
+  （**落盘名声明行只准出现落盘名**；任何 `.md` 引用混入即被闸门误提取 ⇒ 说明性文字另起一行。）
+
+**降级历史（留档，防再形成第二定义源）**
+- v2.6 – v2.7.1：曾为完整版，含 ATS 优化 6 条原则 / `v2.6.4` 三层输出结构 / `v2.6.2` ATS Reframing 边界 E01–E04 / ATS 平台清单 / 经历子标题写法 ⇒ 与 canonical 并存构成第二定义源。
+- v2.23.3（刀 F）：整体降为薄壳 —— 删规则正文与占位示例。**全库唯一规则已先迁移**：**ATS 平台清单**（Workday / Greenhouse / Lever / Moka / 北森）→ `pack_templates/02` 头部「适用平台」（**唯一出处**）；**三层输出结构不迁移** —— `mode_d` Step 9「生成顺序（不可逆）」+ §Capability Interpretation 已完整定义（旧文字 = `v2.6.4` 原表述，已被精化取代）。
+  其余（关键词密度 / 纯文本友好 / 动词+量化 / Reframing 边界 E01–E04 / Track 定位）已有等价定义、不迁移；逐条迁移表见 `CHANGELOG.md` v2.23.3。
 -->
 
-## 职业定位 (Professional Positioning)
-<!-- 引用 career-dna/07_career_identity.md Layer 2 Career Positioning（Primary） -->
-<!-- v2.6: 职业身份来源 = 07，不由 Track 或 JD 推导。语境措辞可适配 JD。 -->
-<!-- v2.6.2 ATS Reframing 边界（E01-E04）：
-     Reframing 允许：能力抽象 + JD 语言润色 + 视角调整
-     Reframing 禁止：职责升级 + 权限升级 + 无证据包装
-     所有描述必须可追溯至 02/03/04/04b 原始证据 -->
-[一句话职业定位]
+## 职业定位
 
 ## 基本信息
-- **姓名**：
-- **电话**：
-- **邮箱**：
-- **所在城市**：
-- **工作年限**：
 
 ## 求职意向
-[目标岗位] | [期望城市] | [到岗时间]
 
 ## 核心能力
-<!-- 5-8个与 JD Match Report ATS Keywords 高度对齐的关键词 -->
-[关键词1] | [关键词2] | [关键词3] | [关键词4] | [关键词5]
 
 ## 工作经历
 
-<!-- v2.6.4 三层输出结构：
-第一层 Capability Interpretation → 角色解释
-第二层 JD Mapping → 匹配方向 + JD 措辞
-第三层 ATS Evidence Output → 以下简历文本 -->
-
-### [公司名] | [原始岗位] | [起止时间]
-
-**角色**：[能力视角角色名 — Capability Interpretation]
-**JD 匹配**：[D0/D1/D2 — JD Mapping — 已验证/可迁移][1-2句话公司简介]
-
-- [动词] + [做了什么] + [量化结果]
-- [动词] + [做了什么] + [量化结果]
-- [动词] + [做了什么] + [量化结果]
-
-### [公司名] | [岗位] | [起止时间]
-
-[1-2句话公司简介]
-
-- [动词] + [做了什么] + [量化结果]
-- [动词] + [做了什么] + [量化结果]
-
 ## 项目经历
 
-### [项目名] | [角色] | [时间]
-
-- **项目背景**：[1句话]
-- **核心贡献**：[动词] + [做了什么] + [量化结果]
-- **项目成果**：[量化数据]
-
 ## 教育背景
-[学校] | [专业] | [学历] | [毕业时间]
 
 ## 技能与认证
-- **技能**：[技能列表，与 JD 关键词对齐]
-- **认证**：[认证列表]
-- **语言**：[语言能力]

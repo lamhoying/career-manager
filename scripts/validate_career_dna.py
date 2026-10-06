@@ -41,12 +41,52 @@ validate_career_dna.py - Career DNA 写入闸门（Write Gate）
                           —— 07 此前**无任何闸门覆盖**（本脚本 13 项校验均不碰它），
                              而它是全系统唯一「自由声明 + 无来源约束」的字段；
                              Layer 2 空值会让 Mode D / Online Profile 的硬身份锚点无兜底降级
+  P2  skill-snapshot-schema knowledge/skill_snapshots/ 的结构契约被破坏：
+                          ① 段完整性（实例须含模板 4 段）
+                          ② 文件名 ↔ Domain 字段一致（受控命名：Domain 英文部分 → 去 & → 小写 → 空白折叠为 _）
+                          ③ 索引一致性（README 存在时：目录每个快照须在索引登记；索引每行文件须存在）
+                          ④ 未建档 Domain（读 04_skill_graph.md 的「Domain 分布总览」表，聚合一条）
+                          —— 该层此前「无建档责任、无索引、无闸门」三缺（role 侧三者皆有）：
+                             Mode D 观察到的能力域市场情报**无文件可流入**，建档链路从未接线
+  P2  portfolio-output-schema   portfolio-outputs/ 的结构契约被破坏：
+                          ① 索引双向一致（README 每行文件存在；每个案例在索引登记）
+                          ② 必备节完整性（kind=case 实例 H2 ⊇ 模板必备集；模板中「可替换」节除外）
+                          ③ 受控字段（Project 非空 / Variant ∈ {none} ∪ 索引登记值域 / Disclosure ∈ {对外,面试,内部}）
+                          ④ 未登记 / 不合规案例**聚合一条**（不逐文件刷屏）
+                          ⑤ 规模主谓红扫（「管理 N 人」且 N > 直接带团队上限 ⇒ 越界）
+                          —— 该目录此前「无目录契约、无索引校验、无闸门」三缺（F32）
+  P2  weight-sum          manifest 的 weight 合计 ≠ 100（权重语义 = 占整体完整度的百分比）
+                          —— 新增文件后未同步重分配 ⇒ 09 报表分母与各模块「权重 %」标注无法据以手算复核
+                             （v2.11.0 加入 13 号文件时漏做重分配，合计漂到 105 且此后 10 个版本无人发现）
   P2  write-target-drift  「写入 01 报告 Part N」类落点声明指向 canonical 不存在的章节
                           —— 01 报告的 Part 骨架会随版本演进（如 Part 4.5 已合并进 Part 4），
                              但下游「写入 X Part N」的声明不会自动跟着改 → 落点悬空：
                              生成时写进不存在的节，或静默丢字段（A3 类 bug 的机械化捕获）
                           —— 只覆盖**显式写了 01 目标文档 + 写入类动词**的声明；「依据 01 Part N」
                              这类**读取引用**不在本规则内（它是 read-ref，不是落点）
+  P2  pdf-glyph-coverage  会被 PDF 渲染的文本里出现「字体无字形 ∧ 降级表也没有」的字符
+                          —— 合册 / 简历 PDF 由 reportlab **直接绘制**（非 HTML→PDF），**无字体回退**：
+                             字符不在字体 cmap 里 ⇒ 画不出、**不报错、文本层也不留痕**
+                             （**静默丢字**，比降级更危险 —— 肉眼与文本提取都可能看不出）。
+                             另兼扫两事：① 字体是否仍覆盖「必保字形清单」（补字体后的回归护栏）；
+                                          ② U+FFFD（REPLACEMENT CHARACTER）= **数据损坏**，单独报
+                          —— 豁免（不报）：不可见 / 格式符 / 装饰类（emoji）—— 判据见 GLYPH_EXEMPT_CATS
+  P2  format-source-consistency
+                          「版式真源」三点的常驻一致性被破坏（种子 ↔ canonical ↔ 产物）：
+                          ① 种子分类完整性 —— 每个种子须自证类别，三类标记**恰有其一**：
+                             `遗留副本（Legacy Copy）` / `版式真源（Format Source · 内联）` /
+                             `声明真源（Format Source · 契约）`
+                          ② 薄壳 ⊆ canonical —— 薄壳声明的「版式唯一定义源」须存在，
+                             且薄壳 H2 ⊆ canonical H2（薄壳只准留骨架）
+                          ③ 落盘名映射完备 —— 每个落盘名只由**一个**真源声明，
+                             且声明集合与 `mode_d` §Pack A–D 清单**双向**一致
+                          ④ 产物 ⊇ 真源 —— `resume-outputs/{JD}/`（旧代际豁免）产物的 H2
+                             须 ⊇ 其真源 H2；落盘名不在映射内即报
+                          —— v2.23.3 的「薄壳化」只把一致性写进**刀内一次性断言**（下刀起失效，F43）；
+                             `resume-outputs/` 产物侧此前**零校验**（F43）；
+                             无 canonical 的长尾（`XX_learning_roadmap` / `XX_transition_*`）
+                             此前**无人对账**（F44）。三类标记即「薄壳 / 真源」二元识别的**唯一判据**
+                             —— 按头部标记识别，**禁硬编码文件名清单**
 
 本脚本 **只报告、绝不修改任何文件**。裁决与处置由调用方（AI/用户）执行：
   - orphan / unregistered-dir → 移入 career-dna/_inbox/（草稿区）或走 manifest 登记
@@ -62,8 +102,26 @@ validate_career_dna.py - Career DNA 写入闸门（Write Gate）
   - identity-layer-schema    → 补层（或按模板重建）；Layer 2 未声明须走 Mode A Step 8 采集协议
                                （**不得代填** —— 违 R01）；Track / 收录标注改受控取值；
                                Layer 4 的 TC 编号回 04b 核对
+  - skill-snapshot-schema    → 补段（或按模板重建）；文件名改为 Domain 字段转名；补 README 索引；
+                               未建档 Domain 走 Mode A Step 9.6（**只搬用户数据，禁代填市场情报**）
+  - portfolio-output-schema  → 补 3 受控字段 / 补必备节 / 回 README 补登记行（或标 kind）；
+                               规模主谓按 12_portfolio_candidates.md 口径改写
+                               （规则真源 = references/portfolio_outputs.md）
+  - weight-sum               → 重分配 manifest 权重使合计恰为 100（新增文件时必须同步做，四件套第 ③ 步）
   - write-target-drift       → 把落点改为 canonical 01 报告的现行章节
                                （真源 = references/pack_templates/01_jd_match_report_template.md 的标题骨架）
+  - pdf-glyph-coverage      → 缺字形：优先补进 `export_resume.py` 的 `_ARROW_FALLBACK`（ASCII 近似），
+                              或走 `build_cn_font.py --build --out <DIR>`（再 `--install <DIR>`） 补**真字形**；
+                              U+FFFD：按上下文**复原原文**（**不得**当字形缺失处理）
+                              （必保字形真源 = build_cn_font.py 的 `CHECKLIST`；降级表真源 = export_resume.py）
+  - format-source-consistency → 无标记 / 多标记：按三类补**恰一个**头部标记；
+                               薄壳越界：把薄壳多出的 H2 删掉（薄壳只留 canonical 骨架），
+                               或该章节确属新增 ⇒ 先加进 canonical 再留骨架；
+                               指针不可达：改正「版式唯一定义源」路径；
+                               落盘名不一致：先定**谁是真源**，再改 mode_d §Pack 清单或种子声明行
+                               （**落盘名声明行只准出现落盘名**，说明文字另起一行）；
+                               产物越界：按真源补章节；旧代际实例豁免面**只允许收缩**
+                               （`RESUME_OUTPUT_GATE_FROM` 只准前移）
 
 退出码：存在 P0/P1 → 1；仅有 P2 或无问题 → 0。
 
@@ -72,9 +130,12 @@ Usage:
     python3 validate_career_dna.py            # 默认 ./career-dna
 """
 
+import ast
 import json
 import re
+import struct
 import sys
+import unicodedata
 from pathlib import Path
 
 MANIFEST_REL = Path("assets") / "career_dna_manifest.json"
@@ -118,11 +179,14 @@ JD_OUTPUT_NAMES = frozenset(
 # ---- P2 ghost-file-ref 相关 ----
 # 反引号内的「路径形态 .md 引用」。ANCHOR_RE 只认 NN_ 数字前缀家族，变量化路径
 # （如 `{track}_strategy.md`）天然逃逸；本规则覆盖这一类幽灵引用。
-GHOST_REF_RE = re.compile(r"`([^`\n]*\.md)`")
+# `+`（非 `*`）：`` `.md` `` 这类**退化 token**（点前零字符）不是文件名 ——
+# 判据自述里常出现它（「任何 `.md` 引用混入即被误提取」），用 `*` 会把它当引用报出来。
+GHOST_REF_RE = re.compile(r"`([^`\n]+\.md)`")
 
 # 这些前缀指向 career-dna/ 之外的资产（skill 自带目录、单次投递产物），不参与本规则
 GHOST_SKIP_PREFIXES = (
     "resume-outputs/",
+    "portfolio-outputs/",
     "assets/",
     "knowledge/",
     "references/",
@@ -148,6 +212,13 @@ GHOST_REF_WHITELIST = frozenset(
         "XX_transition_resume_cn.md",
         "XX_transition_resume_en.md",
         "XX_transition_feasibility.md",
+        # v2.23.4：与 XX_transition_* 同族的同目录种子模板名（漏登记 ⇒ 任何引用它都成「幽灵」）
+        "XX_learning_roadmap.md",
+        # v2.23.3：仓库根固定文件 + Pack B/C 的「按编号落盘名」（运行期产物，非 skill 文件）
+        "CHANGELOG.md",
+        "06_gap_analysis.md",
+        "07_upgrade_plan.md",
+        "08_boss_greeting.md",
         "{Company}_{Role}.md",
         "{role_name}.md",
         "{domain_name}.md",
@@ -250,6 +321,187 @@ ID_TC_RE = re.compile(r"(?<![A-Za-z0-9])TC(\d{3})(?![0-9])")
 # 未填写的模板占位（`[赛道文件名 | none]` 等）不报「取值非法」——由 Layer 2 非空检查统一报。
 ID_PLACEHOLDER_PREFIX = ("[", "{", "<")
 
+# ---- P2 skill-snapshot-schema 相关（v2.22.0 · F30） ----
+# knowledge/skill_snapshots/ 此前「无建档责任、无索引、无闸门」三缺（role 侧三者皆有）——
+# 实测 13 个 Domain 只有 1 个快照，Mode D 观察到的市场情报无处可流。
+# 段清单 = assets/templates/knowledge/skill_snapshot.md 的 H2 集合（模板为真源）。
+SKILL_SNAPSHOT_SEGMENTS = (
+    "能力列表及市场情报",
+    "JD 观察记录",
+    "关联能力矩阵",
+    "趋势观察",
+)
+
+# 迁移白名单：建于 v2.22.0 建档链路之前的旧实例（当前仅 project_management.md，
+# 其 H2 齐全 ⇒ 实际不需豁免，钩子保留以备后续）。**白名单只允许收缩**。
+SKILL_SNAPSHOT_MIGRATION_WHITELIST = frozenset({"project_management.md"})
+
+# `- **Domain（领域）**: Project Management（项目管理）`
+SS_DOMAIN_RE = re.compile(r"^- \*\*Domain（领域）\*\*:\s*(.+?)\s*$", re.MULTILINE)
+# README 索引表内的相对链接 `[x.md](x.md)`
+SS_INDEX_LINK_RE = re.compile(r"\]\(([^)/]+\.md)\)")
+# `04_skill_graph.md` 的 `## Domain 分布总览` 表（要求「能力数」列是数字 ⇒ 天然排除表头行）
+SS_OVERVIEW_HEAD_RE = re.compile(r"^##\s*Domain 分布总览\s*$")
+SS_OVERVIEW_ROW_RE = re.compile(r"^\|\s*([A-Za-z][A-Za-z& ]*?（[^）]+）)\s*\|\s*\d+\s*\|")
+
+
+# ---- P2 portfolio-output-schema 相关（v2.23.0 · 作品集案例库） ----
+# portfolio-outputs/ 此前「无目录契约、无索引校验、无闸门」三缺（F32）——
+# 该目录在 skill 全库 grep 零命中，写入其中的文件不受任何一致性检查。
+# 规则真源 = references/portfolio_outputs.md（目录契约 / 案例 schema / 披露分级 / 索引契约）。
+# 必备节清单 = assets/templates/resume-outputs/XX_portfolio.md 的 H2 集合（模板为真源，禁脚本内另写）。
+PORTFOLIO_TEMPLATE_REL = Path("assets") / "templates" / "resume-outputs" / "XX_portfolio.md"
+PF_FIELD_RE = re.compile(r"^>\s*\*\*(Project|Variant|Disclosure)\*\*:\s*(.+?)\s*$", re.MULTILINE)
+PF_DISCLOSURE_VALUES = frozenset({"对外", "面试", "内部"})
+PF_VARIANT_NONE = "none"
+PF_INDEX_LINK_RE = re.compile(r"\]\(([^)/]+\.md)\)")
+PF_REPLACEABLE_MARK = "可替换"
+PF_DIRECT_TEAM_MAX = 6
+PF_SCALE_VERB_RE = re.compile(r"(管理|带领|负责|统筹)\s*(\d+)\s*人")
+
+
+# ---- P2 format-source-consistency 相关（v2.23.4 · F43 / F44） ----
+# 缺口：`assets/templates/resume-outputs/` 的「种子」分三类（薄壳 / 内联真源 / 声明真源），
+# 此前**无任何闸门覆盖** ——「种子是否还能对上 canonical」「产物是否还含 canonical 的章节」
+# 只靠一次性人工断言（v2.23.3 刀 F 的 54 断言跑在**刀内脚本**里 ⇒ **下刀起失效**）；
+# `resume-outputs/` 产物侧**零校验**。本规则把「版式源一致性」变成常驻检查（4 子项见 docstring）。
+SEED_DIR_REL = Path("assets") / "templates" / "resume-outputs"
+FS_MARKER_LEGACY = "遗留副本（Legacy Copy）"
+FS_MARKER_INLINE = "版式真源（Format Source · 内联）"
+FS_MARKER_DECLARED = "声明真源（Format Source · 契约）"
+FS_MARKERS = (FS_MARKER_LEGACY, FS_MARKER_INLINE, FS_MARKER_DECLARED)
+# 标记只须出现在**文件头部**（沿用 no-timestamp 的 `[:2000]` 口径）。
+# 不用「首个注释块」定位：`XX_portfolio.md` 第 4 行就有行内注释 `<!-- … -->`，
+# 按注释块切会把真标记切到块外 ⇒ 假报「无标记」（本轮实测）。
+FS_HEAD_CHARS = 2000
+FS_CANONICAL_RE = re.compile(r"版式唯一定义源[：:]\s*`([^`\n]+\.md)`")
+# 落盘名声明行。**该行只准出现落盘名** —— 行内任何 `.md` 引用都会被一并提取，
+# 说明性文字须另起一行（本轮实测：薄壳 02/03 的注意事项里写了模板名 ⇒ 被误提取成落盘名）。
+FS_DECL_RE = re.compile(r"^- \*\*落盘名（闸门映射源 · 唯一登记处）\*\*：(.+)$", re.MULTILINE)
+# 落盘名形态 —— 依据 `mode_d` 「落盘命名规则（v2.18.0 定论）」：产物**一律数字前缀**，
+# `XX_*` 只是**模板文件名**（模板跨 Pack 复用）。故声明行里的非数字前缀名 = 声明错误。
+FS_OUTPUT_NAME_RE = re.compile(r"^\d{2}[a-z]?_[^/]*\.md$")
+# 落盘名真源 = `mode_d` §Pack A–D 清单。定位串必须成对出现在真源里，
+# 否则真源不可达（**fail-loud**：静默取空集会让 ③ 与 ghost-file-ref 的豁免一并失效）。
+MODE_D_REL = Path("references") / "mode_d_job_application.md"
+PACK_SECTION_START = "### Pack A:"
+PACK_SECTION_END = "### Portfolio Selection"
+# 旧代际豁免面 —— **规则式，不列目录名**：
+# 投递实例的目录名含真实公司名（PII），枚举进脚本会随发布包外泄（发布 SOP 的 PII 全扫会命中）。
+# 判据 = 目录名前缀的 8 位日期 < 闸门生效日 ⇒ 旧版式 / 旧命名代际，豁免。
+# ⚠️ 该日期**只允许前移**（收缩豁免面），不得后移。
+RESUME_OUTPUT_GATE_FROM = "20260923"
+_PACK_OUTPUT_NAMES_CACHE = {}
+
+
+def _pack_output_names(skill_dir: Path):
+    """`mode_d` §Pack A–D 清单里的「落盘名」集合 —— **唯一定义源**，禁在本脚本另抄一份。
+
+    返回 None = 真源不可达（**区别于空集**：空集是合法的「一个都没声明」，
+    而 None 表示抽取失败，须 fail-loud —— 否则本函数会被当成「豁免一切」）。
+    """
+    key = str(skill_dir)
+    if key in _PACK_OUTPUT_NAMES_CACHE:
+        return _PACK_OUTPUT_NAMES_CACHE[key]
+    out = None
+    src = skill_dir / MODE_D_REL
+    if src.is_file():
+        try:
+            text = src.read_text(encoding="utf-8")
+        except Exception:
+            text = ""
+        i, j = text.find(PACK_SECTION_START), text.find(PACK_SECTION_END)
+        if i >= 0 and j > i:
+            out = frozenset(
+                n for n in re.findall(r"`([^`\n]+\.md)`", text[i:j]) if "/" not in n
+            )
+    _PACK_OUTPUT_NAMES_CACHE[key] = out
+    return out
+
+
+def _norm_h2_set(body: str) -> set:
+    """H2 标题集合（归一化：去尾部 `（…）` —— 模板里可能有「（v2.1.2 新增）」版本后缀）。"""
+    out = set()
+    for ln in body.split("\n"):
+        if ln.startswith("## "):
+            out.add(ln[3:].strip().split("（")[0].split("(")[0].strip())
+    return out
+
+
+def _portfolio_required_segments(text: str) -> set:
+    """模板 XX_portfolio.md 的必备 H2 集合：**节内注释标注「可替换」的节不计入**。"""
+    required = set()
+    cur, body = None, []
+
+    def _flush():
+        if cur is not None and PF_REPLACEABLE_MARK not in "\n".join(body):
+            required.add(cur)
+
+    for ln in text.split("\n"):
+        if ln.startswith("## "):
+            _flush()
+            cur = ln[3:].strip().split("（")[0].split("(")[0].strip()
+            body = []
+        else:
+            body.append(ln)
+    _flush()
+    return required
+
+
+def _parse_portfolio_index(text: str, po_dir: Path):
+    """解析 README 的「案例总览」表 -> ({文件名: (kind, variant)}, [悬空文件名])。"""
+    index, dangling = {}, []
+    hdr = None
+    for ln in text.split("\n"):
+        if not ln.lstrip().startswith("|"):
+            continue
+        cells = [c.strip() for c in ln.replace("\\|", "\x00").strip().strip("|").split("|")]
+        cells = [c.replace("\x00", "|") for c in cells]
+        norm = [c.strip("*` ") for c in cells]
+        if norm and all(re.fullmatch(r":?-{2,}:?", c) for c in norm if c):
+            continue
+        if hdr is None:
+            if any(c == "kind" for c in norm):
+                hdr = {c: i for i, c in enumerate(norm)}
+            continue
+        ki = hdr.get("kind", -1)
+        vi = hdr.get("Variant", -1)
+        kind = (cells[ki].strip().strip("*` ") if 0 <= ki < len(cells) else "") or "case"
+        variant = cells[vi].strip().strip("*` ") if 0 <= vi < len(cells) else ""
+        for m in PF_INDEX_LINK_RE.finditer(ln):
+            name = m.group(1).strip()
+            if (po_dir / name).is_file():
+                index[name] = (kind.lower(), variant)
+            elif name not in dangling:
+                dangling.append(name)
+    return index, dangling
+
+
+def _domain_to_filename(domain_value: str) -> str:
+    """Domain 值 → `{domain_name}`（受控命名，唯一定义源 = Mode A Step 9.6）。
+
+    规则：取英文部分（首个 `（` 之前）→ 移除 `&` → 转小写 → 连续空白折叠为 `_` → 去首尾 `_`。
+    """
+    en = domain_value.split("（")[0].replace("&", " ")
+    return re.sub(r"\s+", "_", en.strip().lower()).strip("_")
+
+
+def _extract_overview_domains(body: str):
+    """`04_skill_graph.md` 的「Domain 分布总览」表数据行 —— Domain 的**唯一取值源**。"""
+    out, started = [], False
+    for ln in body.split("\n"):
+        if SS_OVERVIEW_HEAD_RE.match(ln):
+            started = True
+            continue
+        if not started:
+            continue
+        if ln.startswith("## "):
+            break
+        m = SS_OVERVIEW_ROW_RE.match(ln)
+        if m:
+            out.append(m.group(1).strip())
+    return out
+
 
 def _extract_layer2_names(body: str) -> set:
     """Layer 2 条目名 = `## Layer 2` 段落内，每条定位在 `—` / `（` 之前的英文主名。
@@ -303,6 +555,12 @@ def _ghost_ref_exists(ref: str, base: Path, declared) -> bool:
     且该目录在 career-dna/ 下真实存在；不带目录的变量化引用一律视为可疑。
     """
     if ref in GHOST_REF_WHITELIST or ref in JD_OUTPUT_NAMES or ref in declared:
+        return True
+    # 单次投递产物的「按 Pack 顺位落盘名」（`02_transition_resume_cn.md` 等）——
+    # 真源 = `mode_d` §Pack A–D 清单，**运行期动态提取**。
+    # 为什么不写进 GHOST_REF_WHITELIST：白名单是**静态**声明，而这些名字随 Pack 结构演进；
+    # 抄一份进脚本 = 造第二定义源（且与本 skill 的版本链无关）。
+    if ref in (_pack_output_names(Path(__file__).resolve().parent.parent) or ()):
         return True
     if any(ref.startswith(p) for p in GHOST_SKIP_PREFIXES) or "://" in ref:
         return True
@@ -404,6 +662,114 @@ def collect_long_lines(path: Path):
         if len(norm) >= DUPLICATE_MIN_CHARS:
             out.append((norm, lineno, stripped[:70]))
     return out
+
+
+# ---- P2 pdf-glyph-coverage 相关（v2.23.1 · PDF 静默丢字） ----
+# 起因（F36）：合册 PDF 由 reportlab **直接绘制**（`html_to_pdf`），而 reportlab **无字体回退** ——
+# 字符不在字体 cmap 里 ⇒ 画不出、不报错、文本层不留痕。用户看到的「符号丢失」即此。
+# 两层机制 + 本闸门的分工：
+#   ㊁ 主机制 = **字体本身覆盖**（`scripts/build_cn_font.py` 重子集补齐字形，补到 9,313 码位）
+#   ㊀ 兜底   = **降级表**（`export_resume.py` 的 `_ARROW_FALLBACK`，覆盖「连补字体也补不出」的字符）
+#   本闸门   = 二者的**共同护栏**：① 字体是否仍覆盖必保字形清单（防字体被替换 / 构建回归）
+#                                ② 会被渲染的文本里是否出现「字体没有 ∧ 降级表也没有」的字符
+# ⚠️ 本闸门**不 import** fontTools / export_resume：
+#    fontTools 在 `python3 -S -E`（本脚本的常规调用式）下不可用；export_resume 依赖 reportlab。
+#    ⇒ 字体码位用**纯标准库**解析 TTF cmap；降级表 / 必保清单用 ast 从**源码**取字面量。
+GLYPH_FONT_REL = Path("assets") / "fonts" / "NotoSansSC-Regular.ttf"
+GLYPH_RENDERER_REL = Path("scripts") / "export_resume.py"
+GLYPH_FONT_BUILDER_REL = Path("scripts") / "build_cn_font.py"
+# 「会被渲染器绘制的文本源」= 案例库 + 单次投递产物 + 合册成品（相对 career-dna 同级 = 工作区根）
+GLYPH_SCAN_GLOBS = (
+    (Path("portfolio-outputs"), "*.md"),
+    (Path("resume-outputs"), "**/*.md"),
+    (Path("deliverables"), "*.md"),
+)
+# 索引 / 模板种子 —— 非渲染内容，跳过
+GLYPH_SKIP_NAMES = frozenset({"readme.md", "game_experience_template.md"})
+# 豁免类别（**丢失不改变语义** 或 **本就不可见**）—— 只留「真·不可见」：
+#   Cf 格式符｜Mn·Me 组合符（含变体选择符 U+FE0F —— `⚠️` 的第二个码位）｜Zl·Zp·Zs 分隔符
+#     ⇒ 不可见字符，**无字形需求**（reportlab 丢掉它们不产生任何视觉差）
+# ⚠️ **v2.24.0（F41 ㊁）起 `So` 已移出豁免** —— 收窄前 `⭐`（U+2B50）被「装饰类」吞掉 ⇒
+#     **静默丢字且无人知**。现在按「渲染器是否兜底」分流：符号类 ⇒ 渲染器已**按类降级**（有损但不丢字）
+#     ⇒ 报 `pdf-glyph-degraded`（提示改用文字）；非符号类 ⇒ 仍会**静默丢字** ⇒ 报 `pdf-glyph-coverage`（真缺陷）。
+# ⚠️ 判定顺序：**先**判 U+FFFD —— 它同样是 `So`，若先走豁免会被静默吞掉（真缺陷被豁免掩盖）。
+GLYPH_EXEMPT_CATS = frozenset({"Cf", "Mn", "Me", "Zl", "Zp", "Zs"})
+# 渲染器 `export_resume.py:_generic_glyph_fallback()` 的按类兜底覆盖集（须与 `_GLYPH_SYMBOL_CATS` 对齐）。
+# 落进本集 ⇒ 「有损降级、不丢字」；落不进本集 ⇒ 「真丢字」。
+GLYPH_GENERIC_FALLBACK_CATS = frozenset({"So", "Sm", "Sk", "Sc"})
+GLYPH_INVISIBLE_OK = frozenset("\t\n\r\x0b\x0c")
+GLYPH_CORRUPT_CP = 0xFFFD
+
+
+def _font_cmap(path: Path):
+    """纯标准库解析 TTF cmap（format 4 / 6 / 12）→ set[int]；失败 → None。
+
+    ⚠️ 刻意**不用 fontTools**：本脚本常在 `python3 -S -E` 下运行（`-S` 不加载 site-packages）。
+    返回 None（字体缺失 / 解析失败）⇒ 调用方**跳过本闸门**，不制造假警报。
+    """
+    try:
+        data = path.read_bytes()
+        num = struct.unpack_from(">H", data, 4)[0]
+        tables = {}
+        for i in range(num):
+            off = 12 + 16 * i
+            tables[data[off:off + 4].decode("latin-1")] = struct.unpack_from(">II", data, off + 8)
+        cm = tables["cmap"][0]
+        cps = set()
+        for i in range(struct.unpack_from(">H", data, cm + 2)[0]):
+            _p, _e, sub_off = struct.unpack_from(">HHI", data, cm + 4 + 8 * i)
+            sub = cm + sub_off
+            fmt = struct.unpack_from(">H", data, sub)[0]
+            if fmt == 4:
+                segx2 = struct.unpack_from(">H", data, sub + 6)[0]
+                seg = segx2 // 2
+                ends = struct.unpack_from(">%dH" % seg, data, sub + 14)
+                starts = struct.unpack_from(">%dH" % seg, data, sub + 16 + segx2)
+                deltas = struct.unpack_from(">%dh" % seg, data, sub + 16 + 2 * segx2)
+                ro_pos = sub + 16 + 3 * segx2
+                roffs = struct.unpack_from(">%dH" % seg, data, ro_pos)
+                for j in range(seg):
+                    if starts[j] == 0xFFFF:
+                        continue
+                    for c in range(starts[j], ends[j] + 1):
+                        if roffs[j]:
+                            gi = ro_pos + 2 * j + roffs[j] + 2 * (c - starts[j])
+                            if gi + 2 > len(data):
+                                continue
+                            g = struct.unpack_from(">H", data, gi)[0]
+                            if g:
+                                g = (g + deltas[j]) & 0xFFFF
+                        else:
+                            g = (c + deltas[j]) & 0xFFFF
+                        if g:                       # glyph 0 = .notdef ⇒ 无字形
+                            cps.add(c)
+            elif fmt == 12:
+                for k in range(struct.unpack_from(">I", data, sub + 12)[0]):
+                    s, e, _g = struct.unpack_from(">III", data, sub + 16 + 12 * k)
+                    cps.update(range(s, e + 1))
+            elif fmt == 6:
+                first, cnt = struct.unpack_from(">HH", data, sub + 6)
+                cps.update(range(first, first + cnt))
+        return cps or None
+    except Exception:
+        return None
+
+
+def _source_literal(path: Path, name: str):
+    """从另一脚本的**源码**取顶层字面量赋值（ast，不 import —— 依赖 / 副作用隔离）。
+
+    用途：① `_ARROW_FALLBACK`（降级表）② `CHECKLIST`（必保字形）。
+    真源留在各自脚本里 ⇒ 改一处即生效，**禁在闸门内另写一份**。
+    """
+    try:
+        for node in ast.parse(path.read_text(encoding="utf-8")).body:
+            if isinstance(node, ast.Assign):
+                for t in node.targets:
+                    if isinstance(t, ast.Name) and t.id == name:
+                        return ast.literal_eval(node.value)
+    except Exception:
+        pass
+    return None
 
 
 def validate(career_dna_dir: str = "./career-dna"):
@@ -909,6 +1275,440 @@ def validate(career_dna_dir: str = "./career-dna"):
             findings.append(
                 ("P2", "identity-layer-schema", identity_path.name, "；".join(problems[:4]))
             )
+
+    # ---- P2: manifest 权重合计（v2.22.0 · F9） ----
+    # 「权重」语义 = 占整体完整度的百分比 ⇒ 合计必须恰为 100，否则 09 报表的分母失真、
+    # 各模块标注的「权重 %」无法据以手算复核。v2.11.0 加入 13 号文件时漏做重分配（漂到 105），
+    # 此后 10 个版本无人发现 ⇒ 把该不变量机械化。
+    weight_sum = sum(int(e.get("weight", 0) or 0) for e in entries)
+    if weight_sum != 100:
+        findings.append(
+            (
+                "P2",
+                "weight-sum",
+                "career_dna_manifest.json",
+                f"权重合计 = {weight_sum}%，应为 100 —— 新增文件后必须同步重分配既有权重"
+                "（四件套第 ③ 步：给出权重）",
+            )
+        )
+
+    # ---- P2: Skill Snapshot 结构契约（段完整性 / 文件名↔Domain / 索引一致性 / 未建档 Domain） ----
+    # 扫 knowledge/skill_snapshots/（base 的同级目录）。README 是索引，不是快照，跳过。
+    ss_dir = base.parent / "knowledge" / "skill_snapshots"
+    if ss_dir.is_dir():
+        ss_present = [
+            p
+            for p in sorted(ss_dir.glob("*.md"))
+            if p.is_file() and p.stem.lower() != "readme"
+        ]
+
+        # ③ 索引一致性 —— README 存在时双向比对（单向检查会漏「索引悬空」）
+        ss_readme = ss_dir / "README.md"
+        if ss_readme.is_file():
+            indexed = set()
+            for ln in ss_readme.read_text(encoding="utf-8").split("\n"):
+                for m in SS_INDEX_LINK_RE.finditer(ln):
+                    indexed.add(m.group(1).strip())
+            missing_in_index = [p.name for p in ss_present if p.name not in indexed]
+            dangling = sorted(n for n in indexed if not (ss_dir / n).is_file())
+            if missing_in_index or dangling:
+                parts = []
+                if missing_in_index:
+                    parts.append(
+                        f"目录有 {len(missing_in_index)} 个快照未登记"
+                        f"（{' / '.join(missing_in_index[:4])}）"
+                    )
+                if dangling:
+                    parts.append(f"索引悬空 {len(dangling)} 行（{' / '.join(dangling[:4])}）")
+                findings.append(
+                    (
+                        "P2",
+                        "skill-snapshot-schema",
+                        "README.md",
+                        "；".join(parts)
+                        + " —— Mode A Step 9.6 / Mode D Step 10 B 必须回写本表",
+                    )
+                )
+
+        for path in ss_present:
+            try:
+                body = path.read_text(encoding="utf-8")
+            except Exception:
+                continue
+            problems = []
+
+            # ① 段完整性 —— 旧实例走迁移白名单（已知缺口，不逐日刷屏）
+            if path.name not in SKILL_SNAPSHOT_MIGRATION_WHITELIST:
+                heads = "\n".join(ln for ln in body.split("\n") if ln.startswith("## "))
+                miss = [s for s in SKILL_SNAPSHOT_SEGMENTS if s not in heads]
+                if miss:
+                    problems.append(f"缺段 {' / '.join(miss)}")
+
+            # ② 文件名 ↔ Domain 字段一致（受控命名）
+            m_dom = SS_DOMAIN_RE.search(body)
+            if not m_dom:
+                problems.append("缺 Domain（领域）字段")
+            else:
+                raw = m_dom.group(1).strip()
+                if not raw.startswith(ID_PLACEHOLDER_PREFIX):
+                    expect = _domain_to_filename(raw)
+                    if expect and expect != path.stem:
+                        problems.append(
+                            f"文件名与 Domain 字段不一致 —— 字段 `{raw}` 应转名 `{expect}.md`，"
+                            f"实际 `{path.name}`（命名规则见 Mode A Step 9.6）"
+                        )
+
+            if problems:
+                findings.append(
+                    ("P2", "skill-snapshot-schema", path.name, "；".join(problems))
+                )
+
+        # ④ 未建档 Domain —— 聚合为一条（逐 Domain 报会在建档期产 N 条同码 finding）
+        sg = base / "04_skill_graph.md"
+        if sg.is_file():
+            try:
+                doms = _extract_overview_domains(sg.read_text(encoding="utf-8"))
+            except Exception:
+                doms = []
+            if doms:
+                have = {p.stem for p in ss_present}
+                missing_dom = [d for d in doms if _domain_to_filename(d) not in have]
+                if missing_dom:
+                    findings.append(
+                        (
+                            "P2",
+                            "skill-snapshot-schema",
+                            "domains",
+                            f"{len(missing_dom)} 个 Domain 未建档 → "
+                            f"{' / '.join(missing_dom[:6])}"
+                            "（建档 = Mode A Step 9.6；**只搬用户数据，禁代填市场情报**）",
+                        )
+                    )
+
+    # ---- P2: 作品集案例库结构契约（索引一致性 / 必备节 / 受控字段 / 规模主谓） ----
+    # 扫 portfolio-outputs/（base 同级）。README 是索引，不是案例，跳过。
+    # 规则真源 = references/portfolio_outputs.md；必备节 = 模板 XX_portfolio.md 的 H2 集合。
+    po_dir = base.parent / "portfolio-outputs"
+    if po_dir.is_dir():
+        po_tpl = find_manifest().parent.parent / PORTFOLIO_TEMPLATE_REL
+        po_required = None
+        if po_tpl.is_file():
+            try:
+                po_required = _portfolio_required_segments(po_tpl.read_text(encoding="utf-8"))
+            except Exception:
+                po_required = None
+
+        po_present = [
+            p for p in sorted(po_dir.glob("*.md"))
+            if p.is_file() and p.stem.lower() != "readme"
+        ]
+        po_index, po_dangling = {}, []
+        po_readme = po_dir / "README.md"
+        if po_readme.is_file():
+            try:
+                po_index, po_dangling = _parse_portfolio_index(
+                    po_readme.read_text(encoding="utf-8"), po_dir
+                )
+            except Exception:
+                po_index, po_dangling = {}, []
+            if po_dangling:
+                findings.append((
+                    "P2", "portfolio-output-schema", "README.md",
+                    f"索引悬空 {len(po_dangling)} 行（{' / '.join(po_dangling[:3])}）"
+                    " —— 索引表每行须指向真实存在的文件"
+                ))
+
+        registered_variants = {v for (_k, v) in po_index.values() if v}
+        bad_cases = []
+        for path in po_present:
+            try:
+                body = path.read_text(encoding="utf-8")
+            except Exception:
+                continue
+            meta = po_index.get(path.name)
+            kind = meta[0] if meta else "case"
+            problems = []
+            if meta is None:
+                problems.append("未在 README 索引登记")
+            if kind == "case":
+                fields = {m.group(1): m.group(2).strip() for m in PF_FIELD_RE.finditer(body)}
+                disc, var = fields.get("Disclosure", ""), fields.get("Variant", "")
+                if not fields.get("Project", ""):
+                    problems.append("缺 `Project`")
+                if not var:
+                    problems.append("缺 `Variant`")
+                elif var != PF_VARIANT_NONE and var not in registered_variants:
+                    problems.append(f"`Variant`=`{var}` 未在索引登记")
+                if not disc:
+                    problems.append("缺 `Disclosure`")
+                elif disc not in PF_DISCLOSURE_VALUES:
+                    problems.append(f"`Disclosure`=`{disc}` 非法（∈ 对外/面试/内部）")
+                if po_required:
+                    miss = [s for s in sorted(po_required) if s not in _norm_h2_set(body)]
+                    if miss:
+                        problems.append(f"缺必备节 {' / '.join(miss)}")
+            for m in PF_SCALE_VERB_RE.finditer(body):
+                if int(m.group(2)) > PF_DIRECT_TEAM_MAX:
+                    problems.append(f"规模主谓越界 `{m.group(0)}`（直接带团队上限 {PF_DIRECT_TEAM_MAX}）")
+                    break
+            if problems:
+                bad_cases.append((path.name, problems))
+
+        if bad_cases:
+            head = " / ".join(n for n, _ in bad_cases[:3])
+            more = f" …" if len(bad_cases) > 3 else ""
+            detail = "；".join(f"{n}: {','.join(p)}" for n, p in bad_cases[:3])
+            findings.append((
+                "P2", "portfolio-output-schema", f"{len(bad_cases)} 个案例未登记/不合规",
+                f"{head}{more} —— {detail}"
+                "（登记 = 补 3 受控字段 + README 索引行；规则 → references/portfolio_outputs.md）"
+            ))
+
+    # ---- P2: PDF 字形覆盖（缺字形 = 静默丢字；reportlab 无字体回退） ----
+    # 只扫「会被渲染器绘制的文本源」，不扫 career-dna（它是**上游源**，本身不进 PDF）。
+    g_root = base.parent
+    g_skill = find_manifest().parent.parent
+    g_cmap = _font_cmap(g_skill / GLYPH_FONT_REL)
+    if g_cmap:
+        # ① 字体是否仍覆盖「必保字形清单」（真源 = build_cn_font.py 的 CHECKLIST）
+        g_check = _source_literal(g_skill / GLYPH_FONT_BUILDER_REL, "CHECKLIST")
+        if g_check:
+            g_lost = sorted({c for c in g_check if ord(c) not in g_cmap})
+            if g_lost:
+                findings.append((
+                    "P2", "pdf-glyph-coverage", GLYPH_FONT_REL.name,
+                    f"字体缺必保字形 {' '.join(g_lost)} "
+                    f"（必保清单真源 = scripts/build_cn_font.py 的 CHECKLIST；"
+                    "重跑 `build_cn_font.py --build --out <DIR>`（再 `--install <DIR>`） 重建字体）"
+                ))
+        # ② 渲染文本 × 字体 cmap × 降级表
+        g_fb = _source_literal(g_skill / GLYPH_RENDERER_REL, "_ARROW_FALLBACK") or {}
+        g_miss, g_soft, g_corrupt = {}, {}, {}
+        for g_sub, g_pat in GLYPH_SCAN_GLOBS:
+            g_dir = g_root / g_sub
+            if not g_dir.is_dir():
+                continue
+            for g_p in sorted(g_dir.glob(g_pat)):
+                if not g_p.is_file() or g_p.name.lower() in GLYPH_SKIP_NAMES:
+                    continue
+                try:
+                    g_body = g_p.read_text(encoding="utf-8")
+                except Exception:
+                    continue
+                g_rel = g_p.relative_to(g_root).as_posix()
+                for g_lno, g_line in enumerate(g_body.split("\n"), 1):
+                    for g_ch in g_line:
+                        g_cp = ord(g_ch)
+                        if (g_cp in g_cmap or g_ch in g_fb
+                                or g_ch in GLYPH_INVISIBLE_OK):
+                            continue                  # 有真字形 / 有降级 / 不可见
+                        if g_cp == GLYPH_CORRUPT_CP:
+                            g_corrupt.setdefault(g_rel, []).append(g_lno)
+                            continue                  # 先于豁免判定 —— 它也是 So
+                        g_cat = unicodedata.category(g_ch)
+                        if g_cat in GLYPH_EXEMPT_CATS:
+                            continue
+                        if g_cat in GLYPH_GENERIC_FALLBACK_CATS:
+                            # 渲染器已按类降级（有损、不丢字）⇒ 单列，报「建议改用文字」
+                            g_soft.setdefault((g_ch, g_cp), {}).setdefault(g_rel, []).append(g_lno)
+                        else:
+                            g_miss.setdefault((g_ch, g_cp), {}).setdefault(g_rel, []).append(g_lno)
+
+        if g_miss:
+            g_total = sum(len(v) for d in g_miss.values() for v in d.values())
+            g_parts = []
+            for (g_ch, g_cp), g_files in sorted(g_miss.items(), key=lambda kv: kv[0][1])[:5]:
+                g_loc = " / ".join(
+                    f"{f}:{','.join(str(n) for n in ns[:3])}"
+                    for f, ns in sorted(g_files.items())[:2]
+                )
+                g_parts.append(f"`{g_ch}` U+{g_cp:04X} × {sum(len(n) for n in g_files.values())}（{g_loc}）")
+            g_more = "；…" if len(g_miss) > 5 else ""
+            findings.append((
+                "P2", "pdf-glyph-coverage", f"{g_total} 处缺字形 / {len(g_miss)} 类",
+                "；".join(g_parts) + g_more
+                + " —— 这些字符在 PDF 中会**静默丢字**（reportlab 无字体回退）。"
+                "修法：补进 `export_resume.py` 的 `_ARROW_FALLBACK`（ASCII 近似），"
+                "或走 `build_cn_font.py --build --out <DIR>`（再 `--install <DIR>`） 补真字形"
+            ))
+
+        if g_soft:
+            s_total = sum(len(v) for d in g_soft.values() for v in d.values())
+            s_parts = []
+            for (g_ch, g_cp), g_files in sorted(g_soft.items(), key=lambda kv: kv[0][1])[:5]:
+                s_loc = " / ".join(
+                    f"{f}:{','.join(str(n) for n in ns[:3])}"
+                    for f, ns in sorted(g_files.items())[:2]
+                )
+                s_parts.append(f"`{g_ch}` U+{g_cp:04X} × {sum(len(n) for n in g_files.values())}（{s_loc}）")
+            s_more = "；…" if len(g_soft) > 5 else ""
+            findings.append((
+                "P2", "pdf-glyph-degraded", f"{s_total} 处装饰符号 / {len(g_soft)} 类",
+                "；".join(s_parts) + s_more
+                + " —— 这些**装饰类符号**（emoji 等）字体无字形，渲染器已**按类降级为 `·`**"
+                "（**不丢字**，但语义有损）。⚠️ 建议**改用文字**（正式投递件不应依赖 emoji 传义）；"
+                "若确需保留符号形态 ⇒ 走 `build_cn_font.py --build --out <DIR>` 补真字形"
+            ))
+
+        for g_rel, g_lno_list in sorted(g_corrupt.items()):
+            findings.append((
+                "P2", "pdf-glyph-coverage", g_rel,
+                f"数据损坏 U+FFFD × {len(g_lno_list)}（行 {','.join(str(n) for n in g_lno_list[:6])}）"
+                " —— REPLACEMENT CHARACTER = 源文件某次写入时**字符已丢失**（非字形缺失）；"
+                "须按上下文**复原原文**，改字形不解决"
+            ))
+
+    # ---- P2: 版式源一致性（种子分类 / 薄壳 ⊆ canonical / 落盘名映射 / 产物 ⊇ 真源） ----
+    # v2.23.4（F43 + F44）。识别「薄壳 / 真源」一律按**头部标记**，不按文件名清单
+    # （硬编码清单在下一次重命名 / 新增种子时必失效）。
+    fs_skill = find_manifest().parent.parent
+    fs_seed_root = fs_skill / SEED_DIR_REL
+    fs_seeds = sorted(fs_seed_root.glob("*.md")) if fs_seed_root.is_dir() else []
+    fs_pack = _pack_output_names(fs_skill)
+    if fs_pack is None:
+        findings.append((
+            "P2", "format-source-consistency", str(MODE_D_REL),
+            f"读不到 §Pack 清单（定位串 `{PACK_SECTION_START}` … `{PACK_SECTION_END}`）"
+            " —— 落盘名真源不可达 ⇒ 「种子声明 ↔ Pack 清单」交叉校验与"
+            " `ghost-file-ref` 的落盘名豁免会一并静默失效（fail-loud）"
+        ))
+    fs_src = {}        # 落盘名 -> 真源 Path
+    fs_owner = {}      # 落盘名 -> 声明者文件名
+    fs_bad = []        # 声明行里的非数字前缀名
+    for fs_p in fs_seeds:
+        try:
+            fs_body = fs_p.read_text(encoding="utf-8")
+        except Exception:
+            continue
+        fs_hits = [m for m in FS_MARKERS if m in fs_body[:FS_HEAD_CHARS]]
+        if len(fs_hits) != 1:
+            findings.append((
+                "P2", "format-source-consistency", fs_p.name,
+                ("头部未标注类别 —— 三类标记（薄壳 / 内联真源 / 声明真源）须**恰有其一**"
+                 if not fs_hits else "头部同时出现多个类别标记 —— 类别须唯一")
+                + f"；判据 = 文件头部 {FS_HEAD_CHARS} 字符内出现三类标记之一（v2.23.4 起）"
+            ))
+            continue
+        fs_kind = fs_hits[0]
+        self_src = fs_p
+        if fs_kind == FS_MARKER_LEGACY:
+            # ② 薄壳：指针可达 + H2 ⊆ canonical
+            fs_m = FS_CANONICAL_RE.search(fs_body)
+            if not fs_m:
+                findings.append((
+                    "P2", "format-source-consistency", fs_p.name,
+                    "薄壳未声明「版式唯一定义源」—— 无法定位 canonical（薄壳必须指向真源）"
+                ))
+                self_src = None
+            else:
+                fs_can = fs_skill / fs_m.group(1)
+                if not fs_can.is_file():
+                    findings.append((
+                        "P2", "format-source-consistency", fs_p.name,
+                        f"版式唯一定义源不存在 → {fs_m.group(1)}"
+                    ))
+                    self_src = None
+                else:
+                    try:
+                        fs_can_h2 = _norm_h2_set(fs_can.read_text(encoding="utf-8"))
+                    except Exception:
+                        fs_can_h2 = None
+                    fs_sh = _norm_h2_set(fs_body)
+                    if fs_can_h2 is None:
+                        pass
+                    else:
+                        fs_over = sorted(fs_sh - fs_can_h2)
+                        if fs_over:
+                            findings.append((
+                                "P2", "format-source-consistency", fs_p.name,
+                                f"薄壳 H2 越出 canonical：{' / '.join(fs_over[:4])}"
+                                f"{' …' if len(fs_over) > 4 else ''}"
+                                f" —— 薄壳只准留 canonical 的章节骨架（真源 {fs_m.group(1)}）；"
+                                "确属新增章节请先加进 canonical"
+                            ))
+                    self_src = fs_can
+        # ③a 落盘名声明（收集 + 唯一性）
+        for fs_d in FS_DECL_RE.finditer(fs_body):
+            for fs_n in re.findall(r"`([^`\n]+\.md)`", fs_d.group(1)):
+                if not FS_OUTPUT_NAME_RE.match(fs_n):
+                    fs_bad.append((fs_p.name, fs_n))
+                    continue
+                if fs_n in fs_owner and fs_owner[fs_n] != fs_p.name:
+                    findings.append((
+                        "P2", "format-source-consistency", fs_n,
+                        f"落盘名被多个真源声明（{fs_owner[fs_n]} / {fs_p.name}）"
+                        " —— 一个产物只能有一个真源，否则两份版式各自漂移"
+                    ))
+                    continue
+                fs_owner[fs_n] = fs_p.name
+                if self_src is not None:
+                    fs_src[fs_n] = self_src
+    for fs_f, fs_n in fs_bad:
+        findings.append((
+            "P2", "format-source-consistency", fs_f,
+            f"落盘名声明含非数字前缀名 `{fs_n}` —— `mode_d`「落盘命名规则（v2.18.0 定论）」："
+            "产物一律数字前缀，`XX_*` 只是模板文件名"
+        ))
+    # ③b 声明集合 ↔ mode_d §Pack 清单（双向）
+    if fs_pack is not None:
+        fs_only_seed = sorted(set(fs_src) - set(fs_pack))
+        fs_only_pack = sorted(fs_pack - set(fs_src))
+        if fs_only_seed or fs_only_pack:
+            fs_parts = []
+            if fs_only_seed:
+                fs_parts.append(
+                    f"种子已声明而 Pack 清单无：{' / '.join(fs_only_seed[:4])}"
+                    f"{' …' if len(fs_only_seed) > 4 else ''}"
+                )
+            if fs_only_pack:
+                fs_parts.append(
+                    f"Pack 清单有而种子未声明：{' / '.join(fs_only_pack[:4])}"
+                    f"{' …' if len(fs_only_pack) > 4 else ''}"
+                )
+            findings.append((
+                "P2", "format-source-consistency", "落盘名映射",
+                "；".join(fs_parts)
+                + f"（声明 {len(fs_src)} / 清单 {len(fs_pack)}）"
+                " —— 两处须双向一致；改哪一处取决于**谁是真源**"
+            ))
+    # ④ 产物 ⊇ 真源（`resume-outputs/{JD}/`，旧代际按日期豁免）
+    fs_out_root = base.parent / "resume-outputs"
+    if fs_out_root.is_dir():
+        fs_prod_bad = []
+        for fs_jd in sorted(p for p in fs_out_root.iterdir() if p.is_dir()):
+            fs_date = fs_jd.name[:8]
+            if fs_date.isdigit() and fs_date < RESUME_OUTPUT_GATE_FROM:
+                continue      # 旧版式 / 旧命名代际（豁免面只允许收缩）
+            for fs_art in sorted(fs_jd.glob("*.md")):
+                if not FS_OUTPUT_NAME_RE.match(fs_art.name):
+                    continue
+                fs_ref = fs_src.get(fs_art.name)
+                if fs_ref is None:
+                    fs_prod_bad.append((fs_jd.name, fs_art.name, "落盘名未登记（无真源可对）"))
+                    continue
+                try:
+                    fs_needed = _norm_h2_set(fs_ref.read_text(encoding="utf-8"))
+                    fs_have = _norm_h2_set(fs_art.read_text(encoding="utf-8"))
+                except Exception:
+                    continue
+                fs_miss = sorted(fs_needed - fs_have)
+                if fs_miss:
+                    fs_prod_bad.append((
+                        fs_jd.name, fs_art.name,
+                        f"缺真源章节 {' / '.join(fs_miss[:4])}"
+                        f"{' …' if len(fs_miss) > 4 else ''}（真源 {fs_ref.name}）"
+                    ))
+        if fs_prod_bad:
+            # 聚合一条，但**逐条给原因**（只印第一条的原因会把同类问题藏起来 ——
+            # 承重测试实测：「缺章节」在前时，「未登记落盘名」的原因完全不可见）。
+            fs_pairs = " ｜ ".join(f"{j}/{a} → {r}" for j, a, r in fs_prod_bad[:3])
+            findings.append((
+                "P2", "format-source-consistency",
+                f"{len(fs_prod_bad)} 处产物与真源不一致",
+                f"{fs_pairs}{' …' if len(fs_prod_bad) > 3 else ''}"
+                f" —— 受检 = 目录名前缀 ≥ {RESUME_OUTPUT_GATE_FROM} 的实例"
+                "（更早为旧版式 / 旧命名代际，豁免；豁免面只允许收缩）"
+            ))
 
     # ---- 输出 ----
     order = {"P0": 0, "P1": 1, "P2": 2}

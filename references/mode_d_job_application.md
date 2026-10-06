@@ -1,6 +1,6 @@
 # Mode D: Job Application Mode（岗位投递模式）
 
-> Aligns to: v2.21.0
+> Aligns to: v2.24.0
 ## Trigger（触发条件）
 
 用户提供以下任一信息：
@@ -17,7 +17,7 @@ Mode D 拆为 **两阶段 + 一道决策门**：**默认停在门后**（省钱�
 |---|---|---|---|
 | **P1** | **Recon（侦察 · 报告层）** | Step 1 / 2 / **2.9** / 3 / 3.5 / 4 / 4.5a(TC Mapping) / 5 / 5.5 / 5.6 / 5.7 / 5.8 / 6 / 7 / 8 / **10.A-C** | `01_jd_match_report.md`（9 Part + 附录 A/B，**完整自足**）+ `career-dna/` 与 `knowledge/` 回写 |
 | — | **Phase Gate（决策门）** | 无步骤，只有输出协议（见 §Phase Gate） | 决策摘要 + 三选项 |
-| **P2** | **Build（材料生成 · token 主体）** | Step **4.5b(Identity Lock 重执行)** / 8.5 / 8.6 / 8.8 / 8.9 / 8.10 / 8.12 / 9 / 9.0 / 9.1 / 9.5 / X / **10.D** | Pack A/B/C/D 全部文件 + `deliverables/` |
+| **P2** | **Build（材料生成 · token 主体）** | Step **4.5b(Identity Lock 重执行)** / 8.5 / 8.6 / 8.8 / 8.9 / 8.10 / 8.12 / 9 / 9.0 / 9.1 / 9.5 / **9.6** / X / **10.D** | Pack A/B/C/D 全部文件 + `deliverables/`（含 **9.6 作品集合册**） |
 
 > **`Step 4.5a` / `Step 4.5b` 拆分（v2.18.0）**：本文件原有两个同名 `## Step 4.5:` 节 —— a = Transferable Capability Mapping 属 **P1**；b = Resume Identity Lock 属 **P2 入口（重执行）**。v2.18.0 已把**正文章节标题**同步为 `4.5a` / `4.5b`（此前只改了引用侧、标题侧未同步，导致 `§Step 4.5` 定位撞车）。**编号只做后缀区分，顺序不变**。
 
@@ -839,13 +839,14 @@ P1 结束（`01` 报告落盘 + Step 8 / 10.A-C 回写完成）后，**必须停
 3. P2 内已存在文件 → **增量重生成该文件**，不删其他 Pack 产物（保留用户可能已改的内容）
 4. **P1 后不生成材料 ≠ 失败**：此时产物只有 `01` 报告 + 知识回写，目录**不登记**投递索引（「分析过」≠「要投」，见 Step 10.D）
 
-### 三个「停」不是同一件事
+### 四个「停」不是同一件事
 
 | 机制 | 性质 | 层次 |
 |---|---|---|
 | Step 6 Targeted Discovery | **补输入**（向用户追问证据，3-10 题） | P1 内部 |
 | **Phase Gate** | **做决策**（要不要生成材料） | P1 / P2 之间 |
 | Step 9.5 Delivery Finalization | **定稿导出**（opt-in：「我要投了」） | P2 内部 |
+| **Portfolio Gate**（Step 9.6） | **确认要不要落盘成 PDF**（opt-in：「出作品集 / 要案例合册」） | P2 内部 |
 
 > 用户若在 P1 说「别问了，直接出报告」→ 跳过 Step 6，未答问题转为 Gate 第 ③ 段的条件提示。
 
@@ -962,7 +963,7 @@ Why Alternative:
 | 不用总结腔 | 不写成简历摘要或报告段落 |
 | 自然问句结尾 | 轻问题促回复 |
 | 不堆材料 | 1 主证据 + 至多 1 辅证据 |
-| 不用过度自夸 | 用"比较接近""之前做过"替代"主导""高度匹配" |
+| 不用过度自夸 | 推荐词："比较接近""有相关经验""之前做过""想了解下"；避免词："主导""大量""高度匹配""系统评估" |
 | 开头不模板 | 不说"我有X年经验，在X做过X" |
 
 ### 输出
@@ -1025,6 +1026,7 @@ Narrative Strength（叙事强度 v2.7.1）:
 
 - Narrative Mapping → 写入 `01_jd_match_report.md` Part 8.3
 - Tier A Stories → 按 Narrative Strength 总分排序（非 TC 优先级），应用于 `04_interview_pack.md`
+- **主故事阈值**：主故事优先取 **Narrative Strength ≥ 14** 的故事（总分 0-20，见上「叙事强度」）。
 - 面试身份框架 → 应用于 `05_answer_cards.md` 的回答框架
 - **通用叙事底料 → 先读 `13_interview_narrative_strategy.md` 全部 12 个 Part**，再做 JD 适配。**禁止绕过 13 从 07/05 重新拼装通用话术**——13 是底料，`04`/`05` 是切片。逐 Part 映射：
   - Part 1-5 → `04` §1-§5 与 `05` 的通用框架
@@ -1073,6 +1075,8 @@ JD 中的每项关键要求，必须映射到 04b 的 TC：
 | [JD要求B] | → 找 04b 中匹配的 TC 编号 | TC002 → 03 中 TC002 关联的案例覆盖多个原始岗位 |
 
 **不是**按 JD 关键词去 Timeline 中搜索岗位名匹配的经历，而是按 TC 编号去 03 的 TC 映射字段找证据。
+
+**核心能力行的工具附注（v2.23.5）**：取「JD Explicit 强调」× 「`04_skill_graph` 有证据（非 D4）」的**交叉集** —— **缺一不加**。「强调度最高」**≠**「可写」；照 JD 字面往核心能力塞工具会**直接触发不实陈述**。附注是**索引**，工具的唯一展开位在「技能与认证 · 技能」行（QA-5 检查点）。
 
 ### Step 9.0: Per-Experience Engine Loop（逐经历重构循环 v2.7.1）
 
@@ -1144,6 +1148,7 @@ JD Mapping:
 2. 取 JD Mapping 的「匹配写法方向」→ 决定语气（已验证/可迁移）
 3. 取 JD Mapping 的「JD 措辞映射」→ 融入关键词密度
 4. E01-E04 检查 → 通过后输出
+5. **跨节去重（v2.23.5）**：同一量化指标 / 同一角度**全简历只出现一次** —— 工作经历保留「职责与产出」、项目经历保留「范围与决策」；生成后逐项比对两节，重复项从**项目经历**侧改写，**且优先从「项目成果」条处置**（该条为重复震中 —— 三档实验实测旧形态 11 / 13 处真重复出自此条）；**「项目背景」须为「项目 / 环境」主语（不含「我」）且不复述标题行、不载工作经历已出现的数字**（QA-6 检查点）
 
 ### ATS Keyword Preservation（v2.6）
 
@@ -1241,6 +1246,8 @@ Reframing 允许能力抽象，不允许权限升级。
 - 工作内容描述以 Capability Identity 关键词为主语
 - 任何从 Timeline 自动推断「我是XX岗位」的行为 → 阻断
 - 07 Layer 5 中列出的原始岗位不得出现在简历的身份表达层（**∖ Layer 2 已收录方向**）
+- 「职业定位」段**不含**城市 / 目标方向 —— 二者由头部字段承载（`> 求职意向：…｜城市` / `基本信息 · 所在城市`）；定位段只写身份核心名词 + 年限行业 + 最强能力（v2.23.5）
+- 「职业定位」段长度建议 **≤ 4 行**（PDF 渲染口径 · **建议值、不阻塞**）；禁复述工作经历量化（v2.23.5）
 ```
 
 ### Step 9.1: Resume QA Layer（简历自检层 v2.7.1）
@@ -1267,6 +1274,20 @@ Reframing 允许能力抽象，不允许权限升级。
 
 检查简历尾部是否退化成原始岗位叙事。
 - 最后一段工作经历如回到「负责 [某操作]」流水账 → 重写为能力视角
+
+#### QA-5: Capability Tool Evidence Check（核心能力工具附注检查 v2.23.5）
+
+检查「核心能力」行中每个括号工具附注是否**同时**满足 JD Explicit 强调 + `04_skill_graph` 非 D4 证据。
+- 缺任一 → **删除该附注**（禁以 JD 强调度单独作为依据 —— 强调最高项常恰为最缺证据项）
+- 附注只用于**索引**；工具的熟练度与用途展开在「技能与认证 · 技能」行，不得在两处同时展开
+
+#### QA-6: Cross-Section Duplication Check（跨节复读检查 v2.23.5）
+
+检查「项目经历」是否与「工作经历」重复出现**同一量化指标**或**同一角度**。
+- **项目背景三槽检查（v2.23.5 形态细化 2）**：㈠ 处境 / ㈡ 约束 / ㈢ 代价 **三槽齐备**（可缺项，但须**有意为之**）；主语 = **项目 / 环境**、**禁出现「我」**；**禁复述 `###` 标题行**；**禁出现工作经历已载的量化数字**
+- 重复 → **一律从「项目成果」侧处置**：删除该量化 → 或移入「核心贡献」换角度表述 → 或降为定性影响；仍无可写内容则**省略该标签**（禁为填而填）
+- 判据 = 「同一信息只在一个位置出现」；项目经历的形式为「**项目背景**（三槽：处境 / 约束 / 代价 —— 主语 = 项目 / 环境、**不含「我」**）+ **核心贡献**（**单条**，内部可载多个角度 clause）+ **项目成果**（可选）」
+- **「项目成果」取数闸门**：只收 ① 工作经历**未出现**的**项目独有**量化 ② 定性闭环 / 影响；两者皆无 ⇒ **省略该标签**（依据：三档对照实验实测旧三标签形态 13 处跨节命中中 **11 处真重复出自此条**）
 
 ### Pack 策略（v2.6 更新）
 
@@ -1338,6 +1359,7 @@ Reframing 允许能力抽象，不允许权限升级。
 1. 取 Ready 项目（Readiness ≥ 70%）
 2. 与 Part 4 Evidence Matrix 的能力条目做交集比对
 3. 取与 Primary Evidence 同项目且 Readiness 最高的前 3 个
+4. **（v2.23.0）案例库本赛道口径变体** —— 读 `portfolio-outputs/` 索引，取 `Variant` 与本 JD Track 匹配的变体材料（**同 `Project` 的多个变体只算 1 个案例**）
 
 #### 输出
 
@@ -1348,6 +1370,8 @@ Reframing 允许能力抽象，不允许权限升级。
 | Top 1 | [项目A] | 91% | 与 JD 核心能力直接对应 | 面试开场深度案例 |
 | Top 2 | [项目B] | 86% | 补强 JD 次要能力 | 聊到相关话题时引出 |
 | Backup | [项目C] | 71% | 展示交叉能力 | 面试尾声补充 |
+
+**「补充候选」节（v2.23.0 · 拍板 ⑤ ㊁）**：案例库**本赛道口径变体**输出到**单开的「补充候选」节**（**不并入上表**）—— 变体语义 ≠ 项目候选，**混表会污染计数**。该节 = **Step 9.6 Phase A 的直接输入**（表列：`案例 / Project / Variant / Disclosure / 适用环节`）。
 
 ---
 
@@ -1361,19 +1385,23 @@ Reframing 允许能力抽象，不允许权限升级。
 
 ### 触发（opt-in）
 
-Step 9 简历生成后，用户说"转投递版 / 导出投递 / 我要投了"时进入。不自动执行。
+Step 9 简历生成后，用户说"转投递版 / 导出投递 / 我要投了"时进入。不自动执行。**PNG 载体（v2.24.0 · F25）是其 opt-in 子项** —— 用户另说"**要发图 / 截图发 Boss**"时才出。
+
+> **边界（v2.23.0）**：**9.5 = 简历定稿 · 9.6 = 作品集合册定稿** —— 两者都是 **P2 内部 opt-in**、**互不依赖**，也都**不是 Phase Gate**（见 §四个「停」）。
 
 ### 产物结构（新增 deliverables/ 子目录）
 
 ```
 resume-outputs/{date}-{company}-{role}/
 ├── 02_resume_cn.md                    # working 版（保留推理标注，供追踪迭代）
+├── 09_portfolio_book.md               # 合册草稿（Step 9.6 Phase A；= Portfolio Gate 交付物）
 └── deliverables/
     ├── 02_resume_cn_final.md          # 净化后 md（供用户审核）
     ├── 02_resume_cn_final.docx        # 定稿 Word
     ├── 02_resume_cn_final.pdf         # 定稿 PDF
-    ├── cover_letter_final.docx/.pdf   # 可选附件（求职信，Pack A/B）
-    └── portfolio_final.pdf            # 可选附件（作品集，Pack A）
+    ├── png/                           # PNG 载体（v2.24.0 · F25 · opt-in）：02_resume_cn_final_p{i}.png / _long.png
+    #  （v2.24.0 · F48 起**无** cover_letter_final —— 求职信改由用户自拟，参见 07/08_boss_greeting.md「邮件版」）
+    └── 09_portfolio_book_final.{md,html,pdf,docx}  # 作品集合册（Step 9.6；源 = portfolio-outputs/ 案例库）
 ```
 
 **working 与 final 物理隔离**：追踪用 working 版，投递用 deliverables/。**skill 只读 .md 文件，永不读取 .docx/.pdf 二进制**（格式转换不经过 LLM，token 成本 ≈ 0）。
@@ -1415,6 +1443,17 @@ final.md 顶部必须有 header 区块（`>` 引用行，供姓名/意向/2×2 �
 - 第 1 行 `# ` = 姓名；3 行 `> ` = 意向/信息（`｜` 分隔两栏，标签用 `：` 分隔）
 - 其余 `## ` 节自动进入"节"列表；`### ` 行 = 条目 meta（蓝色加粗）；`- ` bullet 归入当前条目（有 meta 时）或当前节段落
 - `**加粗**` 在 docx/pdf 渲染为加粗、HTML 渲染为 `<b>`
+- **行内标记体系（v2.24.0 · F51 + F57 · 「支持什么 / 不支持什么 / 不支持时的行为」三问已答）**：
+  - **支持**：`**加粗**` → `<b>`；`==强调==` → **加粗 + 主题色**（`--accent`，唯一色源）
+  - **不支持**：**斜体**（`*x*` / `_x_`）—— 本项目 CJK 字体（NotoSansSC）**无 italic 变体**，
+    reportlab 会**静默忽略** `<i>`（2026-09-26 实测）；**行内 code**（反引号）—— 渲染时
+    **剥离反引号、保留内容**（不渲染为等宽体）
+  - **不支持时的行为**：一律**不报错**、按上述降级；⚠️ 斜体标记会**字面残留** ⇒ **勿写**
+  - **用量约束**：`==强调==` **每页 ≤ 3 处**（过多即噪声，反而削弱腔调）
+- ⚠️ **渲染契约两条警示（v2.24.0 · F47）—— 两处均不丢内容、不报错，只在渲染后看图才发现**：
+  1. **表头信息（`>` 引用行）的值必须单行** —— 值换行 ⇒ 网格撑高 ⇒ 末行**越过 header 背景块被裁字**（字形被切）。
+  2. **含 `### ` meta 的节，其正文必须写成 `- ` bullet** —— 裸行会被归入「节段落」，而模板**先渲段落、再渲条目**
+     ⇒ 正文被**上提到该节全部条目之前**（**公司简介**跑到所有公司标题前面 = 典型场景）。
 
 ### Delivery Checklist（投递前核对清单）
 
@@ -1451,6 +1490,8 @@ python scripts/export_resume.py \
 - **占位符语法**（`scripts/mini_template.py`，零依赖，支持嵌套 each）：`{{姓名}}` `{{意向}}` `{{#each 信息}}` `{{#each 节}}`（含 `{{标题}}` `{{段落}}` `{{条目}}` `{{meta}}` `{{行}}`）
 - **样式控制**：模板 `:root` CSS 变量（--accent/--block-bg/--font/--title-size/--line-spacing/页边距/**--body-indent/--bullet-indent/--heading-space-before/--heading-space-after/--entry-space** 等）——用户改这些 = 改设计；`--theme` 可覆盖配色（Track 联动）
 - **样式修改走模板（v2.8.1 样式变量桥）**：所有布局数值（缩进/间距）均由模板 :root 变量驱动，**改模板即可，勿改 py**。例如：缩进改大 → `--body-indent: 56px`；行距 → `--line-spacing: 1.8`。改完跑 `--format all` 三端生效
+- **行首标点检漏（v2.24.0 · F53）**：出 PDF 后跑 `python scripts/check_pdf_kinsoku.py <pdf>` —— `reportlab` 对 CJK **逐字符断行、无禁则**，且 `U+2060` / `U+00A0` 实测**均无法抑制断行** ⇒ **机制级修复不可行**，改由「**文本层规避 + 出包后检漏**」承载：探针命中 ⇒ **改写该处词序**使标点不落行首（**治标 · 每包需重做**）。⚠️ 探针**只报告、不改文件**，且**不进** `validate_career_dna.py` 闸门链（闸门在 `python3 -S -E` 纯标准库下运行）
+- **PNG 载体（v2.24.0 · F25 · opt-in）**：`python scripts/export_resume.py --input …/02_resume_cn_final.md --format png [--png-width 1160]` ⇒ `deliverables/png/…_p{i}.png`（分页，A4 比例）+ `…_long.png`（长图）；`--format png-long` 只出长图；`--png-width 1740` 出 1.5×。**PNG = PDF 的再派生**（**不从 HTML 截图**）；长图走**单张超高页**渲染 ⇒ **无接缝**；⚠️ 长图比例可能**远超平台建议的 16:9**（11 页合册实测 ratio≈15.6）⇒ 会被 App 缩放，**投递默认走分页**。需 `pypdfium2` + `Pillow`（缺失 ⇒ 友善提示不崩）。触发：用户说「要发图 / 截图发 Boss」（**与 Step X 打招呼语分开**）
 - **背景系统（v2.8.2）**：页面整体背景 + Header 背景均可用模板变量配置，PDF 由 onPage canvas 绘制、HTML 端 CSS/SVG 同步。页面背景：`--page-bg-type: none|color|image` + `--page-bg-value`（色值或图片路径）+ `--page-bg-opacity`（水印）；Header 背景：`--header-bg-type: color|image|shape` + `--header-bg-value`；形状组合：`--header-shape: rounded|square|wave|slant`（主形状）+ `,block|dots|stripe`（装饰层，逗号分隔 ≤3）；形状参数：`--shape-wave-amplitude/segments/line`、`--shape-slant-angle`、`--deco-block/dots/stripe-*`。背景图资产放 `assets/backgrounds/`
 - **结构类约定**（引擎支持，勿改名）：`.header` `.header-left` `.photo` `.name` `.intent` `.contact` `.section` `.section-title` `.entry` `.entry-meta` `ul` `li` `p`（`.shape-layer` 为背景装饰层，引擎自动跳过）
 - **docx 最简转换取舍**：保留标题/节/段落/bullet/加粗/颜色/照片；损失圆角背景块/同行横线/形状背景等精细样式（PDF 主保真，docx 可损；背景系统仅 PDF/HTML 生效）
@@ -1460,9 +1501,61 @@ python scripts/export_resume.py \
 
 | Fit | 附件 |
 |-----|------|
-| Strong（Pack A） | 求职信（07_boss_greeting → cover_letter_final）+ 作品集（XX_portfolio → portfolio_final） |
-| Moderate（Pack B） | 求职信（08_boss_greeting → cover_letter_final） |
+| Strong（Pack A） | **作品集合册**（案例库 → `09_portfolio_book_final`，**Step 9.6**）｜求职信 = **用户自拟**（素材见 `07_boss_greeting.md`「邮件版」） |
+| Moderate（Pack B） | **作品集合册**（同上，有作品集时）｜求职信 = **用户自拟**（素材见 `08_boss_greeting.md`「邮件版」） |
 | Stretch/Weak（Pack C/D） | 可选 |
+
+> **作品集附件（v2.23.0 起）**：不再是「一个 Ready 项目 → `portfolio_final.pdf`」的**空声明** —— 改由 **Step 9.6** 产出 **JD 定向案例合册** `deliverables/09_portfolio_book_final.{md,html,pdf,docx}`（源 = `portfolio-outputs/` 案例库，选取规则见 Step 9.6）。
+
+---
+
+## Step 9.6: Portfolio Book（作品集案例合册 v2.23.0）
+
+> **规则唯一定义源 = 本节**；`SKILL.md` / `references/output_contracts.md` 只写指针。
+> ⚠️ **P2 内部第 2 个 opt-in 停点** —— 与 Step 9.5 并列（9.5 = 简历定稿 / 9.6 = 合册定稿），**互不依赖**，**不是 Phase Gate**（见 §四个「停」）。
+
+### 目标
+
+把 `portfolio-outputs/` 案例库中**与本 JD 匹配的案例**组装成一本**JD 定向案例合册**，净化后渲染为可投递的 `deliverables/09_portfolio_book_final.*`。解决"作品集附件长期是空声明"的最后一公里问题。
+
+### 触发（opt-in）
+
+Step 9.5 之后，用户说「**出作品集 / 要案例合册**」时进入（opt-in，不自动执行）。
+
+### Phase A：选题 + 草稿（先落 md，停）
+
+1. **L1 案例级**：读 `01_jd_match_report.md` Part 8 的 Portfolio Selection（Top1-3）**+** 案例库（`portfolio-outputs/`）本赛道口径变体
+1b. **附录候选（F40）**：案例库中 **`kind=doc`** 且**门控命中**的附加资料 ⇒ 以 **`## 附录：{名}`** 追加到**草稿末尾**（**不计入案例数**）
+   - **门控**：`JD Track` ∈ **游戏行业赛道白名单**（当前 = `<默认赛道ID>`）；规则真源 `references/portfolio_outputs.md` **§7**
+   - **人工加挂**：Gate ③ 可显式**加挂 / 摘除**（如「<行业> · <角色>」这类白名单外赛道）
+   - `Disclosure: 内部` 的材料 ⇒ **不得进附录**（同案例硬拦）
+2. **L2 变体级**：JD Track ↔ 案例 `Variant` 匹配（同 `Project` 多变体**只算 1 个案例**）
+3. **L3 段级**：`Disclosure` ≤ 出口档（硬）· 案例自带「材料选取指引」· 体量预算（**≤3 案例 / 总页数 ≤12，其中附录 ≤3** —— F40 起）
+4. **落草稿**：`resume-outputs/{JD}/09_portfolio_book.md`（= Gate 要给你看的形态）
+5. **试渲染取页数**：`python scripts/export_resume.py --input …/09_portfolio_book.md --format pages`
+   ⇒ 打印**真实页数 N**（**不落盘**）
+
+### Portfolio Gate（停 · 等用户确认）
+
+| 段 | 内容 |
+|---|---|
+| ① 选取摘要 | 合册标题 / 案例数 / **预计页数 N（实测）**（**总页数 >12 或附录 >3 须显式放行**）—— 表：`序 / 案例 / Project / Variant / 来源文件 / 选取节 / 页数`；**附录单列一行**（`附录 / 来源文件 / 门控依据 / 页数`，**不计入案例数**） |
+| ② 草稿落点 | 路径 + 每案例一句话概览（**附录一行**） |
+| ③ 可选动作（三选一） | **(a) 确认出册** ← 默认推荐 / **(b) 调整**（增删案例 / 换变体 / 改选段 / **加挂或摘除附录**）/ **(c) 只留草稿** |
+
+### Phase B：出册（仅在 (a) 后执行）
+
+6. **净化 L1 + L2 + L3a**（披露层）—— 对外版
+   - L3a 含 **E19 黑名单机械扫**（`Token 节省率` / `迭代提速` / `过滤率` / `响应窗口`）⇒ **命中即中止**
+   - `Disclosure: 内部` 的案例 ⇒ **拒绝进对外版（硬拦）**
+   - **附录区同受本步约束**（同一套 L1 / L2 / L3a + E19 扫描，**无豁免**）
+7. **渲染**：`python scripts/export_resume.py --input …/09_portfolio_book.md --profile portfolio --format all`
+   ⇒ `deliverables/09_portfolio_book_final.{md,html,pdf,docx}`
+8. **目检 + 报页数**（附录**计入页数**但**不计案例数**）
+9. **行首标点检漏（v2.24.0 · F53）**：`python scripts/check_pdf_kinsoku.py …/09_portfolio_book_final.pdf` ⇒ 命中即改写该处词序（机制不可行，见 Step 9.5「行首标点检漏」）
+
+> **禁止**：在 Gate 处重复 `01` 报告 §8.6 的匹配理由（**一个结论只出现一次**）。
+> **规则真源**：披露分级（L3）/ E19 黑名单 / 案例 schema / 索引契约 → `references/portfolio_outputs.md`。
 
 ---
 
@@ -1551,9 +1644,18 @@ python scripts/export_resume.py \
    - 首次建档同样必须登记。**新字段 / 新文件不加回写钩子 = 第一天即脏**（v2.12.0 `01_application_index` 缺 Pack 列
      且 Mode D 从不回写 → 实测 8 个投递包仅登记 2 行的教训）。
 
-### B. 更新 knowledge/skill_snapshots/{domain_name}.md（v1.4.1 增强 · **P1**）
+### B. 更新 / 建档 knowledge/skill_snapshots/{domain_name}.md（v2.22.0 增强 · **P1**）
 
-每个 Skill 更新：
+> **`domain_name` 取值规则（v2.22.0）**：**唯一取值源 = `04_skill_graph.md` 的 `## Domain 分布总览` 表**。
+> 命名 = 取 Domain 值的**英文部分** → 移除 `&` → 转小写 → 连续空白折叠为 `_` → 去首尾 `_`
+> （例：`AI & Automation（AI与自动化）` → `ai_automation`）。**禁止自由命名**（与 `Track` 字段同纪律），
+> 由 P2 `skill-snapshot-schema` 第 ② 项校验。
+
+**文件不存在时先建档**（v2.22.0 补齐 —— 此前本节只写「更新」、无建档条款，`skill_snapshots/` 由此长期空转）：
+按 `assets/templates/knowledge/skill_snapshot.md` 建骨架，**只搬用户数据**（能力名 / `Related Skills`），
+**市场情报一律留占位符、禁代填**（口径同 Mode A Step 9.6）。首次建档同样必须登记索引 README。
+
+**每个 Skill 更新**（在同一 Domain 文件内）：
 
 1. 更新 **Aliases**（v1.4.1 新增）：如 JD 中出现该 Skill 的新表述，追加到 Aliases 列表（去重）
 2. 更新 **Typical Evidence**：含 Ownership/Scope/Impact 三维度的典型证据形式
@@ -1561,6 +1663,11 @@ python scripts/export_resume.py \
 4. 更新 **Related Hiring Intent**：该 Skill 关联哪类招聘意图
 5. 更新 **Typical Results**：该 Skill 的典型成果量化方式
 6. 更新 **Typical Ownership**：基于多次 Evidence Expectation 的 Expected Ownership 均值
+7. **回写索引 README**（v2.22.0 新增）：在 `knowledge/skill_snapshots/README.md` 的「索引」表登记 / 更新本 Domain 一行 ——
+   `Domain（能力域） | 能力数 | Observed JD Count | 文件 | 段完整性`，并同步「未建档 Domain」「缺段待刷新」两节。
+   - **README 不存在时按本节表头初始化**（表头即结构契约；`knowledge/` 不属 Career DNA SSOT，无需四件套登记）。
+   - 首次建档同样必须登记。**新文件 / 新字段不加回写钩子 = 第一天即脏**（同 10.A 第 7 条与
+     v2.12.0 `01_application_index` 的教训）。
 
 ### C. 更新 career-dna/10_career_tracks/{track}.md（v1.4.2 增强 · **P1**）
 
@@ -1610,7 +1717,7 @@ JD
 ↓
 Talent Persona → Role Snapshot（Skill Weight Baseline + Persona Statistics）
     ↓
-Evidence Expectation → Skill Snapshot（Typical Evidence + Aliases + Ownership 均值）
+Evidence Expectation → Skill Snapshot（建档 Mode A Step 9.6 / 更新：Typical Evidence + Aliases + Ownership 均值）
     ↓
 Career Track（Track Confidence Breakdown + Market Validation + Recent JD Coverage）
 ```

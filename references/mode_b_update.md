@@ -95,11 +95,9 @@ python3 scripts/completeness_checker.py [career-dna目录路径]
 - 更新建议补充项
 - 更新生成时间
 
-### Step 5: 触发 Profile Regeneration（v2.7 新增）
-
-更新完成后，如 `07_career_identity` / `04b_transferable_capabilities` / `03_projects` 任一文件变化 → 触发 `references/online_profile_generation.md` Pipeline 重新生成 `11_online_profile.md`。
-
 ### Step 4.5: 刷新派生资产（Derived Asset Refresh v1.5 + v2.1）
+
+> **触发 Profile Regeneration（原 `Step 5: 触发 Profile Regeneration` · v2.23.0 并入本步）**：更新完成后，如 `07_career_identity` / `04b_transferable_capabilities` / `03_projects` 任一文件变化 → 触发 `references/online_profile_generation.md` Pipeline 重新生成 `11_online_profile.md`。
 
 如果本次更新涉及以下任一文件，自动刷新对应派生资产：
 
@@ -107,7 +105,7 @@ python3 scripts/completeness_checker.py [career-dna目录路径]
 |-------------|------|
 | `01_profile` / `02_timeline` / `03_projects` / `04_skill_graph` / `07_career_identity` / `10_career_tracks/` / `12_portfolio_candidates` | `11_online_profile.md`（Online Career Profile v2.2） |
 | `04_skill_graph` | `04b_transferable_capabilities.md`（Transferable Capability v2.3） |
-| `03_projects` / `05_story_bank` / `04_skill_graph` | `12_portfolio_candidates.md` + Ready 项目的 `XX_portfolio.md` |
+| `03_projects` / `05_story_bank` / `04_skill_graph` | `12_portfolio_candidates.md` + `portfolio-outputs/` **索引 + 受影响案例**（变更 ⇒ 该案例变体标 `stale`） |
 | `07_career_identity` / `02_timeline` / `05_story_bank` / `03_projects` / `04b` | `13_interview_narrative_strategy.md` —— **仅派生区 Part 1-3** |
 
 **⚠️ 13 号文件的分区刷新规则（v2.11.0）**：
@@ -119,6 +117,12 @@ python3 scripts/completeness_checker.py [career-dna目录路径]
   **必须先从模板重建缺失的 Part 骨架，再提示用户补回内容**（不得静默放过）；
   若报 P1 `undeclared-part`，说明有 Part 未登记入 manifest，须补登记或删除。
 - 刷新后同步更新头部 `Last Generated` 与 `Source Files Version`（07/05/02/03/04b）。
+
+**⚠️ 案例库（`portfolio-outputs/`）专项纪律（v2.23.0）**：
+
+1. **只标 `stale`，禁自动改写案例正文** —— 事实源变更 ⇒ 在索引里给受影响案例的变体标 `stale`；正文改写须走 Mode A Step 12.3 或用户显式指令。
+2. **禁自动回灌已定稿合册** —— `deliverables/09_portfolio_book_final.md` 是用户的**定稿物**（同「派生资产禁手改」的另一面）；刷新不得覆盖。
+3. **刷新前先跑闸门** —— `validate_career_dna.py` 的 P2 `portfolio-output-schema`：有未登记 / 不合规案例先报，再刷新。
 
 派生资产不需要用户手动维护。如果目标文件尚未创建，则自动初始化。
 

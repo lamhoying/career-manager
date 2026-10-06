@@ -18,7 +18,7 @@
 - 优先快速完成职业资产建档。
 - 缺失信息进入 Question Backlog，不阻塞建档流程。
 
-## Workflow（12 步工作流）
+## Workflow（12 步工作流 · 含半步 8.5 / 9.5 / 9.6）
 
 ### Step 1: 初始化目录结构
 
@@ -273,6 +273,36 @@ Target Roles: [岗位A], [岗位B], [岗位C]
 
 **产物**：`career-dna/04b_transferable_capabilities.md`
 
+### Step 9.6: Skill Domain Snapshot 骨架建档（v2.22.0）
+
+**目标**：为 `04_skill_graph.md` 中每个 Domain 建立 `knowledge/skill_snapshots/{domain_name}.md` 骨架。
+本条补齐一条**从未接线**的链路 —— v2.22.0 之前，全库（Mode A 12 步 / Mode B / Mode C / `init_career_dna.py`）
+**没有任何模式负责建档**：`mode_d` Step 10 B 只写「更新」、无「文件不存在时建档」条款，init 只建空目录。
+
+**取值源（唯一）**：`04_skill_graph.md` 的 **`## Domain 分布总览`** 表 —— 该表即 Domain 的权威清单。
+（若该表与能力表不一致，**先补齐总览表再建档**；P2 `skill-snapshot-schema` 第 ④ 项会聚合报出未建档 Domain。）
+
+**命名规则（受控取值）**：取 Domain 值的**英文部分** → 移除 `&` → 转小写 → 连续空白折叠为 `_` → 去首尾 `_`；
+括号内中文丢弃。例：`AI & Automation（AI与自动化）` → `ai_automation`；`Project Management（项目管理）` → `project_management`。
+**禁止自由命名**（与 `Track` 字段同纪律），由 P2 `skill-snapshot-schema` 第 ② 项校验。
+
+**流程**：
+
+1. 读 `04_skill_graph.md` 的 `## Domain 分布总览` 表 → 得到 Domain 清单
+2. 对每个 Domain：按 `assets/templates/knowledge/skill_snapshot.md` 建 `knowledge/skill_snapshots/{domain_name}.md`
+3. **只搬用户自己的数据**：能力名（该 Domain 下的能力条目）与 `Related Skills（关联技能）`
+4. **市场情报一律留占位符**：`Aliases` / `Related Roles` / `Industries` / `Talent Intelligence` 五项 /
+   `Market Language`（仅留 H4 段标题）/ `Recent Observations` / `Trend Notes` → 全部 `[待 JD 观察补充]`；
+   `Frequency` 与 `Observed JD Count` 写 `0`
+5. 建完**回写 `knowledge/skill_snapshots/README.md`**（不存在时按本节表头初始化）
+6. 若 `## Domain 分布总览` 表不存在或为空 → **跳过并记入 `08_question_backlog.md`**，不阻塞建档
+
+> ⚠️ **禁代填（硬）**：骨架只允许搬用户数据。凡涉及「市场怎么称呼 / 出现频率 / 关联岗位 / 行业分布 /
+> 典型证据 / 业务价值 / 招聘意图 / 典型成果 / 责任级别」—— **一律留占位符**，待真实 JD 观察填充。
+> 与 Role Snapshot「缺段待刷新」同源：市场情报必须由真实观察产生，**手工补 = 造数据**。
+
+**产物**：`knowledge/skill_snapshots/{domain_name}.md` × N + `knowledge/skill_snapshots/README.md`
+
 ### Step 10: 生成完整度报告和待补充问题库
 
 执行 `scripts/completeness_checker.py` 计算完整度：
@@ -295,10 +325,11 @@ python3 scripts/completeness_checker.py [career-dna目录路径]
 
 本手册**不重复该表** —— 步骤索引：Step 0 → 0.3 → 0.5 → 0.7 → 1 → 2 → 3 → 4 → 5 → 6（Identity → Capability → Evidence，不可逆序）。
 
-**规则**（编号对齐 `online_profile_generation.md` v2.7 后的正式编号 R01-R07）：
+**规则**（编号对齐 `online_profile_generation.md` v2.7 后的正式编号 **R01-R07 + `R02b`（v2.25.0）**）：
 
 - R01 → Step 0+1 执行：07 是唯一身份来源。禁止统计岗位频次作为职业身份。
 - R02 → Step 5 检查：经历仅作为证据，不得作为身份定义；主语来自 Career Positioning，不得来自原始岗位名。
+- R02b → Step 0.5+5 执行（v2.25.0）：**成长表达边界** —— **允许（经历层）**：能力名词层级梯度 · **动词按段分层**（执行/标准化 → 建立·制定·沉淀｜建体系 → 从零设计·推动·洞察｜管理/决策 → 主导设计·统筹·协调·判断）· TC Tier 标注 · 段落按**能力降序**；**禁止（身份层）**：成长句作身份表达 · 岗位阶梯叙事进身份块。**判据**：「这句话能不能只靠『时间线 + 岗位名』写出来？」能 ⇒ 经历层；需抽象成身份 ⇒ 身份层。**正落点**：`07` L3 / `02` 职能轨迹 / `13` Part 1 / `08_boss_greeting` / 面试口述。
 - R03 → Step 0.5 执行：保留真实岗位 + 增加角色解释层，禁止修改岗位事实，禁止将岗位名改写为更高级头衔；经历角色名与工作内容重构为能力形成视角。
 - R04 → Step 0.5+5+6 执行：能力优先于经历；经历必须回答能力形成三问（形成什么能力 / 解决什么问题 / 体现什么价值）；允许高抽象，动词可升级（参与→建立/推动、负责→主导/统筹）。
 - R05 → Step 0.5+0.7+6 执行：每个职责段落必须映射 TC；无法映射的内容删除/合并/降级。
@@ -338,7 +369,7 @@ python3 scripts/completeness_checker.py [career-dna目录路径]
 
 #### 12.3 Portfolio Output（生成作品集）
 
-1. 对 Ready 项目逐个按 `XX_portfolio.md` 模板生成
+1. 对 Ready 项目逐个按 `XX_portfolio.md` 模板生成，**并按 `references/portfolio_outputs.md` §3 写 3 个受控字段**（`Project` / `Variant` / `Disclosure`）后落 `portfolio-outputs/{case}.md`
 2. 每字段严格从 DNA 提取，不推测补充：
 
 | Portfolio 字段 | 主来源 | 备选来源 | 提取规则 |
@@ -361,4 +392,5 @@ Need More Evidence 项目向 `08_question_backlog.md` 追加 `[Portfolio]` 标�
 #### 产物
 
 - `career-dna/12_portfolio_candidates.md`
-- `resume-outputs/XX_portfolio_{项目名}.md`
+- `portfolio-outputs/{case}.md` —— 跨 JD 长期案例库（**受控命名**，与文件名同名；schema / 3 受控字段 → `references/portfolio_outputs.md` §3）
+- `portfolio-outputs/README.md` —— **索引回写**（加列 / 加行须同步维护钩子，见 `references/portfolio_outputs.md` §6）

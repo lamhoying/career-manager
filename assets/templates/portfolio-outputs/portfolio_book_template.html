@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>作品集合册模板 v2（版式版 —— 封面独立页 / 目录 / 页脚 / hero·facts·badge）</title>
+<!-- render-profile: portfolio -->
+<!--
+  Portfolio Book Template v2 · 刀 B 版式版（承接刀 A 骨架版）
+  ------------------------------------------------------------------
+  本文件是「设计源」：改 CSS / 结构 = 改设计，渲染脚本零改动。
+
+  ⚠️ 占位符规则（与 Mustache 惯例相反，务必先读）
+     mini_template.py 不做 HTML 转义（_render_vars 直接 str(val)）
+     ⇒ 原样输出 HTML 用「双花括号 + 名称」；
+       不要写三花括号 —— 三花括号在本引擎下会多输出一对多余的括号。
+     不支持 #if ⇒ 可选块一律「预渲染成空串」（沿用 header_decos 先例）。
+     支持嵌套 #each；同一行内闭合也支持。
+
+  ⚠️ 本注释块内禁止书写完整占位符语法 —— 引擎是纯文本替换，注释不豁免：
+     写了就会被替换，且未闭合的列表指令会吞掉其后内容直至收尾标签。
+     故下方一律用全角括号示意：｛｛名称｝｝ 、｛｛#each 列表｝｝…｛｛/each｝｝
+
+  占位符清单（由 build_data_portfolio() 供给）
+    ｛｛标题｝｝                             合册主标题
+    ｛｛#each 封面｝｝｛｛this｝｝｛｛/each｝｝    封面元信息行（逐行一个 div）
+    ｛｛目录块｝｝                           预渲染的目录 div（案例数 < 2 ⇒ 空串）
+    ｛｛页眉块｝｝                           预渲染的页眉 div（--header: none ⇒ 空串）
+    ｛｛页脚块｝｝                           预渲染的页脚 div（--footer: none ⇒ 空串）
+    ｛｛水印块｝｝                           预渲染的水印 div（--watermark: none ⇒ 空串）
+    ｛｛附录块｝｝                           预渲染的附录区（F40 · 空串 ⇒ 整块不出现 · 置尾 · 不进目录）
+    ｛｛#each 案例｝｝ … ｛｛/each｝｝
+        ｛｛标题｝｝                         案例标题（.case-title · PDF 目录项取自该段）
+        ｛｛#each 徽章｝｝…｛｛/each｝｝        hero 内标签（｛｛文本｝｝ / ｛｛cls｝｝）
+        ｛｛#each 事实卡行｝｝…｛｛/each｝｝    2 列元信息卡（｛｛标签｝｝ / ｛｛值｝｝ / ｛｛cls｝｝）
+        ｛｛摘要块｝｝                       预渲染的摘要 div（无摘要 ⇒ 空串）
+        ｛｛#each 小节｝｝ … ｛｛/each｝｝
+            ｛｛标题｝｝                     小节标题
+            ｛｛html｝｝                     预渲染的小节内容（p / ul / table / div.flow）
+
+  结构类（引擎约定，勿改名）
+     复用简历类：.section / .section-title 的「节标题 + 同行横线」语言 → 本模板用 .sub / .sub-title 同构
+     刀 A 新增 ：.table（表格）  .flow（流程块）
+     刀 B 新增 ：.hero / .facts / .badge · .toc · .footer · 封面独立成页 / 页脚（--cover-page / --footer）
+     刀 D 新增 ：.header（页眉 · --header）· .watermark（文字平铺水印 · --watermark）
+                 封面纵向居中改变量驱动（--cover-min-h / --cover-top-ratio / --cover-rule-gap）
+
+  ⚠️ 维护钩子（改一处必改另一处）
+     1) :root 的「字号 / 间距」变量由渲染器 _portfolio_metrics() 读取（PDF 与 DOCX 共用同一处）
+        ⇒ 新增 / 改名任何版式变量，必须同步 scripts/export_resume.py::_portfolio_metrics()，
+          否则该变量 = 空声明（脚本静默回落默认值 ⇒ 改模板不生效）。
+        颜色变量不经此处 —— 走 _shared/palette.css（唯一定义源）。
+     2) 分页 / 页眉 / 页脚 / 水印开关由 html_to_pdf 与 html_to_docx 各自读取；
+        取值域改动（always|same、none|page-number|page-x-of-y、none|auto|full、
+        none|trace|draft）须同步两处渲染器。
+        ⚠️ --watermark 的 DOCX 落点**未实现**（python-docx 无原生水印，须手写 VML）——
+           见待办 F39；当前 DOCX 出水印 = 静默忽略，不报错。
+        ⚠️ --header: full 需封面元信息含「联系」行；无该行 ⇒ 渲染器静默降级为 auto。
+     3) 版式常量（刻意未变量化）：.hero 内边距、.badge 圆角与内边距、封面装饰线尺寸。
+        这些数值在 CSS 与渲染器里各写一份；若确需调整，必须同时改两处，否则 = 空声明。
+        字号一律走变量（--small-size 供徽章 / 页脚小字）—— 常量镜像只允许出现在「尺寸」上。
+-->
+<style>
+  {{> palette}}
+
+  :root {
+    /* ===== 设计变量（一般不动）=====
+       ⚠️ 颜色一律不在此定义 —— 唯一定义源 = assets/templates/_shared/palette.css */
+    --font: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    --book-title-size: 24pt;   /* 合册标题 */
+    --case-title-size: 16pt;   /* 案例标题 */
+    --sub-title-size: 12pt;    /* 小节标题 */
+    --body-size: 10.5pt;       /* 正文 */
+    --small-size: 9pt;         /* 辅助小字（徽章 / 页脚） */
+    --line-spacing: 1.6;       /* 行距 */
+    --page-margin-top: 18mm;   /* 页边距上下 */
+    --page-margin-side: 16mm;  /* 页边距左右 */
+    /* ===== 布局变量 ===== */
+    --body-indent: 0px;            /* 小节正文缩进（合册不需要简历的 2 字符右移） */
+    --bullet-indent: 18px;         /* bullet 缩进 */
+    --heading-space-before: 14px;  /* 小节标题前 */
+    --heading-space-after: 6px;    /* 小节标题后 */
+    --entry-space: 8px;            /* 段落/块之间基础间距（复用简历同名变量） */
+    --case-space-before: 20px;     /* 案例之间 */
+    --cover-meta-gap: 28px;        /* 封面装饰线 → 元信息 间距（刀 D：18 → 28，放宽） */
+    --cover-rule-gap: 18px;        /* 封面标题 → 装饰线 间距（刀 D 新增；原先硬编码在渲染器） */
+    --cover-min-h: 985px;          /* 封面最小高 = A4 正文高 @96dpi（刀 D 新增；原先硬编码 620px） */
+    --cover-top-ratio: 0.45;       /* 封面留白分配比（刀 D 新增）；0.50 = 数学居中，0.45 重心略上 */
+    /* ===== 分页 / 页眉 / 页脚 / 水印（刀 B + 刀 D）=====
+       ⚠️ 本注释块内**禁止**出现「减号减号 + 变量名 + 冒号」的写法：
+          extract_css_vars() 用正则扫 :root，**不剥注释**
+          ⇒ 注释里那样写会被当成一条真声明读进去（伪声明）。
+       取值域：page-x-of-y / page-number / none ｜ auto / full / none ｜ trace / draft / none */
+    --cover-page: always;      /* always | same —— 封面是否独立成页（PDF 分页 / DOCX 分节） */
+    --footer: page-x-of-y;     /* none | page-number | page-x-of-y —— 页脚页码格式 */
+    --header: auto;            /* none | auto | full —— 页眉（刀 D 新增）；简历模板不声明 ⇒ none */
+    --watermark: trace;        /* none | trace | draft —— 水印（刀 D 新增）；简历模板不声明 ⇒ none */
+    --watermark-opacity: 0.04; /* 水印不透明度（刀 D 新增）；建议 3%–6%，禁 > 10% */
+    --watermark-text: auto;    /* 水印文案（刀 D 新增）；auto = 由封面元信息派生（姓名 + 应聘公司） */
+    --hero-bar: 4px;           /* 案例标题区左侧竖条宽 */
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--font);
+    color: var(--text);
+    font-size: var(--body-size);
+    line-height: var(--line-spacing);
+    background: #FFFFFF;
+  }
+
+  /* ===== 封面（刀 B：独立成页 · --cover-page: always） ===== */
+  /* ⚠️ min-height 必须走变量 —— A4 正文高 @96dpi = (297−2×18)mm ≈ 985px。
+     旧值硬编码 620px ⇒ 内容视觉偏上，且不随 --page-margin-top 变化（与 PDF 的居中不同源）。 */
+  .cover { text-align: center; padding: 0 0 24px;
+           min-height: var(--cover-min-h); display: flex; flex-direction: column;
+           justify-content: center; break-after: page; page-break-after: always; }
+  .cover-title { font-size: var(--book-title-size); font-weight: 700;
+                 color: var(--accent); letter-spacing: 2px; line-height: 1.35; }
+  .cover-rule { width: 96px; height: 3px; background: var(--accent);
+                margin: var(--cover-rule-gap) auto 0; border-radius: 2px; }
+  .cover-meta { margin-top: var(--cover-meta-gap); font-size: var(--body-size); color: var(--text); }
+  .cover-meta div { margin: 4px 0; }
+
+  /* ===== 目录（刀 B 新增 · 案例数 ≥ 2 才存在） ===== */
+  .toc { margin: 0 0 var(--case-space-before); break-after: page; page-break-after: always; }
+  .toc-title { font-size: var(--case-title-size); font-weight: 700;
+               color: var(--accent); margin-bottom: 14px; }
+  .toc-row { display: flex; align-items: baseline; padding: 6px 0; }
+  .toc-row .tx { color: var(--text); }
+  .toc-row .dots { flex: 1; border-bottom: 1px dotted var(--line);
+                   margin: 0 8px; transform: translateY(-3px); }
+  .toc-row .pg { color: var(--accent); font-weight: 700; min-width: 2em; text-align: right; }
+
+  /* ===== 案例（刀 B：标题区改 .hero —— 左竖条 + 浅底） ===== */
+  .case { margin-top: var(--case-space-before); }
+  .hero { border-left: var(--hero-bar) solid var(--accent);
+          background: rgba(var(--accent-rgb), .10);
+          padding: 10px 14px; border-radius: 0 5px 5px 0; }
+  .case-title { font-size: var(--case-title-size); font-weight: 700;
+                color: var(--accent); line-height: 1.35; }
+  .hero-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
+  .hero-badges:empty { display: none; }
+  .badge { display: inline-block; background: rgba(var(--accent-rgb), .18); color: var(--accent);
+           border: 1px solid rgba(var(--accent-rgb), .35); border-radius: 10px;
+           padding: 1px 9px; font-size: var(--small-size); font-weight: 700; }
+  .badge.plain { background: transparent; border-color: var(--line);
+                 color: var(--text); font-weight: 400; }
+
+  /* ===== 元信息卡（刀 B 新增 · .facts · 2 列） ===== */
+  .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 22px;
+           margin: 12px 0 2px; font-size: var(--body-size); }
+  .facts:empty { display: none; }
+  .facts .row { border-bottom: 1px solid var(--line); padding-bottom: 3px; }
+  .facts .row.full { grid-column: 1 / -1; }
+  .facts .k { color: var(--accent); font-weight: 700; margin-right: 6px; }
+  .case-quote { margin: 8px 0; padding-left: 10px;
+                border-left: 3px solid var(--line); color: var(--text); }
+
+  /* ===== 附录区（F40：kind=doc 附加资料 · 置尾 · 不进目录 / 不计案例数）=====
+     与案例块**同构**（.hero / .facts / .sub）⇒ 只弱化标题区：底色转中性块底、竖条转分隔线色、字号降一级。 */
+  .appendix { margin-top: var(--case-space-before); }
+  .appendix .hero { background: var(--block-bg); border-left-color: var(--line); }
+  .appendix .case-title { font-size: var(--sub-title-size); color: var(--text); letter-spacing: 1px; }
+
+  /* ===== 小节（复用简历「节标题 + 同行右侧横线」语言 ⇒ 视觉同源） ===== */
+  .sub { margin-top: 12px; }
+  .sub-title {
+    display: flex; align-items: center;
+    font-size: var(--sub-title-size); font-weight: 700;
+    letter-spacing: 1px; color: var(--text);
+  }
+  .sub-title::after {
+    content: ""; flex: 1; height: 1.2px;
+    background: var(--line); margin-left: 12px;
+  }
+  .sub > p { margin: 6px 0 6px var(--body-indent); }
+  .sub > ul { margin-left: var(--bullet-indent); list-style: disc; }
+  .sub > ul li { margin-bottom: 2px; }
+  /* ===== 行内强调（v2.24.0 · F57）：md 的 ==文本== → 加粗 + 主题色 =====
+     ⚠️ 唯一色源 = --accent（**不新增色板**，守住「配色唯一定义源」）；
+     ⚠️ **不用斜体** —— 本项目 CJK 字体（NotoSansSC）无 italic 变体，reportlab 会静默忽略 <i>
+        （2026-09-26 实测：`<i>斜体中文</i>` 渲染后 italic=False）⇒ 「强调」只能靠**加粗 + 色**。
+     用量约束：每页 ≤ 3 处（过多即噪声；owner 明确要求「不要过多」）。 */
+  .em-accent { color: var(--accent); font-weight: 700; }
+  .sub > p.quote { padding-left: 10px; border-left: 3px solid var(--line); }
+
+  /* ===== 表格（刀 A 新增 · 简历模板不用） ===== */
+  .table { border-collapse: collapse; width: 100%; margin: 8px 0; font-size: var(--body-size); }
+  .table th { background: var(--block-bg); color: var(--text); font-weight: 700;
+              text-align: left; padding: 4px 8px; border: 0.8px solid var(--line); }
+  .table td { padding: 4px 8px; border: 0.8px solid var(--line); vertical-align: top; }
+
+  /* ===== 流程块（刀 A 新增） ===== */
+  .flow { background: var(--block-bg); border-radius: 6px; padding: 10px 12px; margin: 8px 0;
+          font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+          line-height: 1.45; white-space: pre-wrap; }
+
+  /* ===== 页脚（刀 B 新增 · HTML 端为观感占位） =====
+     浏览器不排分页 ⇒ HTML 里的页码只能是格式示意（第 X 页 / 共 Y 页），
+     真实页码由 PDF 渲染器绘制、DOCX 用域生成 —— 不在 HTML 端编造页码。 */
+  .footer { display: flex; justify-content: space-between; align-items: baseline;
+            margin-top: 18px; padding-top: 8px; border-top: 1px solid var(--line);
+            font-size: var(--small-size); color: var(--text); opacity: .68; }
+  .footer .pg { color: var(--accent); font-weight: 700; opacity: 1; }
+
+  /* ===== 页眉（刀 D 新增 · HTML 端为观感占位） =====
+     同页脚：浏览器不排分页 ⇒ 只画一行示意；真实逐页页眉由 PDF / DOCX 渲染器负责。 */
+  .header { display: flex; justify-content: space-between; align-items: baseline;
+            padding-bottom: 6px; border-bottom: 1px solid var(--line);
+            margin-bottom: 14px; font-size: var(--small-size);
+            color: var(--text); opacity: .78; }
+  .header .to { color: var(--accent); font-weight: 700; opacity: 1; }
+
+  /* ===== 水印（刀 D 新增 · 文字平铺，非 logo） =====
+     为什么文字不用 logo：求职者没有品牌 logo，自造 monogram 会被误认为某公司标识；
+     而文字能承载「是谁 · 投给谁 · 作何用」⇒ 泄漏可溯源 —— 这才是防盗水印的真实价值。
+     为什么用 flex 平铺而非 CSS 重复背景：mini_template 是纯文本替换、不做 URL 编码，
+     把文案塞进 data-URI 会破坏 SVG。旋转/放大用 transform（不影响布局 ⇒ 不产生横向滚动）。
+     不透明度由 --watermark-opacity 控制，与 PDF 渲染器同源。 */
+  .watermark { position: fixed; inset: 0; z-index: 0; pointer-events: none;
+               user-select: none; display: flex; flex-wrap: wrap;
+               align-content: space-around; justify-content: space-around;
+               gap: 34px 48px; transform: rotate(-30deg) scale(1.7);
+               font-weight: 700; color: var(--accent);
+               opacity: var(--watermark-opacity);
+               font-size: calc(var(--body-size) * 1.6); }
+  .watermark span { white-space: nowrap; }
+  /* draft 档：显著（解决 Gate 阶段预览件被误投的风险），居中大字 */
+  .watermark.is-draft { font-size: calc(var(--body-size) * 4.4); font-weight: 700;
+                        align-items: center; justify-content: center; }
+  /* 正文层抬到水印之上 ⇒ 水印只在背景，不伤可读性 */
+  body > *:not(.watermark) { position: relative; z-index: 1; }
+
+  /* 打印纸张声明（浏览器不分页 ⇒ 仅供打印预览参考；页码由渲染器负责） */
+  @page { size: A4; }
+</style></head>
+<body>
+
+  <!-- ===== 页眉（刀 D：观感占位 · --header: none ⇒ 空串 ⇒ 整块不出现） ===== -->
+  {{页眉块}}
+
+  <!-- ===== 封面（刀 B：独立成页 · --cover-page: always） ===== -->
+  <div class="cover">
+    <div class="cover-title">{{标题}}</div>
+    <div class="cover-rule"></div>
+    <div class="cover-meta">{{#each 封面}}<div>{{this}}</div>{{/each}}</div>
+  </div>
+
+  <!-- ===== 目录（案例数 ≥ 2 才存在；< 2 时 目录块 = 空串 ⇒ 整块不出现） ===== -->
+  {{目录块}}
+
+  <!-- ===== 案例块（N ≥ 1） ===== -->
+  {{#each 案例}}
+  <section class="case">
+    <div class="hero">
+      <div class="case-title">{{标题}}</div>
+      <div class="hero-badges">{{#each 徽章}}<span class="badge{{cls}}">{{文本}}</span>{{/each}}</div>
+    </div>
+    <div class="facts">{{#each 事实卡行}}<div class="row{{cls}}"><span class="k">{{标签}}</span>{{值}}</div>{{/each}}</div>
+    {{摘要块}}
+    {{#each 小节}}
+    <div class="sub">
+      <div class="sub-title">{{标题}}</div>
+      {{html}}
+    </div>
+    {{/each}}
+  </section>
+  {{/each}}
+
+  <!-- ===== 附录区（F40：kind=doc 附加资料 · 置尾 · 不进目录 / 不计案例数；空串 ⇒ 整块不出现） ===== -->
+  {{附录块}}
+
+  <!-- ===== 页脚（HTML 观感占位；PDF/DOCX 由渲染器绘制 · --footer） ===== -->
+  {{页脚块}}
+
+  <!-- ===== 水印（刀 D：文字平铺 · --watermark: none ⇒ 空串 ⇒ 整块不出现） ===== -->
+  {{水印块}}
+
+</body>
+</html>

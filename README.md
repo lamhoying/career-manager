@@ -3,7 +3,7 @@
 > 把你的 AI 助手变成私人 Career Manager：以 **Career DNA（职业基因库）** 为唯一事实源，持续建设、管理、升级你的职业资产，而不是每次看到 JD 都从零重写简历。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-v2.21.0-green.svg)](https://github.com/lamhoying/career-manager/releases)
+[![Version](https://img.shields.io/badge/version-v2.25.0-green.svg)](https://github.com/lamhoying/career-manager/releases)
 [![Cross-Agent](https://img.shields.io/badge/agent-agnostic-brightgreen.svg)](#跨平台兼容性)
 
 ---
@@ -331,10 +331,15 @@ career-manager/
 
 ## 版本与更新
 
-完整逐版本变更记录见 [GitHub Release notes](https://github.com/lamhoying/career-manager/releases)。当前版本 **v2.21.0**。
+完整逐版本变更记录见 [GitHub Release notes](https://github.com/lamhoying/career-manager/releases)。当前版本 **v2.25.0**。
 
 ### 版本里程碑
 
+- **v2.25.0**：Online Profile 规则补白——新增 `R02b` 成长表达边界：经历层动词按段分层（执行 / 标准化 / 建体系 / 管理决策），成长叙事归位于 `07` / `02_timeline` / `13` / `08`，身份层禁止岗位阶梯叙事进入身份块；并补齐 `R02b` 在规则真源的索引入口。
+- **v2.24.0**：波次 2 全量修复——渲染层按类兜底（字形缺口分类降级）+ 声明即接线（产物必有产生步骤）+ 载体扩展（PDF → PNG 分页 / 长图导出 `render_png.py`）；合册 L2 语义剥离（口径 / 派生自）、行内标记（反引号 / `==强调==`）、项目经历渲染契约根治。
+- **v2.23.5**：简历正文内容位职责边界——总纲「同一信息只在一个位置出现」（One Fact, One Slot）、内容位职责矩阵、项目经历三标签受控化、职业定位去冗余（≤ 4 行）。
+- **v2.23.4**：版式源一致性治理——遗留副本（02–07 / XX_gap_analysis）收敛降级为指针式薄壳、生成规则迁移至 canonical 真源；新增 P2 常驻闸门 `format-source-consistency`（种子分类 / 薄壳⊆canonical / 落盘名映射 / 产物⊇真源），并补齐 v2.23.2 作品集体系收口的公开说明。
+- **v2.23.2**：作品集体系收口——新增附录区（独立桶 / 恒置尾 / 不进目录与案例计数）、合册版式四项（CJK 字形补全与覆盖度降级、封面动态居中、页眉 / 水印受控开关 + 披露 fail-safe）、Skill Domain Snapshot 链路接线、完整度权重合计归一为 100%；并系统化中性化模板与参考文档。
 - **v2.21.0**：身份层（07）重构——Layer 2 定位与赛道映射拆分为受控字段（`Track` / `Positioning` 语义分离），新增方向冲突探针与 Layer 5 条件化收录机制，进一步收紧身份→能力→证据推理链的稳定性与可治理性。
 - **v2.19.0**：发布包不再内含内部变更日志（CHANGELOG），改为在 GitHub Release notes 提供精炼公开摘要；完成多轮架构治理与模板中性化——身份（07）/ 能力（04b）/ 证据（03）三层推理链收敛、面试表达层 SSOT（13）、Mode D 两阶段门控与 G5 冲突检测；系统性去除模板与参考文档中的个人化痕迹，使 skill 默认通用可复用。
 - **v2.7.1**：新增 Step 9.1 Resume QA Layer（QA-1~QA-4 四检）+ Step 9.0 逐经历重构循环 + Step 8.12 叙事强度；并清理模板 / 参考文件中的 PII 痕迹。

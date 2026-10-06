@@ -1,62 +1,34 @@
 # [Name] — [Target Role]
 
-<!-- English ATS Resume (英文 ATS 简历 v1.5.1)
-NOT a translation of 02_resume_cn.md — written directly in ATS-optimized English.
-Follows North American/European resume conventions: action verbs, quantified results, role-specific keywords.
+<!--
+⚠️ 遗留副本（Legacy Copy）—— **v2.23.3 起已降为薄壳骨架**。
 
-Data sources (v2.6):
-- career-dna/07_career_identity.md → Career Positioning (Primary identity source)
-- career-dna/04b_transferable_capabilities.md → Capability Mapping
-- career-dna/03_projects.md → Highlight Projects (English)
-- career-dna/04_skill_graph.md → Core Competencies (English)
-- resume-outputs/01_jd_match_report.md Part 6.5 → Adjacent Match evidence
+**本文件不承载任何生成规则**；只保留该产物的**章节标题骨架**（形状同 `01_jd_match_report.md`；`{…}` 为 canonical 骨架占位原样，本文件不填充）。
+- 版式唯一定义源：`references/pack_templates/03_resume_en_template.md`
+- 生成规则唯一定义源：`references/mode_d_job_application.md`（Step 4.5b Identity Lock → 9 三阶段生成 → 9.0 引擎循环 → 9.1 QA Layer）
+- 产物路径：`resume-outputs/{YYYYMMDD}-{company}-{role}/03_resume_en.md`
+- **落盘名（闸门映射源 · 唯一登记处）**：`03_resume_en.md`（Pack A/B）
+- ⚠️ Pack C 的转岗变体**不在本行登记** —— 由内联真源 `XX_transition_resume_en.md` 声明。
+  （**落盘名声明行只准出现落盘名**；任何 `.md` 引用混入即被闸门误提取 ⇒ 说明性文字另起一行。）
 
-Length: 1-2 pages
-v2.6.2 ATS Reframing boundary (E01-E04):
-  Allowed: Capability abstraction + JD language adaptation + perspective adjustment
-  Forbidden: Role upgrade + authority upgrade + evidence-free packaging
-  All descriptions must be traceable to 02/03/04/04b source evidence
+**降级历史（留档，防再形成第二定义源）**
+- v1.5.1 – v2.7.1：曾为完整版，含英文 ATS 写法说明（非 02 的翻译件）/ 数据来源清单 / `v2.6.4` Three-layer output structure / `v2.6.2` Reframing 边界 E01–E04。
+- v2.23.3（刀 F）：整体降为薄壳 —— 删规则正文与占位示例。**全库唯一规则已先迁移**：**Three-layer output structure 不迁移** —— `mode_d` Step 9 已完整定义（与 `02` 同一链路）。
+  其余（数据来源清单 → canonical `03` 头部 / Reframing 边界 → `07_career_identity` + `mode_d` Step 9）已有等价定义、不迁移；逐条迁移表见 `CHANGELOG.md` v2.23.3。
 -->
 
-## Professional Summary
+## Professional Summary / Career Positioning
 
-[2-3 sentence summary: role + years + key strengths + target]
+## Basic Info
 
-## Core Competencies
+## Target Position / Objective
 
-- [Competency 1] | [Competency 2] | [Competency 3]
-- [Competency 4] | [Competency 5] | [Competency 6]
+## Core Capabilities
 
-## Professional Experience
-
-<!-- v2.6.4 Three-layer output structure:
-Layer 1: Capability Interpretation → role interpretation
-Layer 2: JD Mapping → match direction + JD phrasing
-Layer 3: ATS Evidence Output → resume text below -->
-
-### [Company Name] — [Original Role] | [Start] — [End]
-
-**Role**: [Capability-based role name — Capability Interpretation]
-**JD Match**: [D0/D1/D2 — JD Mapping — Verified/Transferable]
-
-- [Action verb] + [capability] + [quantified result]
-- [Action verb] + [responsibility] + [quantified result]
-
-### [Company Name] — [Role] | [Start] — [End]
-
-- [Action verb] + [responsibility] + [quantified result]
+## Work Experience
 
 ## Key Projects
 
-### [Project Name] | [Role]
-
-- [Action verb] + [scope] + [result]
-
 ## Education
 
-- [Degree], [Major] — [University] | [Year]
-
-## Languages
-
-- Chinese: Native
-- English: [Level]
+## Skills & Certifications

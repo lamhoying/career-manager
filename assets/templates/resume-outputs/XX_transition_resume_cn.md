@@ -1,14 +1,20 @@
 # [姓名] — [目标岗位]（转岗）
 
-<!-- 转岗中文简历 (Transition Resume CN v1.5.1) — Stretch Fit 专用
-与标准简历的区别：突出 Adjacent Match 的可迁移能力证据。
-将 Part 6.5 Capability Translation 的 Adjacent Match 推理写入简历亮点。
+<!--
+版式真源（Format Source · 内联）—— 本产物**无 canonical 对应**（v2.23.4 起明示）。
+**本文件即该产物的版式定义**（章节骨架 + 表头 + 占位，内联于本文件，不外置到 `references/pack_templates/`）。
+- 生成规则真源：`references/mode_d_job_application.md` §Pack C 清单（定落盘名与用途；版式以本文件为准）
+- 产物路径：`resume-outputs/{YYYYMMDD}-{company}-{role}/02_transition_resume_cn.md`
+- **落盘名（闸门映射源 · 唯一登记处）**：`02_transition_resume_cn.md`（Pack C）
+
+与标准简历的区别：突出 Adjacent Match 的可迁移能力证据；把 Part 6.5 Capability Translation 的推理写进亮点。
+核心策略：能力可迁移 → 用一个具体项目的成果证明。
 
 数据来源：
 - career-dna/03_projects.md → 选取涉及 Adjacent Match 能力的项目
 - 01_jd_match_report.md Part 6.5 → Adjacent Match 列表 + 推理过程
 
-核心策略：能力可迁移 → 用一个具体项目的成果证明
+⚠️ 版本标注：早期括注的 `v1.5.1` = **引入版本**、非当期版本；本文件随 skill 版本走，**无独立版本号**。
 -->
 
 ## 职业定位（转岗版）

@@ -1,6 +1,6 @@
 # Output Contracts（产出合约）
 
-> Aligns to: v2.21.0
+> Aligns to: v2.24.0
 ## 概念
 
 Output Contracts 定义每个求职策略（Pack A/B/C/D）对应的文件产出清单和数据来源。确保不同策略下产出一致、可预期、不遗漏。
@@ -109,10 +109,12 @@ Output Contracts 定义每个求职策略（Pack A/B/C/D）对应的文件产出
 |---|---|---|
 | **P1** Recon | `01_jd_match_report.md`（9 Part + 附录 A/B） | **该阶段唯一产物**。落盘后**必须停于 Phase Gate**；`career-dna/` 与 `knowledge/` 的回写（`mode_d` Step 8 / 10.A-C）同属 P1 |
 | **P2** Build | 该 Pack 的全部文件 + `deliverables/` | 由 Gate 放行后生成，清单见上方各 Pack 表 |
+| **P2 内部** | Step 9.5 / **Step 9.6（作品集合册）** | **P2 内部第 2 个 opt-in**；与 Step 9.5 并列，**非 Phase Gate**（见 `mode_d` §四个「停」） |
 | — | 投递索引登记 | **属 P2**（`mode_d` Step 10.D）—— 「打算投」才登记；P1 停住时**不登记**（「分析过」≠「要投」） |
 
 - **P1 停住不是失败**：此时只有 `01` 报告 + 知识回写，**不产生任何 Pack 文件**、不登记投递索引。
 - **续跑禁止重跑 Step 1-7**：P2 从已有 `01` 报告取输入（`01` 是自足的）；**仅当**用户显式说「重新分析 / JD 变了」才重跑 P1 并覆盖报告。
+- **Portfolio Gate ≠ Phase Gate**：它是 **P2 内部**的 opt-in 停点（决定「合册要不要落盘成 PDF」），不是 P1/P2 之间的决策门。层次 / 性质指针 → `references/mode_d_job_application.md` §四个「停」。
 
 ## 模板实体化（v2.1.3 更新）
 
@@ -128,6 +130,8 @@ Output Contracts 定义每个求职策略（Pack A/B/C/D）对应的文件产出
 | `06_gap_analysis.md` | `pack_templates/06_gap_analysis_template.md` |
 | `07_upgrade_plan.md` | `pack_templates/07_upgrade_plan_template.md` |
 | `07/08_boss_greeting.md` | `pack_templates/08_boss_greeting_template.md` |
+| `09_portfolio_book.md` | `assets/templates/resume-outputs/09_portfolio_book.md`（合册骨架 · 输入契约 + Gate 交付物） |
+| `09_portfolio_book_final.html` | `assets/templates/portfolio-outputs/portfolio_book_template.html`（合册 HTML 版式） |
 
 **编号映射**：Boss Greeting 在 Pack A = `07_boss_greeting.md`（A 无 gap 文件），Pack B = `08_boss_greeting.md`（B 有 06_gap + 07_upgrade）。upgrade_plan 在 Pack A = `06`、Pack B = `07`。禁止写死 07。
 
@@ -194,14 +198,17 @@ Decision Score = 0.7 × Match + 0.3 × HireProbability
 | 1 | `deliverables/02_resume_cn_final.md` | Step 9.5 净化（L1/L2 Strip） | `02_resume_cn.md` | 全部 Pack（A/B/C 有简历） |
 | 2 | `deliverables/02_resume_cn_final.docx` | `scripts/export_resume.py --format docx --template resume_template.docx` | final.md | 全部 |
 | 3 | `deliverables/02_resume_cn_final.pdf` | `scripts/export_resume.py --format pdf` | final.md | 全部 |
-| 4 | `deliverables/cover_letter_final.docx/.pdf` | 净化 + 导出 | `07/08_boss_greeting.md`（编号随 Pack）+ `04_interview_pack.md` | Pack A/B |
-| 5 | `deliverables/portfolio_final.pdf` | 净化 + 导出 | `XX_portfolio.md`（Ready 项目） | Pack A |
+| 4 | `deliverables/cover_letter_final.*` | **已移除（v2.24.0 · F48）** —— 原写「净化 + 导出」，但全库**无渲染路径**（`pack_templates/` 无 cover 种子 · `export_resume.py --profile` 仅 `auto/resume/portfolio`）⇒ **声明了产物却跑不出来** | 求职信改由**用户自拟**（素材 = `07/08_boss_greeting.md`「邮件版」） | — |
+| 5 | `deliverables/09_portfolio_book_final.{md,html,pdf,docx}` | **Step 9.6**（净化 + 渲染） | **案例库（`portfolio-outputs/`）经 Step 9.6 选取** | Pack A·B（有作品集时） |
+| 6 | `deliverables/09_portfolio_book_final.md` | Step 9.6 Phase B（净化后 md） | **合册事实源**（脚本只读 `.md`） | Pack A·B |
+| 7 | `deliverables/png/{stem}_p{i}.png` / `{stem}_long.png` | `scripts/export_resume.py --format png [--png-width 1160]` | final.md → **PDF**（再派生） | 全部 Pack（opt-in） |
 
 ### 规则
 
 - **净化不改内容，只剥离标注**：L1 删 `<!-- -->` 注释；L2 删 D0-D3 / TC 编号 / 版本注释；`[待补充]` 转用户确认
 - **PII 反转**：working 版脱敏（[XX]），投递版由用户审核时填真实值
 - **单一事实源**：审核后 final.md 为定稿事实源；小改直接改 final.md，大幅迭代回 working 版
+- **PNG 为 PDF 的再派生（v2.24.0 · F25）**：`final.md → HTML → PDF → PNG` —— **不从 HTML 截图**（HTML 是浏览器连续流，与 A4 分页 + onPage 背景层**不同源**）。分页 `{stem}_p{i}.png`（A4 比例、默认宽 1160）+ 长图 `{stem}_long.png`（**单张超高页**渲染 ⇒ 无接缝）。**派生渲染物 · 禁手改**；**单一事实源仍为 final.md**。**opt-in**（用户说「要发图 / 截图发 Boss」时）⇒ 挂 Step 9.5；⚠️ **与 Step X 打招呼语分开** —— Boss 平台策略「不附简历」约束的是**打招呼语语境**，截图属 **HR 索要后的响应**
 - **token 纪律**：skill 只读 .md，永不读 .docx/.pdf 二进制；格式转换由脚本执行，不经过 LLM
 - **v2.8 范围**：仅中文（02）；英文版（03）管道复用，待中文验证后扩展
 - **模板**：`resume_template.docx` 从用户既有简历提取样式（微软雅黑 / 14pt 加粗标题 / 10.5pt 正文 / #1564BF 蓝色），可替换，脚本零改动
