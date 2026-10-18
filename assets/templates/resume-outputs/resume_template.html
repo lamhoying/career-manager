@@ -29,16 +29,16 @@
     --title-size: 20pt;       /* 姓名 */
     --heading-size: 14pt;     /* 节标题 */
     --body-size: 10.5pt;      /* 正文 */
-    --line-spacing: 1.5;      /* 行距 */
+    --line-spacing: 1.35;     /* 行距（v2.27.0 紧凑档：1.5 → 1.35） */
     --photo-width: 3.5cm;     /* 证件照宽 */
-    --page-margin-top: 18mm;  /* 页边距上下 */
-    --page-margin-side: 16mm; /* 页边距左右 */
+    --page-margin-top: 13mm;  /* 页边距上下（v2.27.0 紧凑档：18 → 13mm） */
+    --page-margin-side: 14mm; /* 页边距左右（v2.27.0 紧凑档：16 → 14mm） */
     /* ===== 布局变量（渲染引擎从这里读取，改这里 = 改 PDF/DOCX 版式） ===== */
     --body-indent: 20px;      /* 节内正文右平移（2 字符；4 字符=56px） */
     --bullet-indent: 13px;    /* bullet 再右平移 */
     --heading-space-before: 2px;  /* 节标题前间距 */
     --heading-space-after: 0px;    /* 节标题后间距 */
-    --entry-space: 4px;       /* 条目（工作/项目经历）间距 */
+    --entry-space: 2px;       /* 条目间距（v2.27.0 紧凑档：4 → 2px） */
     /* ===== Header 布局变量（照片边距 / 信息间距 / 字号） ===== */
     --header-pad-top: 12px;   /* header 块上内边距（信息顶距 header 上边） */
     --header-pad-bottom: 12px;/* header 块下内边距 */
@@ -170,6 +170,8 @@
     list-style: disc;
   }
   .entry li { margin-bottom: 2px; }
+  /* 条目的「注记」行（v2.27.0）：md 里写成**裸行**（不带 `- `）⇒ 无 bullet、仅缩进 + 粗体标签 */
+  .entry-note { margin: 1px 0 3px 18px; }
   /* ===== 行内强调（v2.24.0 · F57）：md 的 ==文本== → 加粗 + 主题色 =====
      ⚠️ 唯一色源 = --accent（**不新增色板**，守住「配色唯一定义源」）；
      ⚠️ **不用斜体** —— 本项目 CJK 字体（NotoSansSC）无 italic 变体，reportlab 会静默忽略 <i>
@@ -235,6 +237,13 @@
   </div>
 
   <!-- ===== 章节（工作经历/项目/教育等统一结构） ===== -->
+  <!--
+    v2.27.0 三条行级写法（简历 02 专用；由 export_resume.py 注入 <div class="hang|sub"> 承载缩进）：
+      ① **二级缩进行**：行首 **2 个空格** —— 无 bullet 的缩进块（比同级再缩一级）
+      ② **悬挂块**：某段落**紧接 ≥1 个二级行** ⇒ 该段落首行顶格、其余行与二级行**对齐到其标签之后**
+         （缩进量 = 标签渲染后宽度，CJK 1 字 = 1em；由脚本按 `_emw()` 折算，**不要在 md 里手调空格**）
+      ③ **栏目强调**：`==栏目==` ⇒ 加粗 + 主题色（每页 ≤3 处 · 全项目唯一加粗强调形态）
+  -->
   {{#each 节}}
   <section class="section">
     <div class="section-title">{{标题}}</div>
@@ -242,6 +251,8 @@
     {{#each 条目}}
     <div class="entry">
       <div class="entry-meta">{{meta}}</div>
+      <!-- v2.27.0 注记行：md 裸行（无 `- `）⇒ 无 bullet 的缩进块；仍与 bullet 行同属本条目 -->
+      {{#each 注}}<div class="entry-note">{{this}}</div>{{/each}}
       <ul>{{#each 行}}<li>{{this}}</li>{{/each}}</ul>
     </div>
     {{/each}}

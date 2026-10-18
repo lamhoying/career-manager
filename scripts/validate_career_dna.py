@@ -81,7 +81,11 @@ validate_career_dna.py - Career DNA 写入闸门（Write Gate）
                           ③ 落盘名映射完备 —— 每个落盘名只由**一个**真源声明，
                              且声明集合与 `mode_d` §Pack A–D 清单**双向**一致
                           ④ 产物 ⊇ 真源 —— `resume-outputs/{JD}/`（旧代际豁免）产物的 H2
-                             须 ⊇ 其真源 H2；落盘名不在映射内即报
+                             须 ⊇ 其真源 H2；落盘名不在映射内即报。
+                             **必备侧须尊重真源自身的标注（v2.26.0 · F58）**：
+                             含 `{{…}}` / `{…}` / `[…]` 的标题 = 生成时填入的内容 ⇒
+                             占位段转 `.*` 按**模式匹配**（非字面量比对）；
+                             含 `条件必填` / `可选` 的标题 = 模板已自证「非常备」⇒ **不计入必备集**
                           —— v2.23.3 的「薄壳化」只把一致性写进**刀内一次性断言**（下刀起失效，F43）；
                              `resume-outputs/` 产物侧此前**零校验**（F43）；
                              无 canonical 的长尾（`XX_learning_roadmap` / `XX_transition_*`）
@@ -426,6 +430,59 @@ def _norm_h2_set(body: str) -> set:
         if ln.startswith("## "):
             out.add(ln[3:].strip().split("（")[0].split("(")[0].strip())
     return out
+
+
+# ---- F58（v2.26.0）· 必备集须尊重模板标注 ----
+# 缺口：④「产物 ⊇ 真源」原先做**纯字面集合比较**，把模板 H2 的**占位符**与**可选标注**
+# 一并按必备字面量处理 ⇒ 两类**永久假报**（都不是「产物写错」）：
+#   ① 占位符：`05_answer_cards` / `06_gap_analysis` / `09_portfolio_book` 的三个标题天然含
+#      `{{…}}` / `{…}` / `[…]` ⇒ **任何实例都不可能命中**（实测 3 处：<公司甲> 05/06 + <公司乙> 05）；
+#   ② 条件必填：`04 §10 英文面试准备` 标题自证「**条件必填**（JD 明确要求英语工作语言时）」
+#      却被当必备 ⇒ **非英语岗实例必挂**（<公司甲> 04 实测）。
+# 修法：必填侧按模板标注归一 —— 占位段转 `.*`（模式匹配）；含 `条件必填` / `可选` 整条剔除。
+# `_norm_h2_set` **原语义不动**（②③ 两条子规则沿用字面集合比较 ⇒ 零回归面）。
+# 注：`{{…}}` 段可能被「去尾部 `（…）`」截断（如 `Q1. {{第一个问题（通常为自我介绍）}}`），
+#     故占位正则须容忍**未闭合**的 `{{`（`\{\{[^{}]*$`）—— 否则截断后判成字面量，假报依旧。
+FS_H2_PLACEHOLDER_RE = re.compile(r"\{\{.*?\}\}|\{\{[^{}]*$|\{[^{}\n]*\}|\[[^\[\]\n]*\]")
+FS_H2_OPTIONAL_MARKS = ("条件必填", "可选")
+
+
+def _h2_requirements(text: str):
+    """模板正文 → [(原样标题, 归一化标题)]。**行内含可选标注的标题整条剔除**。"""
+    out = []
+    for ln in text.split("\n"):
+        if not ln.startswith("## "):
+            continue
+        raw = ln[3:].strip()
+        if any(mk in ln for mk in FS_H2_OPTIONAL_MARKS):
+            continue
+        out.append((raw, raw.split("（")[0].split("(")[0].strip()))
+    return out
+
+
+def _h2_pattern(head: str):
+    """归一化标题 → 正则（占位段 `.*`，字面段转义）。**无占位 ⇒ None**（按字面量比）。"""
+    parts = FS_H2_PLACEHOLDER_RE.split(head)
+    if len(parts) == 1:
+        return None
+    return re.compile(".*".join(re.escape(p) for p in parts))
+
+
+def _h2_missing(req_src: str, art_body: str) -> list:
+    """产物缺哪些真源 H2：字面量按集合成员；含占位段的按**模式匹配 ≥1**。
+
+    返回**人可读**缺失项（含占位段的回显模板原样，便于定位）。
+    """
+    have = _norm_h2_set(art_body)
+    missing = []
+    for raw, head in _h2_requirements(req_src):
+        pat = _h2_pattern(head)
+        if pat is None:
+            if head not in have:
+                missing.append(head)
+        elif not any(pat.fullmatch(h) for h in have):
+            missing.append(raw)
+    return missing
 
 
 def _portfolio_required_segments(text: str) -> set:
@@ -1687,11 +1744,12 @@ def validate(career_dna_dir: str = "./career-dna"):
                     fs_prod_bad.append((fs_jd.name, fs_art.name, "落盘名未登记（无真源可对）"))
                     continue
                 try:
-                    fs_needed = _norm_h2_set(fs_ref.read_text(encoding="utf-8"))
-                    fs_have = _norm_h2_set(fs_art.read_text(encoding="utf-8"))
+                    fs_miss = _h2_missing(
+                        fs_ref.read_text(encoding="utf-8"),
+                        fs_art.read_text(encoding="utf-8"),
+                    )
                 except Exception:
                     continue
-                fs_miss = sorted(fs_needed - fs_have)
                 if fs_miss:
                     fs_prod_bad.append((
                         fs_jd.name, fs_art.name,

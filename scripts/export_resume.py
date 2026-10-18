@@ -254,12 +254,25 @@ def parse_md(text: str):
         elif line.startswith("> "):
             elements.append(("quote", line[2:].strip()))
         else:
-            elements.append(("body", line))
+            _raw = lines[i]
+            _ind = len(_raw) - len(_raw.lstrip(" "))
+            elements.append(("body2" if _ind >= 2 else "body", line))
         i += 1
     return elements
 
 
 # 简历 profile 数据构建（原 build_data；v2.23.0 起改名以支持 profile 分派，函数体零改动）
+
+def _emw(s: str) -> float:
+    """带 md 标记的文本 → **em 宽度估算**（CJK/全角 = 1em；ASCII ≈ 0.55em）。
+
+    ⚠️ 必须**先去标记**（`**` / `==`）再量 —— 否则 `==技能==` 会被算成 7 个字符，悬挂列错位。
+    用途：悬挂缩进 / 二级缩进的缩进量（与字号相乘即得 pt；HTML 端直接用 em）。
+    """
+    s = re.sub(r"[*=`]", "", s)
+    return sum(1.0 if ord(c) > 0x2000 else 0.55 for c in s)
+
+
 def build_data_resume(md_text: str, photo_path: str = "") -> dict:
     elements = parse_md(md_text)
     data = {"姓名": "", "意向": "", "信息": [], "节": [], "证件照": photo_path or ""}
@@ -281,26 +294,51 @@ def build_data_resume(md_text: str, photo_path: str = "") -> dict:
 
     # sections
     cur = None
-    for kind, line in elements:
+    # 预扫：段落 A 若**紧接 ≥1 个 body2** ⇒ A 为「悬挂父行」（标签 = A 首个 `：` 之前 ⇒ 折算 em）
+    _hang_idx, _hang_em = {}, 0.0
+    for _i, (_k, _v) in enumerate(elements):
+        if _k == "body" and _i + 1 < len(elements) and elements[_i + 1][0] == "body2":
+            _m = re.match(r"^([^：\s]{1,10})：", _v)
+            if _m:
+                _hang_idx[_i] = _emw(_m.group(1)) + 1.0
+    for _idx, (kind, line) in enumerate(elements):
         if kind == "heading":
+            _hang_em = 0.0
             cur = {"标题": _fmt(line), "段落": [], "条目": []}
             data["节"].append(cur)
+        elif kind == "body" and _idx in _hang_idx:
+            _hang_em = _hang_idx[_idx]
+            _k10 = int(round(_hang_em * 10))
+            if cur:
+                cur["段落"].append(
+                    f'<div class="hang n{_k10}" style="padding-left:{_hang_em}em;text-indent:-{_hang_em}em">'
+                    + _fmt(line) + "</div>")
         elif kind == "meta":
             if cur:
-                cur["条目"].append({"meta": _fmt(line), "行": []})
+                cur["条目"].append({"meta": _fmt(line), "行": [], "注": []})
         elif kind == "bullet":
             if cur:
                 if cur["条目"]:
                     cur["条目"][-1]["行"].append(_fmt(line))
                 else:
                     cur["段落"].append(_fmt(line))
+        elif kind == "body2":
+            # 二级行：无 bullet 的缩进块；若本节是「悬挂块」⇒ 缩进到悬挂列
+            if cur:
+                _k10 = int(round(_hang_em * 10))
+                _t = (f'<div class="sub n{_k10}" style="padding-left:{_hang_em}em">'
+                      if _hang_em else '<div class="sub">') + _fmt(line) + "</div>"
+                if cur["条目"]:
+                    cur["条目"][-1]["注"].append(_fmt(line))
+                else:
+                    cur["段落"].append(_t)
         elif kind == "body":
+            # v2.27.0：**裸行 = 当前条目的「缩进注记」**（无 bullet，仅缩进 + 粗体标签）
+            # 取代 F47② 的「裸行并入 bullet 行」—— 那一版会把注记当 bullet 渲染，层次出不来。
+            # ⚠️ 仍写进「注」而非另开列表 ⇒ **保序**（模板引擎无 `{{#if}}`）。
             if cur:
                 if cur["条目"]:
-                    # F47 ②（v2.24.0）：**含 meta 的节，正文归入当前条目** —— 否则落入「节段落」，
-                    # 而模板先渲段落、再渲条目 ⇒ 正文被**上提到该节全部条目之前**
-                    # （公司简介跑到所有公司标题前面 = 典型场景）。不丢内容、不报错，只在渲染后看图才发现。
-                    cur["条目"][-1]["行"].append(_fmt(line))
+                    cur["条目"][-1]["注"].append(_fmt(line))
                 else:
                     cur["段落"].append(_fmt(line))
     return data
@@ -481,14 +519,20 @@ def _pf_appendix_html(items) -> str:
     return "\n".join(out)
 
 
-def _pf_toc_html(cases) -> str:
-    """目录块（刀 B）：案例数 ≥ 2 才渲染；HTML 端**不编造页码**（页码列留格式位）。"""
+def _pf_toc_html(cases, appendix=()) -> str:
+    """目录块（刀 B · v2.28.0 改）：案例数 ≥ 2 才渲染；HTML 端**不编造页码**（页码列留格式位）。
+
+    v2.28.0（owner 拍板）：**附录进目录** —— 单独分组（行加 `.apx`）· 样式弱一档。
+    ⚠️ **计数与呈现分离**：附录**仍不计案例数**（见 references/portfolio_outputs.md §7）。"""
     if len(cases) < 2:
         return ""
     rows = []
     for c in cases:
         title = re.sub(r"^案例\s*\d+\s*[:：]\s*", "", c["标题"])
         rows.append(f'<div class="toc-row"><span class="tx">{title}</span>'
+                    f'<span class="dots"></span><span class="pg">·</span></div>')
+    for a in appendix:                     # v2.28.0：附录进目录（保留「附录：」前缀以便区分）
+        rows.append(f'<div class="toc-row apx"><span class="tx">{a["标题"]}</span>'
                     f'<span class="dots"></span><span class="pg">·</span></div>')
     return ('<div class="toc"><div class="toc-title">目录</div>'
             + "".join(rows) + "</div>")
@@ -720,7 +764,7 @@ def build_data_portfolio(md_text: str, photo_path: str = "", css: dict = None) -
         # F35（v2.24.0 · L2 语义剥离）：`口径` 徽章**不再输出**（原为「口径：{值}」）。
         #   值仍由 _pf_split_facts 返回（_kou）以备调试 / 核查，**不进任何输出产物**。
         c["徽章"].extend({"文本": t, "cls": " plain"} for t in c["标签"])
-    data["目录块"] = _pf_toc_html(data["案例"])
+    data["目录块"] = _pf_toc_html(data["案例"], data["附录"])   # v2.28.0：附录进目录
     data["页脚块"] = _pf_footer_html(css, data["标题"])
     # ---- 刀 D：页眉块 / 水印块 ----
     # ⚠️ 披露 fail-safe：待渲染的 md 里残留内部档标记 ⇒ 说明未过 L3 剥离
@@ -985,6 +1029,7 @@ def _portfolio_metrics(cv, cv_px) -> dict:
         # ---- 刀 D 新增（封面居中 / 间距）----
         "cover_rule_gap":  cv_px("--cover-rule-gap", 18),                 # 封面标题 → 装饰线
         "cover_top_ratio": _ratio(cv("--cover-top-ratio", "0.45"), 0.45),  # 留白分配比（0.5=居中）
+        "cover_toc_gap":   _ratio(cv("--cover-toc-gap-ratio", "0.34"), 0.34),  # v2.28.0：封面→目录 间距比（合并同页）
     }
 
 
@@ -1541,8 +1586,8 @@ def html_to_pdf(html_text: str, out_path: Path, profile: str = "resume", _total:
             ⚠️ 不复用简历 .header 的形状背景 —— 那是**页面级 onPage 绘制**（页的属性、非块的属性），
                硬复用会把整页形状画进每个案例。视觉同源靠**配色/变量同源**保证。
             标题段样式名固定 "pf_ct" —— 目录回填（afterFlowable）据此识别。
-            ⚠️ F40：附录（ap=True）标题改用样式名 **"pf_at"** ⇒ **不进目录**
-               （目录只收 "pf_ct"）；字号降为小节级、色转正文色 ⇒ 视觉弱化。
+            ⚠️ F40 + v2.28.0：附录（ap=True）标题用样式名 **"pf_at"** ⇒ 目录里作 **1 级**条目
+               （单独分组 · 弱一档：正文色 + 缩进 + 小 1pt）；字号降为小节级、色转正文色 ⇒ 视觉弱化。
             """
             blob = []
             t = _s(node, "case-title")
@@ -1642,6 +1687,12 @@ def html_to_pdf(html_text: str, out_path: Path, profile: str = "resume", _total:
                     flows.extend(_blocks(c.children))
             return flows
 
+        # v2.28.0：**封面与目录合并同页**（owner 拍板）—— DOM 里是否存在「目录」节点
+        #         决定封面后是否插分页符（存在 ⇒ 合并 ⇒ 不插）。目录恒在封面之后。
+        _has_toc = any("toc" in c.cls() for c in container.children)
+        _cov_broke = False          # 封面后是否真的插了分页符
+        _cov_avail = 0.0            # 封面页可用高（供目录侧算间距）
+
         for child in container.children:
             cls = child.cls()
             if "cover" in cls:
@@ -1711,19 +1762,30 @@ def html_to_pdf(html_text: str, out_path: Path, profile: str = "resume", _total:
                       file=sys.stderr)
                 story.append(Spacer(1, _cov_pad))
                 story.extend(_cover_items())                 # 重建后渲染
-                if cover_page == "always":
+                _cov_avail = _cov_h
+                # v2.28.0：紧随其后有「目录」⇒ **合并同页**，不插分页符
+                if cover_page == "always" and not _has_toc:
                     # 封面独立成页 ⇒ 页脚回调天然干净：第 1 页 = 封面（不画），其后 = 正文（画）
                     story.append(PageBreak())
+                    _cov_broke = True
             elif "toc" in cls:
                 # 目录页（案例数 ≥ 2 时「目录块」才非空 ⇒ 才会出现该节点）
+                # v2.28.0：与封面**合并同页**时，先补「封面 → 目录」垂直间距（可用高 × 该比例）
+                if not _cov_broke and _cov_avail > 0:
+                    story.append(Spacer(1, _cov_avail * pf["cover_toc_gap"]))
                 from reportlab.platypus.tableofcontents import TableOfContents
                 story.append(Paragraph("目录",
                                        _pf_style("pf_toc_t", s_head, pf["case"],
                                                  textColor=accent)))
                 story.append(Spacer(1, heading_sa + 2))
                 story.append(TableOfContents(
-                    levelStyles=[_pf_style("pf_toc0", s_body, pf["body"])],
-                    dotsMinLevel=0))    # dotsMinLevel=0 ⇒ 0 级（案例级）也带点线引导
+                    levelStyles=[
+                        _pf_style("pf_toc0", s_body, pf["body"]),
+                        # v2.28.0：1 级 = 附录（正文色 + 缩进 + 小 1pt）⇒ 与案例一眼可分
+                        _pf_style("pf_toc1", s_body, max(pf["body"] - 1, 6),
+                                  textColor=text_c, leftIndent=14),
+                    ],
+                    dotsMinLevel=0))    # dotsMinLevel=0 ⇒ 0/1 级均带点线引导
                 toc_needed = True
                 story.append(PageBreak())
             elif child.tag == "section" and "case" in cls:
@@ -1835,7 +1897,26 @@ def html_to_pdf(html_text: str, out_path: Path, profile: str = "resume", _total:
                 first_entry = True
                 for sub in child.children:
                     if sub.tag == "p":
-                        style_p = ParagraphStyle("p_indent", parent=s_body, leftIndent=body_indent)
+                        # v2.27.0：p 内若含 div.hang / div.sub ⇒ 悬挂缩进 / 二级缩进
+                        _hang = _sub = 0.0
+                        for _c in sub.children:
+                            if _c.tag == "div":
+                                _cls = _c.cls()
+                                for _cl in _cls:
+                                    if _cl.startswith("n") and _cl[1:].isdigit():
+                                        if "hang" in _cls:
+                                            _hang = int(_cl[1:]) / 10.0
+                                        elif "sub" in _cls:
+                                            _sub = int(_cl[1:]) / 10.0
+                        if _hang:
+                            style_p = ParagraphStyle("p_hang", parent=s_body,
+                                                     leftIndent=body_indent + _hang * body_size,
+                                                     firstLineIndent=-_hang * body_size)
+                        elif _sub:
+                            style_p = ParagraphStyle("p_sub", parent=s_body,
+                                                     leftIndent=body_indent + _sub * body_size)
+                        else:
+                            style_p = ParagraphStyle("p_indent", parent=s_body, leftIndent=body_indent)
                         story.append(Paragraph(_node_markup(sub), style_p))
                     elif sub.tag == "div" and "entry" in sub.cls():
                         if not first_entry:
@@ -1845,6 +1926,10 @@ def html_to_pdf(html_text: str, out_path: Path, profile: str = "resume", _total:
                         if meta:
                             style_meta = ParagraphStyle("meta_indent", parent=s_meta, leftIndent=body_indent)
                             story.append(Paragraph(_node_markup(meta), style_meta))
+                        for note in sub.children:
+                            if note.tag == "div" and "entry-note" in note.cls():
+                                story.append(Paragraph(_node_markup(note),
+                                             ParagraphStyle("note_indent", parent=s_body, leftIndent=body_indent)))
                         ul = sub.find_first("ul")
                         if ul:
                             for li in ul.children:
@@ -1867,8 +1952,12 @@ def html_to_pdf(html_text: str, out_path: Path, profile: str = "resume", _total:
                     _collect_toc_titles(sub, out)
             return
         if isinstance(flowable, Paragraph):
-            if getattr(getattr(flowable, "style", None), "name", "") == "pf_ct":
-                out.append(flowable)
+            nm = getattr(getattr(flowable, "style", None), "name", "")
+            # v2.28.0：pf_ct = 案例（**0 级**）· pf_at = 附录（**1 级** ⇒ 目录里单独分组、样式弱一档）
+            if nm == "pf_ct":
+                out.append((0, flowable))
+            elif nm == "pf_at":
+                out.append((1, flowable))
             return
         for cell in (getattr(flowable, "_cellvalues", None) or ()):
             _collect_toc_titles(cell, out)
@@ -1882,8 +1971,8 @@ def html_to_pdf(html_text: str, out_path: Path, profile: str = "resume", _total:
             _collect_toc_titles(flowable, found)
             # 页码口径与页脚一致：封面独立成页时封面不计入 ⇒ 目录页码 = 物理页 − 1
             off = 1 if cover_page == "always" else 0
-            for p in found:
-                self.notify("TOCEntry", (0, p.getPlainText(), self.page - off))
+            for lvl, p in found:      # v2.28.0：级别由收集侧决定（0 = 案例 / 1 = 附录）
+                self.notify("TOCEntry", (lvl, p.getPlainText(), self.page - off))
 
     doc_kw = dict(pagesize=(A4 if page_height is None else (A4[0], float(page_height))),
                   topMargin=mt * mm, bottomMargin=mt * mm,
@@ -2188,11 +2277,12 @@ def html_to_docx(html_text: str, out_path: Path, profile: str = "resume"):
             t = _ds(hero, "case-title")
             if t is not None:
                 p = doc.add_paragraph()
-                if not ap:
-                    try:
-                        p.style = doc.styles["Heading 1"]
-                    except KeyError:
-                        pass
+                # v2.28.0：案例挂 Heading 1 · 附录挂 Heading 2 ⇒ 目录域（\o "1-2"）两者都收，
+                #   且 Word 会把附录渲染成**缩进的二级条目**（= 「单独分组 · 弱一档」）。
+                try:
+                    p.style = doc.styles["Heading 2" if ap else "Heading 1"]
+                except KeyError:
+                    pass
                 p.paragraph_format.space_before = Pt(pf["case_space"])
                 p.paragraph_format.space_after = Pt(2)
                 _fill_rich(p, rich_text(t), size=pf["sub"] if ap else pf["case"],
@@ -2274,10 +2364,13 @@ def html_to_docx(html_text: str, out_path: Path, profile: str = "resume"):
                         _fill_rich(p, rich_text(st), size=pf["sub"], color=text_c)
                     _df_blocks(c.children)
 
+        # v2.28.0：封面 / 目录**合并同页** —— 与 PDF 同判据（存在目录 ⇒ 不另起一页）
+        _has_toc = any("toc" in n.cls() for n in body.children)
+
         for node in body.children:
             cls = node.cls()
             if "cover" in cls:
-                if cover_page == "always":
+                if cover_page == "always" and not _has_toc:
                     # 封面纵向居中（刀 D · F37）：DOCX 走节级 vAlign；封面独立成节时才安全
                     _center_section_vertically(doc.sections[0])
                 for d in node.children:
@@ -2304,7 +2397,7 @@ def html_to_docx(html_text: str, out_path: Path, profile: str = "resume"):
                 if header_mode != "none":
                     header_left, header_right = _pf_header_parts(
                         extract_css_vars(html_text), cover_meta_plain)
-                if cover_page == "always":
+                if cover_page == "always" and not _has_toc:
                     # DOCX 无「页级」回调 ⇒ 封面独立成页 = 独立分节（页码自正文节重排）
                     _docx_body_section(doc, ms, mt, footer_mode, footer_title,
                                        pf["small"], text_c, header_mode, header_left,
@@ -2313,7 +2406,7 @@ def html_to_docx(html_text: str, out_path: Path, profile: str = "resume"):
                 # 目录（刀 B）：插 Word TOC 域；Word/WPS 打开时自动更新（dirty=true）
                 p = doc.add_paragraph()
                 _fill_rich(p, [("目录", True)], size=pf["case"], color=accent)
-                _add_field(doc.add_paragraph(), 'TOC \\o "1-1" \\h \\z \\u',
+                _add_field(doc.add_paragraph(), 'TOC \\o "1-2" \\h \\z \\u',
                            placeholder="（右键 → 更新域，生成目录页码）",
                            font="微软雅黑", size=pf["small"], color=text_c)
                 doc.add_page_break()
@@ -2322,8 +2415,8 @@ def html_to_docx(html_text: str, out_path: Path, profile: str = "resume"):
             elif node.tag == "section" and "appendix" in cls:
                 # F40：附录区（置尾 · 不计案例数 · 不进目录域）
                 _df_case(node, ap=True)
-        if cover_page != "always":
-            # 封面未独立成节 ⇒ 页眉 / 页脚落在第 1 节（含封面 ⇒ 页码用 NUMPAGES）
+        if cover_page != "always" or _has_toc:
+            # 封面未独立成节（含 v2.28.0「封面 + 目录合并同页」）⇒ 页眉 / 页脚落在第 1 节
             if footer_mode != "none":
                 _docx_footer(doc.sections[0], footer_mode, footer_title, ms, pf["small"],
                              False, text_c)
@@ -2391,8 +2484,24 @@ def html_to_docx(html_text: str, out_path: Path, profile: str = "resume"):
                 first_entry = True
                 for sub in node.children:
                     if sub.tag == "p":
+                        _hang = _sub = 0.0
+                        for _c in sub.children:
+                            if _c.tag == "div":
+                                _cls = _c.cls()
+                                for _cl in _cls:
+                                    if _cl.startswith("n") and _cl[1:].isdigit():
+                                        if "hang" in _cls:
+                                            _hang = int(_cl[1:]) / 10.0
+                                        elif "sub" in _cls:
+                                            _sub = int(_cl[1:]) / 10.0
                         p = doc.add_paragraph()
-                        p.paragraph_format.left_indent = Pt(body_indent)
+                        if _hang:
+                            p.paragraph_format.left_indent = Pt(body_indent + _hang * body_size)
+                            p.paragraph_format.first_line_indent = Pt(-_hang * body_size)
+                        elif _sub:
+                            p.paragraph_format.left_indent = Pt(body_indent + _sub * body_size)
+                        else:
+                            p.paragraph_format.left_indent = Pt(body_indent)
                         _fill_rich(p, rich_text(sub), size=body_size, color=text_c)
                     elif sub.tag == "div" and "entry" in sub.cls():
                         if not first_entry:
@@ -2404,6 +2513,11 @@ def html_to_docx(html_text: str, out_path: Path, profile: str = "resume"):
                             p = doc.add_paragraph()
                             p.paragraph_format.left_indent = Pt(body_indent)
                             _fill_rich(p, rich_text(meta), size=body_size, color=accent)
+                        for note in sub.children:
+                            if note.tag == "div" and "entry-note" in note.cls():
+                                p = doc.add_paragraph()
+                                p.paragraph_format.left_indent = Pt(body_indent)
+                                _fill_rich(p, rich_text(note), size=body_size, color=text_c)
                         ul = sub.find_first("ul")
                         if ul:
                             for li in ul.children:
