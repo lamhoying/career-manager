@@ -20,14 +20,14 @@
      写了就会被替换，且未闭合的列表指令会吞掉其后内容直至收尾标签。
      故下方一律用全角括号示意：｛｛名称｝｝ 、｛｛#each 列表｝｝…｛｛/each｝｝
 
-  占位符清单（由 build_data_portfolio() 供给）
+  占位符清单（由 build_data_portfolio 供给）
     ｛｛标题｝｝                             合册主标题
     ｛｛#each 封面｝｝｛｛this｝｝｛｛/each｝｝    封面元信息行（逐行一个 div）
     ｛｛目录块｝｝                           预渲染的目录 div（案例数 < 2 ⇒ 空串）
     ｛｛页眉块｝｝                           预渲染的页眉 div（--header: none ⇒ 空串）
     ｛｛页脚块｝｝                           预渲染的页脚 div（--footer: none ⇒ 空串）
     ｛｛水印块｝｝                           预渲染的水印 div（--watermark: none ⇒ 空串）
-    ｛｛附录块｝｝                           预渲染的附录区（F40 · 空串 ⇒ 整块不出现 · 置尾 · 不进目录）
+    ｛｛附录块｝｝                           预渲染的附录区（空串 ⇒ 整块不出现 · 置尾 · 不进目录）
     ｛｛#each 案例｝｝ … ｛｛/each｝｝
         ｛｛标题｝｝                         案例标题（.case-title · PDF 目录项取自该段）
         ｛｛#each 徽章｝｝…｛｛/each｝｝        hero 内标签（｛｛文本｝｝ / ｛｛cls｝｝）
@@ -45,15 +45,15 @@
                  封面纵向居中改变量驱动（--cover-min-h / --cover-top-ratio / --cover-rule-gap）
 
   ⚠️ 维护钩子（改一处必改另一处）
-     1) :root 的「字号 / 间距」变量由渲染器 _portfolio_metrics() 读取（PDF 与 DOCX 共用同一处）
-        ⇒ 新增 / 改名任何版式变量，必须同步 scripts/export_resume.py::_portfolio_metrics()，
+     1) :root 的「字号 / 间距」变量由渲染器 _portfolio_metrics 读取（PDF 与 DOCX 共用同一处）
+        ⇒ 新增 / 改名任何版式变量，必须同步 scripts/export_resume.py::_portfolio_metrics，
           否则该变量 = 空声明（脚本静默回落默认值 ⇒ 改模板不生效）。
         颜色变量不经此处 —— 走 _shared/palette.css（唯一定义源）。
      2) 分页 / 页眉 / 页脚 / 水印开关由 html_to_pdf 与 html_to_docx 各自读取；
         取值域改动（always|same、none|page-number|page-x-of-y、none|auto|full、
         none|trace|draft）须同步两处渲染器。
         ⚠️ --watermark 的 DOCX 落点**未实现**（python-docx 无原生水印，须手写 VML）——
-           见待办 F39；当前 DOCX 出水印 = 静默忽略，不报错。
+           见待办 ；当前 DOCX 出水印 = 静默忽略，不报错。
         ⚠️ --header: full 需封面元信息含「联系」行；无该行 ⇒ 渲染器静默降级为 auto。
      3) 版式常量（刻意未变量化）：.hero 内边距、.badge 圆角与内边距、封面装饰线尺寸。
         这些数值在 CSS 与渲染器里各写一份；若确需调整，必须同时改两处，否则 = 空声明。
@@ -88,7 +88,7 @@
     --cover-toc-gap-ratio: 0.34;   /* 封面块 → 目录 的垂直间距比（v2.28.0 合并同页新增）；按 --cover-min-h 折算，PDF 同源读取 */
     /* ===== 分页 / 页眉 / 页脚 / 水印（刀 B + 刀 D）=====
        ⚠️ 本注释块内**禁止**出现「减号减号 + 变量名 + 冒号」的写法：
-          extract_css_vars() 用正则扫 :root，**不剥注释**
+          extract_css_vars 用正则扫 :root，**不剥注释**
           ⇒ 注释里那样写会被当成一条真声明读进去（伪声明）。
        取值域：page-x-of-y / page-number / none ｜ auto / full / none ｜ trace / draft / none */
     --cover-page: always;      /* always | same —— 封面是否独立成页（PDF 分页 / DOCX 分节） */
@@ -163,7 +163,7 @@
   .case-quote { margin: 8px 0; padding-left: 10px;
                 border-left: 3px solid var(--line); color: var(--text); }
 
-  /* ===== 附录区（F40：kind=doc 附加资料 · 置尾 · 不进目录 / 不计案例数）=====
+  /* ===== 附录区（：kind=doc 附加资料 · 置尾 · 不进目录 / 不计案例数）=====
      与案例块**同构**（.hero / .facts / .sub）⇒ 只弱化标题区：底色转中性块底、竖条转分隔线色、字号降一级。 */
   .appendix { margin-top: var(--case-space-before); }
   .appendix .hero { background: var(--block-bg); border-left-color: var(--line); }
@@ -183,10 +183,10 @@
   .sub > p { margin: 6px 0 6px var(--body-indent); }
   .sub > ul { margin-left: var(--bullet-indent); list-style: disc; }
   .sub > ul li { margin-bottom: 2px; }
-  /* ===== 行内强调（v2.24.0 · F57）：md 的 ==文本== → 加粗 + 主题色 =====
+  /* ===== 行内强调（v2.24.0）：md 的 ==文本== → 加粗 + 主题色 =====
      ⚠️ 唯一色源 = --accent（**不新增色板**，守住「配色唯一定义源」）；
      ⚠️ **不用斜体** —— 本项目 CJK 字体（NotoSansSC）无 italic 变体，reportlab 会静默忽略 <i>
-        （2026-09-26 实测：`<i>斜体中文</i>` 渲染后 italic=False）⇒ 「强调」只能靠**加粗 + 色**。
+        （ 实测：`<i>斜体中文</i>` 渲染后 italic=False）⇒ 「强调」只能靠**加粗 + 色**。
      用量约束：每页 ≤ 3 处（过多即噪声；owner 明确要求「不要过多」）。 */
   .em-accent { color: var(--accent); font-weight: 700; }
   .sub > p.quote { padding-left: 10px; border-left: 3px solid var(--line); }
@@ -274,7 +274,7 @@
   </section>
   {{/each}}
 
-  <!-- ===== 附录区（F40：kind=doc 附加资料 · 置尾 · 不进目录 / 不计案例数；空串 ⇒ 整块不出现） ===== -->
+  <!-- ===== 附录区（：kind=doc 附加资料 · 置尾 · 不进目录 / 不计案例数；空串 ⇒ 整块不出现） ===== -->
   {{附录块}}
 
   <!-- ===== 页脚（HTML 观感占位；PDF/DOCX 由渲染器绘制 · --footer） ===== -->

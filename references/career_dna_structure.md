@@ -457,7 +457,7 @@ Online Profile 是 Career DNA 的派生资产（Derived Asset），不直接维�
 - 写入责任：**S1 = `mode_a_build` Step 12.3**（生成）· **S2 = `mode_b_update` Step 4.5**（刷新 / 标 `stale`）
 - 消费责任：**S3 = `mode_d` §Portfolio Selection**（选取）· **S4/S5 = `mode_d` Step 9.6**（合册）
 - 闸门：`validate_career_dna.py` P2 **`portfolio-output-schema`**（5 项）
-- ⚠️ **不入 manifest**（不是 `career-dna/` 根目录文件，无需四件套登记）；**但必须受闸门约束**（这是原 F32 的核心缺口）
+- ⚠️ **不入 manifest**（不是 `career-dna/` 根目录文件，无需四件套登记）；**但必须受闸门约束**（这是原 的核心缺口）
 
 ---
 
@@ -565,9 +565,9 @@ knowledge/
 
 > **模板真源**：`assets/templates/knowledge/role_snapshot.md` —— 本段与模板保持同步，生成 / 更新前以模板为准。
 > 全篇共 **8 段**（下方全列）。此前本 spec 只列 `Hiring Intelligence` + `Trend Intelligence` 两段，**漏了 6 段** ——
-> 这是 2026-07-20 ~ 09-02 期间 7 个旧实例缺段的直接上游原因（生成器读 spec 就会产出漂移实例）。
+> 这是  期间 7 个旧实例缺段的直接上游原因（生成器读 spec 就会产出漂移实例）。
 > `Track` 为**受控取值**（赛道文件名 或 `none`），解释写 `Track Note` —— 见 `references/mode_d_job_application.md` Step 10 A。
-> `Observed Companies` 同为**受控格式**（公司名，` · `/`+` 分隔，说明写 `（）` 括注，未标注写 `unknown`）——
+> `Observed Companies` 同为**受控格式**（公司名，` · `/`+` 分隔，说明写 `` 括注，未标注写 `unknown`）——
 > 其解析出的**不同公司数**是「新赛道发现」判据的唯一输入（见 `references/mode_d_job_application.md` §Step 10 C 第 7 条），
 > 由 P2 `role-snapshot-schema` 第 ④ 项校验。
 
@@ -578,7 +578,7 @@ knowledge/
 - **Track Note（赛道说明）**: [解释：子域限定 / 为何 none / 交叉参考]
 - **Aliases（别名）**: [该岗位的其他常见名称]
 - **Observed JD Count（已观察JD数）**: 0
-- **Observed Companies（已观察公司）**: [受控格式 —— 公司名（` · ` 分隔）；说明写 `（）` 括注，不计入计数；未标注公司写 `unknown`]
+- **Observed Companies（已观察公司）**: [受控格式 —— 公司名（` · ` 分隔）；说明写 `` 括注，不计入计数；未标注公司写 `unknown`]
 - **Recent JD Sources（近期JD来源）**: [YYYY-MM Company Role]
 - **Core Skills（核心技能）**: [核心技能列表]
 - **Soft Skills（软技能）**: [软技能列表]

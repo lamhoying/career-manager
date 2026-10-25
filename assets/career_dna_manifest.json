@@ -140,5 +140,127 @@
     ".DS_Store",
     ".gitkeep",
     "Thumbs.db"
+  ],
+  "gate_checks": [
+    {
+      "code": "orphan",
+      "level": "P0",
+      "desc": "career-dna 根目录出现未登记文件"
+    },
+    {
+      "code": "unregistered-dir",
+      "level": "P0",
+      "desc": "career-dna 根目录出现未登记目录"
+    },
+    {
+      "code": "duplicate-content",
+      "level": "P0",
+      "desc": "跨文件长段落重复"
+    },
+    {
+      "code": "missing",
+      "level": "P1",
+      "desc": "manifest 声明但实际缺失"
+    },
+    {
+      "code": "identity-layer-schema",
+      "level": "P1",
+      "desc": "07 身份层结构"
+    },
+    {
+      "code": "undeclared-part",
+      "level": "P2",
+      "desc": "01 报告出现未声明 Part"
+    },
+    {
+      "code": "unresolved-anchor",
+      "level": "P2",
+      "desc": "NN_ 锚点引用悬空"
+    },
+    {
+      "code": "no-timestamp",
+      "level": "P2",
+      "desc": "缺时间戳"
+    },
+    {
+      "code": "stale-rule-ref",
+      "level": "P2",
+      "desc": "引用已废弃规则编号"
+    },
+    {
+      "code": "track-constraint-coverage",
+      "level": "P2",
+      "desc": "04b 每 TC 的赛道条目数 = 实有赛道数"
+    },
+    {
+      "code": "track-confidence-consistency",
+      "level": "P2",
+      "desc": "赛道置信度分解式自洽 + README 两表一致（v2.32.0）"
+    },
+    {
+      "code": "track-strategy-schema",
+      "level": "P2",
+      "desc": "Track Strategy 段 + S1–S4 齐全（v2.32.0）"
+    },
+    {
+      "code": "ghost-file-ref",
+      "level": "P2",
+      "desc": "幽灵文件引用（4 域扫描 + 域分级解析基准 · v2.33.0）"
+    },
+    {
+      "code": "derived-part-drift",
+      "level": "P2",
+      "desc": "派生区与真源漂移"
+    },
+    {
+      "code": "portfolio-output-schema",
+      "level": "P2",
+      "desc": "portfolio-outputs 结构契约"
+    },
+    {
+      "code": "portfolio-outputs",
+      "level": "P1",
+      "desc": "portfolio-outputs 目录"
+    },
+    {
+      "code": "role-snapshot-schema",
+      "level": "P2",
+      "desc": "role_snapshots 契约"
+    },
+    {
+      "code": "skill-snapshot-schema",
+      "level": "P2",
+      "desc": "skill_snapshots 契约"
+    },
+    {
+      "code": "format-source-consistency",
+      "level": "P2",
+      "desc": "落盘名 / 版式源一致"
+    },
+    {
+      "code": "weight-sum",
+      "level": "P2",
+      "desc": "manifest 权重合计 = 100"
+    },
+    {
+      "code": "write-target-drift",
+      "level": "P2",
+      "desc": "写入落点指向不存在的章节"
+    },
+    {
+      "code": "pdf-glyph-coverage",
+      "level": "P2",
+      "desc": "PDF 字形覆盖"
+    },
+    {
+      "code": "pdf-glyph-degraded",
+      "level": "P2",
+      "desc": "PDF 字形降级"
+    },
+    {
+      "code": "gate-check-registry",
+      "level": "P2",
+      "desc": "登记项 ↔ 实现一致性（v2.32.0 元校验）"
+    }
   ]
 }

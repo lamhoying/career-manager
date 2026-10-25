@@ -5,10 +5,16 @@
 统一状态定义。所有 Mode E 操作共用。
 
 流转规则：
-- 仅允许正向流转（Applied → Viewed → Contacted → ...）
+- 仅允许正向流转（Analyzed → Planned → Applied → Viewed → Contacted → ...）
+- **`Analyzed` 不是「已投」也不是「已备料」** —— 它只表示「分析过，未决定」
 - Rejected 和 Withdrawn 为终态，不可再变更
 - 用户手动触发状态更新，不自动推测
 -->
+
+## Stage -1: Analyzed（已分析 · 未决定）
+已完成 JD 分析、留有 `01_jd_match_report.md`，但**尚未决定是否投递**、也**未生成材料**（对应 `resume-outputs/{JD}/` 仅 1 个文件）。
+与 `Stage 0` 的区别：**`Planned` = 已备料（有 Pack）**；**`Analyzed` = 只看过（无 Pack）**。
+决定不投则**停留在本档**（终态之一，不产生 `Rejected`）。
 
 ## Stage 0: Planned（待投）
 想投但尚未投递。已评估过匹配度但暂未发送简历或打招呼。
@@ -26,7 +32,7 @@ HR 已查看简历或消息。仅 Boss、猎聘等可感知"已读"的平台适�
 HR 面试进行中或已通过。
 
 ## Stage 5: Hiring Manager（业务面试）
-业务部门 /  Hiring Manager 面试。
+业务部门 / Hiring Manager 面试。
 
 ## Stage 6: Final Interview（终面）
 终面 / Offer Review 阶段。
@@ -43,9 +49,11 @@ HR 面试进行中或已通过。
 ## 状态流转图
 
 ```
-Planned → Applied → Viewed → Contacted → HR Interview → Hiring Manager → Final Interview → Offer
-                       ↘ Contacted → Rejected
-                       ↘ 任意阶段 → Withdrawn
+Analyzed → Planned → Applied → Viewed → Contacted → HR Interview → Hiring Manager → Final Interview → Offer
+ ↘ 任意阶段 → Rejected
+ ↘ 任意阶段 → Withdrawn
+
+Analyzed 只在「决定要投」时 → Planned（此时才生成 Pack）；决定不投则停留在 Analyzed。
 ```
 
 ## 建档规则

@@ -11,7 +11,7 @@ v1.4: Common Hiring Intent / Talent Persona / Typical Evidence / Career Backgrou
 - **Aliases（别名）**: [该岗位的其他常见名称]
 - **Observed JD Count（已观察JD数）**: 0
   <!-- 数字开头即可计数；口径说明（如「同一公司同批次」）写括注，不影响计数。本字段**不是**新赛道判据（判据用公司数）。 -->
-- **Observed Companies（已观察公司）**: [**受控格式 v2.17.0** —— 只放**公司名**，多家用 ` · ` 或 `+` 分隔；每家的说明写在紧跟其后的 `（）` 括注内（证码 / 城市 / 隶属 / 规模），**括注内容不计入公司计数**、括注内提及的关联方（母公司 / 客户）**不算独立观察**；JD 未标注公司 → 写受控值 `unknown`（**不计入**），推断理由写括注。**禁止**把说明写成 ` · ` 分隔的平铺串（会被解析成另一家公司 → 误触发「新赛道发现」）。本字段解析出的**不同公司数**＝「新赛道发现」判据的唯一输入（`references/mode_d_job_application.md` §Step 10 C 第 7 条），并由 P2 `role-snapshot-schema` 第 ④ 项校验 —— **取值与说明分离**，同 `Track` / `Track Note` 的思路]
+- **Observed Companies（已观察公司）**: [**受控格式 v2.17.0** —— 只放**公司名**，多家用 ` · ` 或 `+` 分隔；每家的说明写在紧跟其后的 `` 括注内（证码 / 城市 / 隶属 / 规模），**括注内容不计入公司计数**、括注内提及的关联方（母公司 / 客户）**不算独立观察**；JD 未标注公司 → 写受控值 `unknown`（**不计入**），推断理由写括注。**禁止**把说明写成 ` · ` 分隔的平铺串（会被解析成另一家公司 → 误触发「新赛道发现」）。本字段解析出的**不同公司数**＝「新赛道发现」判据的唯一输入（`references/mode_d_job_application.md` §Step 10 C 第 7 条），并由 P2 `role-snapshot-schema` 第 ④ 项校验 —— **取值与说明分离**，同 `Track` / `Track Note` 的思路]
 - **Recent JD Sources（近期JD来源）**: [最近 JD 来源，格式 YYYY-MM Company Role]
 - **Core Skills（核心技能）**: [核心技能列表]
 - **Soft Skills（软技能）**: [软技能列表]

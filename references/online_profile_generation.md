@@ -2,9 +2,9 @@
 
 > Aligns to: v2.25.0
 <!-- Pipeline 索引（**非定义** —— 唯一定义见下文 §「Online Profile Generation Pipeline」）
-   Step 0 / 0.3 / 0.5 / 0.7 / 1 / 2 / 3 / 4 / 5 / 6
-   推理链约束：Identity → Capability → Evidence，不可逆序（细则见 §Rule R07）。
-   本索引只列步骤号，不重复各步的输入/输出 —— 避免同一份 Pipeline 在本文件内出现两份定义。
+ Step 0 / 0.3 / 0.5 / 0.7 / 1 / 2 / 3 / 4 / 5 / 6
+ 推理链约束：Identity → Capability → Evidence，不可逆序（细则见 §Rule R07）。
+ 本索引只列步骤号，不重复各步的输入/输出 —— 避免同一份 Pipeline 在本文件内出现两份定义。
 -->
 
 ---
@@ -22,19 +22,19 @@
 
 1. 读取 `07_career_identity.md`
 2. 提取：
-   - Layer 1 Professional Identity → 一句话身份
-   - Layer 2 Career Positioning → Primary Positioning
-   - Layer 5 Non-Positioning Statement → 禁止表达列表（**剔除 Layer 2 已收录的方向**）
+ - Layer 1 Professional Identity → 一句话身份
+ - Layer 2 Career Positioning → Primary Positioning
+ - Layer 5 Non-Positioning Statement → 禁止表达列表（**剔除 Layer 2 已收录的方向**）
 3. 确定：
 
 ```yaml
 Identity Resolution:
-  职业身份: [07 Layer 2 Primary Positioning]
-  禁止表达: [07 Layer 5 中未被 Layer 2 收录的条目]
-  身份锚点来源: 07，非工作经历
+ 职业身份: [07 Layer 2 Primary Positioning]
+ 禁止表达: [07 Layer 5 中未被 Layer 2 收录的条目]
+ 身份锚点来源: 07，非工作经历
 ```
 
-> **Fail-safe（v2.21.0 · F18）**：若 `07` Layer 2 **缺失、为空、或含 `[待声明]`** ⇒
+> **Fail-safe（v2.21.0）**：若 `07` Layer 2 **缺失、为空、或含 `[待声明]`** ⇒
 > **停下询问用户**，**禁止从 `03` / `04` / `04b` 或 JD 代填身份锚点**（违 `R01` / `R02`），禁止静默降级。
 
 ### 硬约束
@@ -86,9 +86,9 @@ Identity Resolution:
 
 - **能力名词的层级梯度**：早期经历用「标准化 / 沉淀 / 执行」类措辞，后期经历用「设计 / 统筹 / 判断」类措辞
 - **动词按段分层**（R04 的动词升级按**段**给不同档位，而非全篇一律）：
-  - 执行 / 标准化层 → `建立` · `制定` · `沉淀`
-  - 建体系层 → `从零设计` · `推动` · `洞察`
-  - 管理 / 决策层 → `主导设计` · `统筹` · `协调` · `判断`
+ - 执行 / 标准化层 → `建立` · `制定` · `沉淀`
+ - 建体系层 → `从零设计` · `推动` · `洞察`
+ - 管理 / 决策层 → `主导设计` · `统筹` · `协调` · `判断`
 - **TC Tier 标注**（`04b` 的 Tier A/B/C 字段化展示）
 - **段落顺序按能力降序**（最强证据在前）—— 与「成长升序」冲突时**取能力降序**
 
@@ -108,6 +108,11 @@ Identity Resolution:
 
 > **与 R04 的关系**：R04 管「**用不用强动词**」，R02b 管「**各段用哪一档动词**」—— 后者是前者的**分层细化**，两者不冲突。
 
+> **校验定位（`` · 拍板 ㊀）：本规则是「语义规则」，不设闸门项。**
+> 理由 —— 「动词是否按段分层」无法从文本机械判定（同段内 `建立`/`制定` 占比、段间动词档位是否倒挂，
+> 均需理解段落语义）。⇒ **生成时施加 + 人工复核**，与 ``（行首标点）「机制级不可行 ⇒ 转长期观察」同体例。
+> ⚠️ **不设闸门 ≠ 无约束**：`mode_d` Step 9.1 / Mode B 的复核清单仍须逐条对照本节三个档位。
+
 ### Rule R03 — Role Interpretation（原 R04 + R08 合并 v2.7）
 
 **保留真实岗位名称作为事实。增加角色解释层，不修改事实。**
@@ -117,10 +122,10 @@ Identity Resolution:
 ```yaml
 原始岗位: [合同上的岗位名称]
 Role Interpretation:
-  该岗位主要承担:
-    - [能力维度 1]
-    - [能力维度 2]
-    - [能力维度 3]
+ 该岗位主要承担:
+ - [能力维度 1]
+ - [能力维度 2]
+ - [能力维度 3]
 ```
 
 规则：真实岗位始终保留（事实不可修改）；Role Interpretation 优先使用 Capability Identity 关键词。
@@ -178,20 +183,20 @@ Role Interpretation:
 
 ```
 07 Career Identity
-    ↓
+ ↓
 职业身份（Identity Resolution）
 
-    ↓
+ ↓
 07 Layer4 + 04b
-    ↓
+ ↓
 核心能力体系（Capability Resolution）
 
-    ↓
+ ↓
 03 Projects + 02 Timeline
-    ↓
+ ↓
 经历证据（Evidence Retrieval）
 
-    ↓
+ ↓
 Profile 生成
 ```
 
@@ -225,13 +230,13 @@ Pipeline 中每个阶段的输出是下一阶段的输入。禁止跳过 Capabil
 
 ```yaml
 Capability Resolution:
-  Core Value Proposition:
-    - [Capability Identity 1]
-    - [Capability Identity 2]
-    - [Capability Identity 3]
-  Tier B Support:
-    - [Capability Identity 4]
-    - [Capability Identity 6]
+ Core Value Proposition:
+ - [Capability Identity 1]
+ - [Capability Identity 2]
+ - [Capability Identity 3]
+ Tier B Support:
+ - [Capability Identity 4]
+ - [Capability Identity 6]
 ```
 
 此输出决定：Personal Advantage 写什么 / Experience 保留什么 / Project 排序什么。
@@ -331,11 +336,58 @@ Capability Resolution:
 
 ---
 
-## Project Experience Generation（项目经历生成规则）
+## Project Experience Generation（项目经历生成规则 v2.30.0）
 
-### Capability Showcase 规则
+> **规则唯一定义源 = 本节**。`assets/templates/career-dna/11_online_profile.md` 同段**只留字段约束 + 指针**，禁复制规则（否则成第二定义源）。
+> **为什么升格**（``）：升格前本节仅 **1 句 / 242 字符**，实际约束（选案三因子 / 来源闸 / 去重）只写在模板**注释**里；且「去重」只覆盖**行动**、不覆盖**成果** ⇒ 实测 `11` 项目经历 19 行中 **6 行**与工作经历相似度 ≥0.60（**5 条是成果行**，3 条近乎逐字）。
 
-固定 Top 3 案例。每个标注展示 TC。选案确保 Tier A 全部覆盖。
+### 1. 选案（四道筛 · 按序执行）
+
+| # | 筛 | 判据 | 不满足时 |
+|:--:|---|---|---|
+| **S1** | **TC 门槛** | 只保留能证明 Step 3 所选 **Tier A TC** 的案例（证据源 = `03_projects.md`） | 不入选 |
+| **S2** | **来源闸** | 只取 `12_portfolio_candidates.md` 中 **Readiness ≥ 70% 且分级 ≥ C** 的候选 | 不入选 |
+| **S3** | **三因子排序** | `Track 覆盖数` ↓ → `Evidence Strength` ↓ → `可量化成果条数` ↓ | 取前 3 |
+| **S4** | **覆盖校验** | Top 3 合并后必须覆盖**全部 Tier A TC**；有遗漏 ⇒ 用「S3 淘汰但能补漏」者替换 `Track 覆盖` 最低者 | 替换后重校验 |
+
+**槽位 = 固定 3 个**（Boss「项目经历」字段上限）：**不足 3 个不凑数**（宁 2 不 3）；**多于 3 个必须砍**。
+
+### 2. 结构（每案例四段 · 顺序固定）
+
+1. **`背景与挑战`** —— 1–2 句；主语 = **项目 / 环境**，**不含「我」**；写「处境 + 约束 + 代价」
+2. **`技术实现`** —— 底座类型 + 关键机制 + 自研/低代码边界；**不写熟练度 / 年限**（那是技能标签职责）；**不写平台品牌名**（留面试口头）
+3. **`关键行动`** —— 2–4 条，**动词开头**，必须**项目独有**
+4. **`项目成果`** —— 1–3 条，**项目独有量化**或定性闭环；**无则整段省略**（不硬凑空话）
+
+### 3. 去重（v2.30.0 核心修订 · **覆盖到「成果」**）
+
+| 规则 | 内容 |
+|---|---|
+| **R1 行动去重** | 每条 `关键行动` ↔ 「工作经历 · 工作内容」逐条比对 ⇒ 重叠则**删除或改写为项目独有** |
+| **R2 成果去重**（**v2.30.0 新增**） | 每条 `项目成果` ↔ 「工作经历 · 工作业绩」逐条比对 ⇒ 重叠则**必须改写为项目独有指标**，**不得原样保留** |
+| **R3 同一数字只出现一次** | 公司级总量留「工作业绩」；项目级切片留「项目成果」。**同一数字两处出现 = 违规** |
+| **R4 单向去重** | 只从**项目经历侧**删 / 改写，**不动工作经历**（工作经历 = 全集；项目经历 = 切面） |
+
+> **判据（可机检·可选·用户侧，未随技能发布）**：去标点归一化后**逐行字符相似度 ≥ 0.60 即报**。脚本 `.workbuddy/scripts/_profile_dedup_check.py`；每次改 `11` 后必跑，**0 命中**为准。未配置该脚本时可人工核对跨节重复。
+
+### 4. 与作品集的分工（v2.30.0 新增 · 防「同一套内容两个载体」）
+
+| 维度 | 项目经历（本节） | 作品集（`mode_d` Step 9.6） |
+|---|---|---|
+| 来源 | `12` Ready 候选 | 同左 ＋ `portfolio-outputs/` 案例库 |
+| 选案目标 | **能力覆盖**（Tier A 全覆盖） | **JD 匹配**（当前 JD 最相关） |
+| 是否随 JD 变 | **不变**（跨 JD 稳定） | **每 JD 重选** |
+| 体量 | 3 案例 × 4 段（**字段级**） | ≤3 案例 / ≤12 页（**附件级**） |
+| 深度 | 项目级（≈6 行/案例） | 单案例 3–4 页（含图表 / 事实卡） |
+
+⇒ **项目经历 = 稳定的能力名片；作品集 = 按需的深度证据**。同一案例可在两处出现，但**呈现层不同**，且项目经历仍须守 R1–R4。
+
+### 5. 反例（生成时自检）
+
+- ❌ 把「工作业绩」三条原样搬进「项目成果」→ 违反 **R2 / R3**
+- ❌ 为凑 3 个案例，硬塞 Tier A 覆盖不到的案例 → 违反 **S4**
+- ❌ 在 `技术实现` 里写「熟练使用 X 三年」→ 那是技能标签职责
+- ❌ 项目成果写「提升了效率」而无量化 → 应**省略该段**，不写空话
 
 ---
 

@@ -47,7 +47,7 @@
 ### {{Company Full Name}} | {{Actual Job Title}} | {{MMM YYYY – MMM YYYY}}
 
 - {{Company one-liner + project context + reporting line}}
-<!-- F47 ② (v2.24.0): the company one-liner MUST be a `- ` bullet — a bare line is hoisted ABOVE every
+<!-- (v2.24.0): the company one-liner MUST be a `- ` bullet — a bare line is hoisted ABOVE every
      company heading in this section (the template renders paragraphs BEFORE entries). -->
 
 - **{{Capability-led subheader [TC00X][D0]}}**: {{description with metrics}}
@@ -68,7 +68,7 @@
      Necessity test: delete the sentence — does "Core Contribution" become unintelligible? If yes keep; if no delete. Length (ADVISORY, non-blocking): <= 3 rendered lines. -->
 - **Core Contribution**: {{angle-A clause}}; {{angle-B clause}}
 <!-- Single-bullet form: pick the angle(s) first (decision trade-offs / technical difficulty / cross-team blockers), then join clauses with "; ".
-     Angle names are NOT printed in the output — their binding force lives in THIS placeholder, so F55 regression protection still holds. -->
+     Angle names are NOT printed in the output — their binding force lives in THIS placeholder, so regression protection still holds. -->
 - **Outcome**: {{project-unique metrics, or qualitative closure / impact}}  (optional — OMIT if none)
 (total **2-3 bullets** = Context 1 + Contribution 1 + Outcome 0-1)
 <!-- Rule: pick the 2-3 most TC-relevant projects; capability-led narrative, not a log -->
@@ -77,7 +77,7 @@
      Iron rule 2 (Outcome gate): Outcome accepts ONLY (1) metrics NOT already in Work Experience, or (2) qualitative closure / impact.
          NEVER relocate Work Experience numbers here. If neither exists, OMIT the label (no filler — "never fabricate" red line).
      Iron rule 3 (layout): ALL items in this section MUST be `- ` bullets — a bare line is bucketed as a paragraph
-         and hoisted above every entry in the section (F47 ②). -->
+         and hoisted above every entry in the section . -->
 
 ## Education
 

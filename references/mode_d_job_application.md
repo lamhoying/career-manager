@@ -48,35 +48,35 @@ Mode D 拆为 **两阶段 + 一道决策门**：**默认停在门后**（省钱�
 JD
 ↓
 ═════════════ Phase 1: Recon（侦察 · 报告层）═════════════
-Step 1    Role Decomposition（岗位能力拆解）
-Step 2    Hiring Intent Analysis（招聘意图分析）
-Step 2.9  Appendix Generation（附录 A 术语速查 / 附录 B 公司背景尽调）
-Step 3    Talent Persona Inference（人才画像推理）
-Step 3.5  Skill Weight Analysis（能力权重分析）
-Step 4    Evidence Expectation Analysis（证据需求分析）
+Step 1 Role Decomposition（岗位能力拆解）
+Step 2 Hiring Intent Analysis（招聘意图分析）
+Step 2.9 Appendix Generation（附录 A 术语速查 / 附录 B 公司背景尽调）
+Step 3 Talent Persona Inference（人才画像推理）
+Step 3.5 Skill Weight Analysis（能力权重分析）
+Step 4 Evidence Expectation Analysis（证据需求分析）
 Step 4.5a Transferable Capability Mapping（可迁移能力映射）
-Step 5    DNA Match Analysis → Match Confidence / Track Validation
-Step 5.5  Evidence Distance Analysis（证据距离 → D0-D4）
-Step 5.6  Role Authenticity Inference（角色真实性 → HireProbability 的折扣因子）
-Step 5.7  Recruiter Risk Funnel（招聘漏斗风险）
-Step 5.8  Decision Score（0.7×Match + 0.3×HireProb）
-Step 6    Targeted Discovery（定向证据发现 —— 向【用户】补证据，不是决策门）
-Step 7    Application Strategy Decision → Pack A/B/C/D
-Step 8    Career DNA Update（career-dna 唯一回写口）
+Step 5 DNA Match Analysis → Match Confidence / Track Validation
+Step 5.5 Evidence Distance Analysis（证据距离 → D0-D4）
+Step 5.6 Role Authenticity Inference（角色真实性 → HireProbability 的折扣因子）
+Step 5.7 Recruiter Risk Funnel（招聘漏斗风险）
+Step 5.8 Decision Score（0.7×Match + 0.3×HireProb）
+Step 6 Targeted Discovery（定向证据发现 —— 向【用户】补证据，不是决策门）
+Step 7 Application Strategy Decision → Pack A/B/C/D
+Step 8 Career DNA Update（career-dna 唯一回写口）
 Step 10.A-C Knowledge Update（Role / Skill Snapshot + Track Market Validation + 新赛道发现）
-    └── 产物：resume-outputs/{YYYYMMDD}-{company}-{role}/01_jd_match_report.md（9 Part + 附录 A/B）
+ └── 产物：resume-outputs/{YYYYMMDD}-{company}-{role}/01_jd_match_report.md（9 Part + 附录 A/B）
 ═════════════ Phase Gate（决策门）═════════════
-    决策摘要 + 三选项（生成材料 / 只留报告 / 换策略）—— 详见 §Phase Gate
+ 决策摘要 + 三选项（生成材料 / 只留报告 / 换策略）—— 详见 §Phase Gate
 ═════════════ Phase 2: Build（材料生成 · token 主体）═════════════
 Step 4.5b Resume Identity Lock（【重执行】：从 07 锁身份 —— 身份锚点不可落盘，须在新上下文重建）
 Step 8.5 / 8.6 / 8.8 / 8.9 / 8.10 / 8.12（证据路由 → 平台策略 → 策略选择 → 人味化 → 推荐/备选 → 叙事对齐）
-Step 9    Capability-Driven Resume Generation（能力驱动简历生成）
-    └── 9.0 Per-Experience Engine Loop（逐经历重构循环 → 逐段 E01-E04）
-    └── 9.1 Resume QA Layer（QA-1~QA-4 四检 → 全部通过才输出）
-Step 9.5  Delivery Finalization（opt-in：用户说「要投了」才净化 / 审核 / 导出 deliverables/）
-Step X    Boss Greeting Generation（Boss 打招呼语生成）
+Step 9 Capability-Driven Resume Generation（能力驱动简历生成）
+ └── 9.0 Per-Experience Engine Loop（逐经历重构循环 → 逐段 E01-E04）
+ └── 9.1 Resume QA Layer（QA-1~QA-4 四检 → 全部通过才输出）
+Step 9.5 Delivery Finalization（opt-in：用户说「要投了」才净化 / 审核 / 导出 deliverables/）
+Step X Boss Greeting Generation（Boss 打招呼语生成）
 Step 10.D 投递索引登记（Status = Planned）
-    └── 产物：Pack A/B/C/D 全部文件
+ └── 产物：Pack A/B/C/D 全部文件
 ```
 
 > **`01` 报告是自足的**：P2 的全部输入都能从「`01` 报告 + `career-dna/` 文件」恢复 ——
@@ -99,8 +99,8 @@ Step 10.D 投递索引登记（Status = Planned）
 
 | 维度 | 说明 | 示例 |
 |------|------|------|
-| **Core Functions（核心职能）** | 这个岗位在公司里承担什么角色 | 交付执行者 / 客户对接窗口 / 项目 Owner |
-| **Responsibilities（核心职责）** | 具体的日常工作和关键任务 | 项目排期和进度管理 / 客户需求调研 / 团队协调 |
+| **Core Functions（核心职能）** | 这个岗位在公司里承担什么角色 | 流程执行者 / 跨部门协调窗口 / 项目 Owner |
+| **Responsibilities（核心职责）** | 具体的日常工作和关键任务 | 项目排期和进度管理 / 需求调研与对齐 / 团队协调 |
 | **Expected Ownership（期望责任级别）** | 独立执行？带人？跨部门推动？ | Lead（独立负责完整项目）/ Support（辅助） |
 | **Reporting Structure Hint（管理层级暗示）** | 向谁汇报？带不带团队？ | 向 VP 汇报 → 高级别 |
 | **Scope Hint（范围暗示）** | 单项目？多项目？跨地域？ | 多项目并行 → 需要强资源协调能力 |
@@ -111,8 +111,8 @@ Step 10.D 投递索引登记（Status = Planned）
 Role: [标准化 Role 名称]
 Core Functions: [核心职能描述]
 Responsibilities:
-  - [职责1]
-  - [职责2]
+ - [职责1]
+ - [职责2]
 Expected Ownership: [Lead / Partial Lead / Support]
 Management Scope: [带团队 / 独立执行 / 辅助]
 Project Scope: [单项目 / 多项目 / 跨地域]
@@ -268,16 +268,16 @@ Hiring Reason: [新设岗位 / 替补离职 / 业务扩张 / 项目需求]
 
 ```yaml
 Ideal Candidate:
-  "具有项目交付经验，能独立面对客户，具备需求梳理和推进能力的实施型人才"
+ "具有 [核心经验/能力]，能 [面对对象或场景]，具备 [关键能力A] 与 [关键能力B] 的 [人才类型]"
 Career Background:
-  - 来自 [行业]
-  - [N] 年以上 [领域] 经验
+ - 来自 [行业]
+ - [N] 年以上 [领域] 经验
 Typical Experience:
-  - [典型经历1]
-  - [典型经历2]
+ - [典型经历1]
+ - [典型经历2]
 Preferred Traits:
-  - [特质1]
-  - [特质2]
+ - [特质1]
+ - [特质2]
 ```
 
 ---
@@ -300,18 +300,18 @@ Preferred Traits:
 
 ```yaml
 Skill Weights:
-  - 能力: Stakeholder Management
-    Weight: 35%
-    Reasoning: JD 高频出现 + Role Snapshot 频率 90% + Critical Evidence 对应
-  - 能力: Project Delivery
-    Weight: 25%
-    Reasoning: JD 明确要求（必须）
-  - 能力: Risk Management
-    Weight: 20%
-    Reasoning: Role Snapshot 频率 75%
-  - 能力: Data Analysis
-    Weight: 10%
-    Reasoning: JD 提及但非核心
+ - 能力: [能力项A]
+ Weight: [35%]
+ Reasoning: JD 高频出现 + Role Snapshot 频率 [90%] + Critical Evidence 对应
+ - 能力: [能力项B]
+ Weight: [25%]
+ Reasoning: JD 明确要求（必须）
+ - 能力: [能力项C]
+ Weight: [20%]
+ Reasoning: Role Snapshot 频率 [75%]
+ - 能力: [能力项D]
+ Weight: [10%]
+ Reasoning: JD 提及但非核心
 ```
 
 ### 用途
@@ -349,24 +349,24 @@ Skill Weights:
 
 ```yaml
 Critical Evidence:
-  - 证据项: Cross-team Coordination
-    Importance: Critical
-    Expected Ownership: Lead
-    Expected Scope: Department
-    Expected Impact: Efficiency
-    Interview Question: "请举一个跨部门推动项目的例子"
-  - 证据项: Client-facing Delivery
-    Importance: High
-    Expected Ownership: Owner
-    Expected Scope: Global
-    Expected Impact: Revenue
-    Interview Question: "如何处理客户现场的需求变更？"
+ - 证据项: [能力项A]
+   Importance: Critical
+   Expected Ownership: Lead
+   Expected Scope: Department
+   Expected Impact: Efficiency
+   Interview Question: "[针对该能力项的面试追问示例]"
+ - 证据项: [能力项B]
+   Importance: High
+   Expected Ownership: Owner
+   Expected Scope: Global
+   Expected Impact: Revenue
+   Interview Question: "[针对该能力项的面试追问示例]"
 Expected Stories:
-  - 案例类型: 需求调研案例 → 期望 Ownership: Lead / Scope: Department
-  - 案例类型: 客户培训案例 → 期望 Ownership: Owner / Scope: Global
+ - 案例类型: [案例类型A] → 期望 Ownership: Lead / Scope: Department
+ - 案例类型: [案例类型B] → 期望 Ownership: Owner / Scope: Global
 Evidence Risks:
-  - 证据薄弱区域: 跨组织推动经验 → 缺失影响: High（对应能力权重 35%）
-  - 证据薄弱区域: 量化交付数据 → 缺失影响: Medium（对应能力权重 20%）
+ - 证据薄弱区域: [薄弱区域A] → 缺失影响: High（对应能力权重 [35%]）
+ - 证据薄弱区域: [薄弱区域B] → 缺失影响: Medium（对应能力权重 [20%]）
 ```
 
 **Evidence Scoring Rule（证据评分规则）**：
@@ -384,9 +384,9 @@ Evidence Risks:
 2. 查询 `knowledge/role_snapshots/{role}.md` 的 Role Capability Model
 3. 调用 `career-dna/04b_transferable_capabilities.md` 查找匹配项
 4. 对每个 JD 能力输出匹配结论：
-   - Direct：用户有此能力的直接 Transferable Keywords
-   - Adjacent：用户能力通过 Transferable 可转换，记录转换路径
-   - Missing：用户无此能力且无相邻能力可转
+ - Direct：用户有此能力的直接 Transferable Keywords
+ - Adjacent：用户能力通过 Transferable 可转换，记录转换路径
+ - Missing：用户无此能力且无相邻能力可转
 
 **输出**：写入 JD Match Report Part 4 Evidence Matrix 的 Capability Match 列。
 
@@ -414,10 +414,10 @@ Evidence Risks:
 
 ```yaml
 Resume Identity Lock:
-  职业身份: [07 Layer 2 Primary Positioning]
-  禁止表达: [07 Layer 5 中未被 Layer 2 收录的条目]   # = Layer 5 ∖ Layer 2
-  并行方向: [已被 Layer 2 收录、因而解禁的方向]      # 可为空
-  身份来源: 07（禁止从 Timeline / 岗位历史推导）
+ 职业身份: [07 Layer 2 Primary Positioning]
+ 禁止表达: [07 Layer 5 中未被 Layer 2 收录的条目] # = Layer 5 ∖ Layer 2
+ 并行方向: [已被 Layer 2 收录、因而解禁的方向] # 可为空
+ 身份来源: 07（禁止从 Timeline / 岗位历史推导）
 ```
 
 > **K4 交叉指针（v2.19.0）**：本结构与 `references/online_profile_generation.md` §Identity Resolution
@@ -461,9 +461,9 @@ Resume Identity Lock:
 - 禁止从 Timeline 的岗位频次推导职业身份
 - 禁止从 JD 反推「我应该是什么身份」
 - 07 Layer 5 中列出的原始岗位，**在其方向未被 Layer 2 收录时**，不得出现在简历的身份表达层
-  （仅可作为事实信息在「公司·岗位」行出现；**已被 Layer 2 收录的方向不受此限**）
+ （仅可作为事实信息在「公司·岗位」行出现；**已被 Layer 2 收录的方向不受此限**）
 
-> **Fail-safe（v2.21.0 · F18）**：若 `07` Layer 2 **缺失、为空、或含 `[待声明]`** ⇒
+> **Fail-safe（v2.21.0）**：若 `07` Layer 2 **缺失、为空、或含 `[待声明]`** ⇒
 > **停下询问用户**（复用方向冲突探针形态），**禁止从 Layer 1 / Timeline / JD 代填身份锚点**（违 `R01` / `R02`），
 > **禁止静默降级**。
 
@@ -641,10 +641,10 @@ Coverage = (D0子证据数×100 + D1×85 + D2×65 + D3×40 + D4×0) / 总子证�
 
 1. 提取用户在 `07_career_identity.md` 和 `02_timeline.md` 中的最近岗位头衔
 2. 与 JD Role 对比：
-   - 同岗位 → Level A (90+)
-   - 同域不同岗 → Level B (70-89)
-   - 跨域可迁移 → Level C (40-69)
-   - 跨赛道 → Level D (0-39)
+ - 同岗位 → Level A (90+)
+ - 同域不同岗 → Level B (70-89)
+ - 跨域可迁移 → Level C (40-69)
+ - 跨赛道 → Level D (0-39)
 3. 根据 Track Confidence 和 Evidence Distance D0/D1 占比微调 ±10
 
 ### 输出
@@ -809,17 +809,17 @@ P1 结束（`01` 报告落盘 + Step 8 / 10.A-C 回写完成）后，**必须停
 
 ```
 ① 决策摘要（约 5 行）
-   Match {score} / HireProbability {x} / Decision {档位}
-   一句话结论：建议投 / 谨慎 / 不建议
-   建议 Pack：Pack {X}（{N} 个文件）—— 依据 01 Part 8 Application Advice
+ Match {score} / HireProbability {x} / Decision {档位}
+ 一句话结论：建议投 / 谨慎 / 不建议
+ 建议 Pack：Pack {X}（{N} 个文件）—— 依据 01 Part 8 Application Advice
 
 ② 可选动作（三选一）
-   (a) 生成 Pack {X}          ← 默认推荐，回「生成材料」即可
-   (b) 只保留报告，不生成材料
-   (c) 换策略生成（如 Match 建议 Pack B，改做 Pack C / 只要 gap_analysis）
+ (a) 生成 Pack {X} ← 默认推荐，回「生成材料」即可
+ (b) 只保留报告，不生成材料
+ (c) 换策略生成（如 Match 建议 Pack B，改做 Pack C / 只要 gap_analysis）
 
 ③ 一个提示（条件出现）
-   若 Step 6 有未回填的追问 → 「生成材料前建议先补答 {N} 个问题，否则简历会带 [待补充]」
+ 若 Step 6 有未回填的追问 → 「生成材料前建议先补答 {N} 个问题，否则简历会带 [待补充]」
 ```
 
 **禁止**在 Gate 处重复 Part 1-9 的论证、重复一次「投 / 不投」结论（与附录 B 的边界纪律同源：**一个结论只出现一次**）。
@@ -853,7 +853,7 @@ P1 结束（`01` 报告落盘 + Step 8 / 10.A-C 回写完成）后，**必须停
 ---
 
 > **Step 8.x 编号说明（v2.18.0）**：本段步骤编号为 `8.5 / 8.6 / 8.8 / 8.9 / 8.10 / 8.12` —— **`8.7` 与 `8.11` 无对应步骤**（CHANGELOG 无删除记录，属历史跳号；**不补编号**，避免与历史留痕不符）。
-> ⚠️ 与 `01_jd_match_report_template.md` 的 **Part 8.x**（报告章节编号，`8.0`–`8.7` 连续）**是两套独立体系，勿混**。
+> ⚠️ 与 `pack_templates/01_jd_match_report_template.md` 的 **Part 8.x**（报告章节编号，`8.0`–`8.7` 连续）**是两套独立体系，勿混**。
 
 ## Step 8.5: Evidence Routing Engine（证据路由引擎 v1.6.2）
 
@@ -937,13 +937,13 @@ P1 结束（`01` 报告落盘 + Step 8 / 10.A-C 回写完成）后，**必须停
 
 ```yaml
 Why Recommended:
-  - Match Basis: [Decision Score + Authenticity]
-  - Evidence Basis: [Primary 证据 + Distance]
-  - Risk Basis: [HR 风险 + 是否可控]
+ - Match Basis: [Decision Score + Authenticity]
+ - Evidence Basis: [Primary 证据 + Distance]
+ - Risk Basis: [HR 风险 + 是否可控]
 
 Why Alternative:
-  - Switch Condition: [何时切换]
-  - Difference: [语气/证据/策略差异]
+ - Switch Condition: [何时切换]
+ - Difference: [语气/证据/策略差异]
 ```
 
 ---
@@ -1006,20 +1006,20 @@ Why Alternative:
 
 ```yaml
 Narrative Alignment:
-  核心叙事: [07 Layer 3]
-  JD 适配角度: [JD 需要什么角度]
-  叙事主线: [07 核心叙事 + JD 适配 — 一句话]
-  Tier A Stories: [按 Narrative Strength 排序的 Story Bank 条目]
-  面试身份框架: [07 Professional Identity 的一句话变体 — 适配 JD 语境]
+ 核心叙事: [07 Layer 3]
+ JD 适配角度: [JD 需要什么角度]
+ 叙事主线: [07 核心叙事 + JD 适配 — 一句话]
+ Tier A Stories: [按 Narrative Strength 排序的 Story Bank 条目]
+ 面试身份框架: [07 Professional Identity 的一句话变体 — 适配 JD 语境]
 
 Narrative Strength（叙事强度 v2.7.1）:
-  评估维度:
-    - Problem-Solution Arc: 是否有清晰的问题→解决→结果线（0-5）
-    - Memorability: 是否能让面试官记住（0-5）
-    - STAR Completeness: Situation/Task/Action/Result 完整度（0-5）
-    - Identity Alignment: 是否强化 07 Career Narrative（0-5）
-  总分: [0-20]
-  用途: 面试故事排序（Interview Pack + Answer Cards）
+ 评估维度:
+ - Problem-Solution Arc: 是否有清晰的问题→解决→结果线（0-5）
+ - Memorability: 是否能让面试官记住（0-5）
+ - STAR Completeness: Situation/Task/Action/Result 完整度（0-5）
+ - Identity Alignment: 是否强化 07 Career Narrative（0-5）
+ 总分: [0-20]
+ 用途: 面试故事排序（Interview Pack + Answer Cards）
 ```
 
 ### 规则
@@ -1029,14 +1029,14 @@ Narrative Strength（叙事强度 v2.7.1）:
 - **主故事阈值**：主故事优先取 **Narrative Strength ≥ 14** 的故事（总分 0-20，见上「叙事强度」）。
 - 面试身份框架 → 应用于 `05_answer_cards.md` 的回答框架
 - **通用叙事底料 → 先读 `13_interview_narrative_strategy.md` 全部 12 个 Part**，再做 JD 适配。**禁止绕过 13 从 07/05 重新拼装通用话术**——13 是底料，`04`/`05` 是切片。逐 Part 映射：
-  - Part 1-5 → `04` §1-§5 与 `05` 的通用框架
-  - **Part 6（口径纵深卡）→ `04` §5 风险题 + `05` 风险卡**：数字与规模口径**必须逐字对齐 13 Part 6.3 交叉校验表**，禁止在本轮临时加码
-  - **Part 7（分轮次与分题型打法）→ `04` §7.1**：只填本轮实际情况（几轮 / 谁面 / 形式），通用打法不在 `04` 重复；7.4 分题型的「考什么形式」映射到 `04` §7 的「形式」列
-  - **Part 8（面试后跟进）→ `04` §8**：只记本轮实际动作与回应，通用方法不在 `04` 重复
-  - **Part 9（复盘回路）→ 落 `application-tracker/archives/{Company}_{Role}.md`**，不进 `04`
-  - **Part 10（反向尽调）→ `04` §7.2「本轮定制反问」** + 公司业务/阶段判断：**结论**落 `01` **Part 2.2**、**论证**落 `01` **附录 B**；通用调研方法不在 `04` 重复（附录 B 生成规则见 Step 2.9）
-  - **Part 11（录用阶段 / Offer 谈判与背调）→ 落 `application-tracker/archives/{Company}_{Role}.md`**，**不进 `04`**（`04` 只记本轮实际谈判过程与结果）
-  - **Part 12（英文面试准备）→ `04` §10**（条件必填：JD 明确要求英语工作语言时）；卡壳处置话术与语言能力表述不在 `04` 重复
+ - Part 1-5 → `04` §1-§5 与 `05` 的通用框架
+ - **Part 6（口径纵深卡）→ `04` §5 风险题 + `05` 风险卡**：数字与规模口径**必须逐字对齐 13 Part 6.3 交叉校验表**，禁止在本轮临时加码
+ - **Part 7（分轮次与分题型打法）→ `04` §7.1**：只填本轮实际情况（几轮 / 谁面 / 形式），通用打法不在 `04` 重复；7.4 分题型的「考什么形式」映射到 `04` §7 的「形式」列
+ - **Part 8（面试后跟进）→ `04` §8**：只记本轮实际动作与回应，通用方法不在 `04` 重复
+ - **Part 9（复盘回路）→ 落 `application-tracker/archives/{Company}_{Role}.md`**，不进 `04`
+ - **Part 10（反向尽调）→ `04` §7.2「本轮定制反问」** + 公司业务/阶段判断：**结论**落 `01` **Part 2.2**、**论证**落 `01` **附录 B**；通用调研方法不在 `04` 重复（附录 B 生成规则见 Step 2.9）
+ - **Part 11（录用阶段 / Offer 谈判与背调）→ 落 `application-tracker/archives/{Company}_{Role}.md`**，**不进 `04`**（`04` 只记本轮实际谈判过程与结果）
+ - **Part 12（英文面试准备）→ `04` §10**（条件必填：JD 明确要求英语工作语言时）；卡壳处置话术与语言能力表述不在 `04` 重复
 - Step 9 简历生成前必须先完成本步骤
 
 ---
@@ -1049,19 +1049,19 @@ Narrative Strength（叙事强度 v2.7.1）:
 
 ```
 Step 4.5b: Resume Identity Lock
-    ↓ 确定职业身份（核心名词来自 07，不可变）
+ ↓ 确定职业身份（核心名词来自 07，不可变）
 Step 3.5: Skill Weight（JD 关键词提取）
-    ↓ 确定 JD 需要什么能力 + ATS 关键词
+ ↓ 确定 JD 需要什么能力 + ATS 关键词
 04b → Capability Interpretation（v2.6.4 第一层）
-    ↓ 每条经历：原始岗位 → 角色解释 + 形成 TC + 关键证据
+ ↓ 每条经历：原始岗位 → 角色解释 + 形成 TC + 关键证据
 04b + Evidence Distance D0-D4 → JD Mapping（v2.6.4 第二层）
-    ↓ JD 要求 ← TC ← 证据 ← D0-D4 距离 → 匹配写法方向
+ ↓ JD 要求 ← TC ← 证据 ← D0-D4 距离 → 匹配写法方向
 03_projects
-    ↓ 按 04b TC 关联度筛选证据
+ ↓ 按 04b TC 关联度筛选证据
 02_timeline
-    ↓ 补充时间线和公司信息（辅助输入，不驱动身份）
+ ↓ 补充时间线和公司信息（辅助输入，不驱动身份）
 ATS Evidence Output（v2.6.4 第三层）
-    ↓ 基于前两层中间产物 + E01-E04 检查 → 生成简历
+ ↓ 基于前两层中间产物 + E01-E04 检查 → 生成简历
 → 生成简历
 ```
 
@@ -1084,15 +1084,15 @@ JD 中的每项关键要求，必须映射到 04b 的 TC：
 
 ```
 对于每条经历：
-  1. Capability Interpretation
-     → 输出该经历的 角色解释 + 形成 TC + 关键证据
-  2. JD Mapping
-     → 输出 JD 要求 ← TC ← D距离 → 写法方向
-  3. 基于 JD Mapping 的「写法方向」生成该段简历文本
-     → Direct(D0-D1)：肯定语气
-     → Adjacent(D2-D3)：可迁移语气
-     → D4：跳过，不写入简历
-  4. E01-E04 单段检查 → 通过则追加到简历 → 不通过则重写该段
+ 1. Capability Interpretation
+ → 输出该经历的 角色解释 + 形成 TC + 关键证据
+ 2. JD Mapping
+ → 输出 JD 要求 ← TC ← D距离 → 写法方向
+ 3. 基于 JD Mapping 的「写法方向」生成该段简历文本
+ → Direct(D0-D1)：肯定语气
+ → Adjacent(D2-D3)：可迁移语气
+ → D4：跳过，不写入简历
+ 4. E01-E04 单段检查 → 通过则追加到简历 → 不通过则重写该段
 ```
 
 只有全部经历生成完毕且通过 E01-E04 后，进入 Step 9.1 Resume QA Layer。
@@ -1103,14 +1103,14 @@ JD 中的每项关键要求，必须映射到 04b 的 TC：
 
 ```yaml
 Capability Interpretation:
-  原始岗位: [合同岗位名称]
-  公司: [公司名]
-  时间段: [YYYY.MM - YYYY.MM]
-  角色解释: [该岗位在能力体系中承担的角色 — 来自 R03 Role Interpretation]
-  形成能力:
-    - TC001: [该 TC 在此经历中的具体体现]
-    - TC002: [体现]
-  关键证据: [03 中该经历的量化结果摘录]
+ 原始岗位: [合同岗位名称]
+ 公司: [公司名]
+ 时间段: [YYYY.MM - YYYY.MM]
+ 角色解释: [该岗位在能力体系中承担的角色 — 来自 R03 Role Interpretation]
+ 形成能力:
+ - TC001: [该 TC 在此经历中的具体体现]
+ - TC002: [体现]
+ 关键证据: [03 中该经历的量化结果摘录]
 ```
 
 **规则**：
@@ -1124,14 +1124,14 @@ Capability Interpretation:
 
 ```yaml
 JD Mapping:
-  JD 要求: [JD 中的具体能力要求]
-  对应 TC: [TC001 / TC002]
-  证据距离: [D0 / D1 / D2 / D3 — 来自 Step 5.5 Evidence Distance Analysis]
-  匹配写法方向:
-    Direct(D0-D1): "已验证"
-    Adjacent(D2-D3): "可迁移"
-    Missing(D4): 不写入简历
-  JD 措辞映射: [JD 原文关键词列表 — 用于 ATS 关键词密度]
+ JD 要求: [JD 中的具体能力要求]
+ 对应 TC: [TC001 / TC002]
+ 证据距离: [D0 / D1 / D2 / D3 — 来自 Step 5.5 Evidence Distance Analysis]
+ 匹配写法方向:
+ Direct(D0-D1): "已验证"
+ Adjacent(D2-D3): "可迁移"
+ Missing(D4): 不写入简历
+ JD 措辞映射: [JD 原文关键词列表 — 用于 ATS 关键词密度]
 ```
 
 **规则**：
@@ -1177,11 +1177,11 @@ Capability Mapping 与 ATS Keyword Extraction 是并行层，不替代：
 
 ```
 Experience（原始事实）
-    ↓
+ ↓
 Capability（能力抽象 — 来自 04b TC）
-    ↓
+ ↓
 JD Mapping（JD 要求 → 对应 TC → 对应证据）
-    ↓
+ ↓
 Evidence（JD 语言 + 可追溯事实）
 ```
 
@@ -1388,7 +1388,7 @@ Reframing 允许能力抽象，不允许权限升级。
 
 ### 触发（opt-in）
 
-Step 9 简历生成后，用户说"转投递版 / 导出投递 / 我要投了"时进入。不自动执行。**PNG 载体（v2.24.0 · F25）是其 opt-in 子项** —— 用户另说"**要发图 / 截图发 Boss**"时才出。
+Step 9 简历生成后，用户说"转投递版 / 导出投递 / 我要投了"时进入。不自动执行。**PNG 载体（v2.24.0）是其 opt-in 子项** —— 用户另说"**要发图 / 截图发 Boss**"时才出。
 
 > **边界（v2.23.0）**：**9.5 = 简历定稿 · 9.6 = 作品集合册定稿** —— 两者都是 **P2 内部 opt-in**、**互不依赖**，也都**不是 Phase Gate**（见 §四个「停」）。
 
@@ -1396,15 +1396,15 @@ Step 9 简历生成后，用户说"转投递版 / 导出投递 / 我要投了"�
 
 ```
 resume-outputs/{date}-{company}-{role}/
-├── 02_resume_cn.md                    # working 版（保留推理标注，供追踪迭代）
-├── 09_portfolio_book.md               # 合册草稿（Step 9.6 Phase A；= Portfolio Gate 交付物）
+├── 02_resume_cn.md # working 版（保留推理标注，供追踪迭代）
+├── 09_portfolio_book.md # 合册草稿（Step 9.6 Phase A；= Portfolio Gate 交付物）
 └── deliverables/
-    ├── 02_resume_cn_final.md          # 净化后 md（供用户审核）
-    ├── 02_resume_cn_final.docx        # 定稿 Word
-    ├── 02_resume_cn_final.pdf         # 定稿 PDF
-    ├── png/                           # PNG 载体（v2.24.0 · F25 · opt-in）：02_resume_cn_final_p{i}.png / _long.png
-    #  （v2.24.0 · F48 起**无** cover_letter_final —— 求职信改由用户自拟，参见 07/08_boss_greeting.md「邮件版」）
-    └── 09_portfolio_book_final.{md,html,pdf,docx}  # 作品集合册（Step 9.6；源 = portfolio-outputs/ 案例库）
+ ├── 02_resume_cn_final.md # 净化后 md（供用户审核）
+ ├── 02_resume_cn_final.docx # 定稿 Word
+ ├── 02_resume_cn_final.pdf # 定稿 PDF
+ ├── png/ # PNG 载体（v2.24.0· opt-in）：02_resume_cn_final_p{i}.png / _long.png
+ # （v2.24.0**无** cover_letter_final —— 求职信改由用户自拟，参见 07/08_boss_greeting.md「邮件版」）
+ └── 09_portfolio_book_final.{md,html,pdf,docx} # 作品集合册（Step 9.6；源 = portfolio-outputs/ 案例库）
 ```
 
 **working 与 final 物理隔离**：追踪用 working 版，投递用 deliverables/。**skill 只读 .md 文件，永不读取 .docx/.pdf 二进制**（格式转换不经过 LLM，token 成本 ≈ 0）。
@@ -1435,12 +1435,12 @@ resume-outputs/{date}-{company}-{role}/
 | # | 写法 | md 形态 | 渲染结果 |
 |:--:|---|---|---|
 | ① | **二级缩进行** | 行首 **2 个空格**、无 `- ` | 比同级再缩一级的缩进块 |
-| ② | **悬挂块** | 某段落**紧接 ≥1 个二级行** | 该段落首行顶格、其余行**对齐到其标签之后**（缩进量 = 标签渲染宽度，由 `_emw()` 折算 ⇒ **不要在 md 里手调空格**） |
+| ② | **悬挂块** | 某段落**紧接 ≥1 个二级行** | 该段落首行顶格、其余行**对齐到其标签之后**（缩进量 = 标签渲染宽度，由 `_emw` 折算 ⇒ **不要在 md 里手调空格**） |
 | ③ | **裸行注记** | 条目内**不带 `- `** 的独立行 | **注记行**（`.entry-note`：无 bullet、缩进，仍与同级 bullet **同属本条目**） |
-| ④ | **栏目强调** | `==栏目==` | 加粗 + 主题色（**每页 ≤3 处** ｜ 沿用 `F57`） |
+| ④ | **栏目强调** | `==栏目==` | 加粗 + 主题色（**每页 ≤3 处** ｜ 沿用 ``） |
 
 ⚠️ **净化（L1/L2）只剥标注、不碰行级形态** —— 行首缩进与「无 `- `」是**内容**，剥离即改变版式（参上「铁律」）。
-⚠️ **③ 修订 `F47②`（v2.24.0）**：旧规则把「含 meta 的节，正文归入条目 bullet 行」；v2.27.0 起**裸行 = 无 bullet 的注记行**（bullet 行**只**由 `- ` 产生）。⇒ 旧警示「裸行会被渲染到本节全部标题之前」**已失效**（渲染器已加 body → 当前条目 兜底）。
+⚠️ **③ 修订 ``（v2.24.0）**：旧规则把「含 meta 的节，正文归入条目 bullet 行」；v2.27.0 起**裸行 = 无 bullet 的注记行**（bullet 行**只**由 `- ` 产生）。⇒ 旧警示「裸行会被渲染到本节全部标题之前」**已失效**（渲染器已加 body → 当前条目 兜底）。
 
 **目检（Step 9.5 第 5 步）加检**：① 同一 (条目, 标签) 下不得出现**两种形态混排**；② 悬挂块的缩进**跟着标签宽度走**（不得标签与首行错位）；③ `==栏目==` 计数 **≤3 / 页**。
 
@@ -1462,23 +1462,24 @@ final.md 顶部必须有 header 区块（`>` 引用行，供姓名/意向/2×2 �
 - 第 1 行 `# ` = 姓名；3 行 `> ` = 意向/信息（`｜` 分隔两栏，标签用 `：` 分隔）
 - 其余 `## ` 节自动进入"节"列表；`### ` 行 = 条目 meta（蓝色加粗）；`- ` bullet 归入当前条目（有 meta 时）或当前节段落
 - `**加粗**` 在 docx/pdf 渲染为加粗、HTML 渲染为 `<b>`
-- **行内标记体系（v2.24.0 · F51 + F57 · 「支持什么 / 不支持什么 / 不支持时的行为」三问已答）**：
-  - **支持**：`**加粗**` → `<b>`；`==强调==` → **加粗 + 主题色**（`--accent`，唯一色源）
-  - **不支持**：**斜体**（`*x*` / `_x_`）—— 本项目 CJK 字体（NotoSansSC）**无 italic 变体**，
-    reportlab 会**静默忽略** `<i>`（2026-09-26 实测）；**行内 code**（反引号）—— 渲染时
-    **剥离反引号、保留内容**（不渲染为等宽体）
-  - **不支持时的行为**：一律**不报错**、按上述降级；⚠️ 斜体标记会**字面残留** ⇒ **勿写**
-  - **用量约束**：`==强调==` **每页 ≤ 3 处**（过多即噪声，反而削弱腔调）
-- ⚠️ **渲染契约两条警示（v2.24.0 · F47）—— 两处均不丢内容、不报错，只在渲染后看图才发现**：
-  1. **表头信息（`>` 引用行）的值必须单行** —— 值换行 ⇒ 网格撑高 ⇒ 末行**越过 header 背景块被裁字**（字形被切）。
-  2. **含 `### ` meta 的节，其正文必须写成 `- ` bullet** —— 裸行会被归入「节段落」，而模板**先渲段落、再渲条目**
-     ⇒ 正文被**上提到该节全部条目之前**（**公司简介**跑到所有公司标题前面 = 典型场景）。
+- **行内标记体系（v2.24.0+ · 「支持什么 / 不支持什么 / 不支持时的行为」三问已答）**：
+ - **支持**：`**加粗**` → `<b>`；`==强调==` → **加粗 + 主题色**（`--accent`，唯一色源）
+ - **不支持**：**斜体**（`*x*` / `_x_`）—— 本项目 CJK 字体（NotoSansSC）**无 italic 变体**，
+ reportlab 会**静默忽略** `<i>`（ 实测）；**行内 code**（反引号）—— 渲染时
+ **剥离反引号、保留内容**（不渲染为等宽体）
+ - **不支持时的行为**：一律**不报错**、按上述降级；⚠️ 斜体标记会**字面残留** ⇒ **勿写**
+ - **用量约束**：`==强调==` **每页 ≤ 3 处**（过多即噪声，反而削弱腔调）
+- ⚠️ **渲染契约两条警示（v2.24.0）—— 两处均不丢内容、不报错，只在渲染后看图才发现**：
+ 1. **表头信息（`>` 引用行）的值必须单行** —— 值换行 ⇒ 网格撑高 ⇒ 末行**越过 header 背景块被裁字**（字形被切）。
+ 2. **含 `### ` meta 的节，其正文必须写成 `- ` bullet** —— 裸行会被归入「节段落」，而模板**先渲段落、再渲条目**
+ ⇒ 正文被**上提到该节全部条目之前**（**公司简介**跑到所有公司标题前面 = 典型场景）。
 
 ### Delivery Checklist（投递前核对清单）
 
 - [ ] PII 真实值已填（[XX] → 真实公司/姓名/电话/邮箱）
 - [ ] 无内部推理字段（注释 / TC / D 标注 / 版本号）
 - [ ] 数字与 Career DNA 一致（量化结果未漂移）
+- [ ] **年限字段按渠道取值表**（真源 = `02_timeline.md` 年限口径：头部**默认不显示** / 定位段**两值并列** / 打招呼**不写年数** / 背调用总量；禁把<行业>年限填进「工作年限」字段）
 - [ ] 职业定位仍来自 07（未漂移）
 - [ ] 长度 1-2 页
 - [ ] 格式：日期格式统一、无乱码
@@ -1489,19 +1490,19 @@ final.md 顶部必须有 header 区块（`>` 引用行，供姓名/意向/2×2 �
 
 ```
 final.md（净化定稿）
-  → build_data() 结构化（姓名/意向/2×2信息/节/条目）
-  → mini_template 渲染 resume_template.html（v1 抽象模板）→ final.html（v2 完整版，可预览）
-  → HTML → PDF（Platypus，样式从模板 CSS 变量提取）
-  → HTML → DOCX（最简转换，效果可接受部分损失）
+ → build_data 结构化（姓名/意向/2×2信息/节/条目）
+ → mini_template 渲染 resume_template.html（v1 抽象模板）→ final.html（v2 完整版，可预览）
+ → HTML → PDF（Platypus，样式从模板 CSS 变量提取）
+ → HTML → DOCX（最简转换，效果可接受部分损失）
 ```
 
 ```bash
 python scripts/export_resume.py \
-  --input  deliverables/02_resume_cn_final.md \
-  --format all \
-  --photo  证件照.jpg \
-  [--template assets/templates/resume-outputs/resume_template.html] \
-  [--theme blue]          # 可选：覆盖模板 CSS 变量（Track 联动）
+ --input deliverables/02_resume_cn_final.md \
+ --format all \
+ --photo 证件照.jpg \
+ [--template assets/templates/resume-outputs/resume_template.html] \
+ [--theme blue] # 可选：覆盖模板 CSS 变量（Track 联动）
 ```
 
 - **产物**：`deliverables/02_resume_cn_final.html`（v2 完整版：样式+内容）+ `.pdf`（主，保真）+ `.docx`（辅，最简）
@@ -1509,8 +1510,13 @@ python scripts/export_resume.py \
 - **占位符语法**（`scripts/mini_template.py`，零依赖，支持嵌套 each）：`{{姓名}}` `{{意向}}` `{{#each 信息}}` `{{#each 节}}`（含 `{{标题}}` `{{段落}}` `{{条目}}` `{{meta}}` `{{行}}`）
 - **样式控制**：模板 `:root` CSS 变量（--accent/--block-bg/--font/--title-size/--line-spacing/页边距/**--body-indent/--bullet-indent/--heading-space-before/--heading-space-after/--entry-space** 等）——用户改这些 = 改设计；`--theme` 可覆盖配色（Track 联动）
 - **样式修改走模板（v2.8.1 样式变量桥）**：所有布局数值（缩进/间距）均由模板 :root 变量驱动，**改模板即可，勿改 py**。例如：缩进改大 → `--body-indent: 56px`；行距 → `--line-spacing: 1.8`。改完跑 `--format all` 三端生效
-- **行首标点检漏（v2.24.0 · F53）**：出 PDF 后跑 `python scripts/check_pdf_kinsoku.py <pdf>` —— `reportlab` 对 CJK **逐字符断行、无禁则**，且 `U+2060` / `U+00A0` 实测**均无法抑制断行** ⇒ **机制级修复不可行**，改由「**文本层规避 + 出包后检漏**」承载：探针命中 ⇒ **改写该处词序**使标点不落行首（**治标 · 每包需重做**）。⚠️ 探针**只报告、不改文件**，且**不进** `validate_career_dna.py` 闸门链（闸门在 `python3 -S -E` 纯标准库下运行）
-- **PNG 载体（v2.24.0 · F25 · opt-in）**：`python scripts/export_resume.py --input …/02_resume_cn_final.md --format png [--png-width 1160]` ⇒ `deliverables/png/…_p{i}.png`（分页，A4 比例）+ `…_long.png`（长图）；`--format png-long` 只出长图；`--png-width 1740` 出 1.5×。**PNG = PDF 的再派生**（**不从 HTML 截图**）；长图走**单张超高页**渲染 ⇒ **无接缝**；⚠️ 长图比例可能**远超平台建议的 16:9**（11 页合册实测 ratio≈15.6）⇒ 会被 App 缩放，**投递默认走分页**。需 `pypdfium2` + `Pillow`（缺失 ⇒ 友善提示不崩）。触发：用户说「要发图 / 截图发 Boss」（**与 Step X 打招呼语分开**）
+- **行首标点检漏（v2.24.0）**：出 PDF 后跑 `python scripts/check_pdf_kinsoku.py <pdf>` —— `reportlab` 对 CJK **逐字符断行、无禁则**，且 `U+2060` / `U+00A0` 实测**均无法抑制断行** ⇒ **机制级修复不可行**，改由「**文本层规避 + 出包后检漏**」承载：探针命中 ⇒ **改写该处词序**使标点不落行首（**治标 · 每包需重做**）。⚠️ 探针**只报告、不改文件**，且**不进** `validate_career_dna.py` 闸门链（闸门在 `python3 -S -E` 纯标准库下运行）
+- **行距自动寻优（v2.34.0· 默认开启）**：`--auto-fit` **默认开**（ owner 拍板）；需要回到固定行距时传 `--no-auto-fit`。⚠️ 开启后模板 `:root` 的 `--line-spacing` / `--entry-space` 退化为**起点值**（会被寻优结果覆盖）——想把某包钉死在固定行距，必须显式传 `--no-auto-fit`，改模板变量不再生效
+ —— 判据 = **「页数 ≤ `--fit-max-pages`（默认 2）前提下取最大行距」**（行距↑ ⇒ 内容总高↑ ⇒ 页数↑ ⇒ 满足约束的最大值 = 末页留白最小）。
+ 两级变量：① `--line-spacing` ∈ [`--fit-min` 1.26, `--fit-max` 1.60]，从上限往下粗扫 0.06、命中后向上细化 0.005；② 行距顶到上限后，再抬 `--entry-space`（2 → `--fit-entry-max` 14px）。
+ **硬边界**：最小行距仍超页数上限 ⇒ **不缩版式**、打印「请删减内容」；**不写第 3 页**。结果落 `deliverables/_render_meta.json`（line_spacing / entry_space / pages / attempts），供回溯。
+ ⚠️ 只保证**页数**、**不保证断点好看**（条目可能在页底被拆）⇒ 出包后仍须目检孤行。
+- **PNG 载体（v2.24.0· opt-in）**：`python scripts/export_resume.py --input …/02_resume_cn_final.md --format png [--png-width 1160]` ⇒ `deliverables/png/…_p{i}.png`（分页，A4 比例）+ `…_long.png`（长图）；`--format png-long` 只出长图；`--png-width 1740` 出 1.5×。**PNG = PDF 的再派生**（**不从 HTML 截图**）；长图走**单张超高页**渲染 ⇒ **无接缝**；⚠️ 长图比例可能**远超平台建议的 16:9**（11 页合册实测 ratio≈15.6）⇒ 会被 App 缩放，**投递默认走分页**。需 `pypdfium2` + `Pillow`（缺失 ⇒ 友善提示不崩）。触发：用户说「要发图 / 截图发 Boss」（**与 Step X 打招呼语分开**）
 - **背景系统（v2.8.2）**：页面整体背景 + Header 背景均可用模板变量配置，PDF 由 onPage canvas 绘制、HTML 端 CSS/SVG 同步。页面背景：`--page-bg-type: none|color|image` + `--page-bg-value`（色值或图片路径）+ `--page-bg-opacity`（水印）；Header 背景：`--header-bg-type: color|image|shape` + `--header-bg-value`；形状组合：`--header-shape: rounded|square|wave|slant`（主形状）+ `,block|dots|stripe`（装饰层，逗号分隔 ≤3）；形状参数：`--shape-wave-amplitude/segments/line`、`--shape-slant-angle`、`--deco-block/dots/stripe-*`。背景图资产放 `assets/backgrounds/`
 - **结构类约定**（引擎支持，勿改名）：`.header` `.header-left` `.photo` `.name` `.intent` `.contact` `.section` `.section-title` `.entry` `.entry-meta` `ul` `li` `p`（`.shape-layer` 为背景装饰层，引擎自动跳过）
 - **docx 最简转换取舍**：保留标题/节/段落/bullet/加粗/颜色/照片；损失圆角背景块/同行横线/形状背景等精细样式（PDF 主保真，docx 可损；背景系统仅 PDF/HTML 生效）
@@ -1544,17 +1550,17 @@ Step 9.5 之后，用户说「**出作品集 / 要案例合册**」时进入（o
 ### Phase A：选题 + 草稿（先落 md，停）
 
 1. **L1 案例级**：读 `01_jd_match_report.md` Part 8 的 Portfolio Selection（Top1-3）**+** 案例库（`portfolio-outputs/`）本赛道口径变体
-1b. **附录候选（F40）**：案例库中 **`kind=doc`** 且**门控命中**的附加资料 ⇒ 以 **`## 附录：{名}`** 追加到**草稿末尾**（**不计入案例数**；**v2.28.0：进目录 · 单独分组 · 样式弱一档** —— 计数与呈现分离）
-   - **门控**：`JD Track` ∈ **<行业>赛道白名单**（当前 = `<默认赛道ID>`）；规则真源 `references/portfolio_outputs.md` **§7**
-   - **人工加挂**：Gate ③ 可显式**加挂 / 摘除**（如「<行业> · <角色>」这类白名单外赛道）
-   - ⭐ **主动提议（v2.28.0）**：当 **门控未命中**、但 `01_jd_match_report` 的**自由文本**显示**目标公司属<行业>**时 ⇒ **必须在 Gate ③ 主动给出「加挂建议」并附实测页数**（`--format pages` 实测**加 / 不加**两版），由 owner 一键决定 —— **禁止沉默略过**。
-     ⚠️ **边界**：**门控逻辑不变**（仍绑 `Track` 受控轴 ⇒ **不引入「按行业判定」的不可治理面**）；本条**只把「提议」自动化，「决策」仍归 owner**（同 §7「门控绑受控轴 + 人工覆盖作兜底」）。
-   - `Disclosure: 内部` 的材料 ⇒ **不得进附录**（同案例硬拦）
+1b. **附录候选**：案例库中 **`kind=doc`** 且**门控命中**的附加资料 ⇒ 以 **`## 附录：{名}`** 追加到**草稿末尾**（**不计入案例数**；**v2.28.0：进目录 · 单独分组 · 样式弱一档** —— 计数与呈现分离）
+ - **门控**：`JD Track` ∈ **<行业>赛道白名单**（当前 = `<默认赛道ID>`）；规则真源 `references/portfolio_outputs.md` **§7**
+ - **人工加挂**：Gate ③ 可显式**加挂 / 摘除**（如「<行业> · <角色>」这类白名单外赛道）
+ - ⭐ **主动提议（v2.28.0）**：当 **门控未命中**、但 `01_jd_match_report` 的**自由文本**显示**目标公司属<行业>**时 ⇒ **必须在 Gate ③ 主动给出「加挂建议」并附实测页数**（`--format pages` 实测**加 / 不加**两版），由 owner 一键决定 —— **禁止沉默略过**。
+ ⚠️ **边界**：**门控逻辑不变**（仍绑 `Track` 受控轴 ⇒ **不引入「按行业判定」的不可治理面**）；本条**只把「提议」自动化，「决策」仍归 owner**（同 §7「门控绑受控轴 + 人工覆盖作兜底」）。
+ - `Disclosure: 内部` 的材料 ⇒ **不得进附录**（同案例硬拦）
 2. **L2 变体级**：JD Track ↔ 案例 `Variant` 匹配（同 `Project` 多变体**只算 1 个案例**）
-3. **L3 段级**：`Disclosure` ≤ 出口档（硬）· 案例自带「材料选取指引」· 体量预算（**≤3 案例 / 总页数 ≤12，其中附录 ≤3** —— F40 起）
+3. **L3 段级**：`Disclosure` ≤ 出口档（硬）· 案例自带「材料选取指引」· 体量预算（**≤3 案例 / 总页数 ≤12，其中附录 ≤3** —— ）
 4. **落草稿**：`resume-outputs/{JD}/09_portfolio_book.md`（= Gate 要给你看的形态）
 5. **试渲染取页数**：`python scripts/export_resume.py --input …/09_portfolio_book.md --format pages`
-   ⇒ 打印**真实页数 N**（**不落盘**）
+ ⇒ 打印**真实页数 N**（**不落盘**）
 
 ### Portfolio Gate（停 · 等用户确认）
 
@@ -1567,13 +1573,13 @@ Step 9.5 之后，用户说「**出作品集 / 要案例合册**」时进入（o
 ### Phase B：出册（仅在 (a) 后执行）
 
 6. **净化 L1 + L2 + L3a**（披露层）—— 对外版
-   - L3a 含 **E19 黑名单机械扫**（`Token 节省率` / `迭代提速` / `过滤率` / `响应窗口`）⇒ **命中即中止**
-   - `Disclosure: 内部` 的案例 ⇒ **拒绝进对外版（硬拦）**
-   - **附录区同受本步约束**（同一套 L1 / L2 / L3a + E19 扫描，**无豁免**）
+ - L3a 含 **E19 黑名单机械扫**（<内部指标名1> / <内部指标名2> / <内部指标名3> / <内部指标名4>，含各类自研效率 / 速率类指标）⇒ **命中即中止**
+ - `Disclosure: 内部` 的案例 ⇒ **拒绝进对外版（硬拦）**
+ - **附录区同受本步约束**（同一套 L1 / L2 / L3a + E19 扫描，**无豁免**）
 7. **渲染**：`python scripts/export_resume.py --input …/09_portfolio_book.md --profile portfolio --format all`
-   ⇒ `deliverables/09_portfolio_book_final.{md,html,pdf,docx}`
+ ⇒ `deliverables/09_portfolio_book_final.{md,html,pdf,docx}`
 8. **目检 + 报页数**（附录**计入页数**但**不计案例数**）
-9. **行首标点检漏（v2.24.0 · F53）**：`python scripts/check_pdf_kinsoku.py …/09_portfolio_book_final.pdf` ⇒ 命中即改写该处词序（机制不可行，见 Step 9.5「行首标点检漏」）
+9. **行首标点检漏（v2.24.0）**：`python scripts/check_pdf_kinsoku.py …/09_portfolio_book_final.pdf` ⇒ 命中即改写该处词序（机制不可行，见 Step 9.5「行首标点检漏」）
 
 > **禁止**：在 Gate 处重复 `01` 报告 §8.6 的匹配理由（**一个结论只出现一次**）。
 > **规则真源**：披露分级（L3）/ E19 黑名单 / 案例 schema / 索引契约 → `references/portfolio_outputs.md`。
@@ -1642,7 +1648,8 @@ Step 9.5 之后，用户说「**出作品集 / 要案例合册**」时进入（o
 ## Step 10: Knowledge Update（知识更新）
 
 > **Phase 归属（v2.17.0）**：**10.A / 10.B / 10.C → P1** —— 市场情报与「投不投」无关，**看过就该沉淀**（且新赛道发现依赖观察计数，挡在门后就永不积累）；
-> **10.D → P2** —— 那是「**打算投**」的登记，不是「分析过」的登记（与本节既有纪律同源：Mode D 不写 `Applied`）。
+> **10.D → v2.29.0 起拆两档**：**D-1「分析即登记」= P1**（`Status/Type = Analyzed`，只留痕、不表态）；**D-2「出包升级」= P2**（`Status = Planned` + `Type = Pack A–D`）。
+> 拆分理由（ 实测）：原「10.D = P2 · 只在出包时登记」⇒ **纯分析跑完不留痕** —— 22 个 `resume-outputs/` 目录只有 10 个在索引里（**12 个「只分析」包无名字**）。
 
 ### A. 更新 knowledge/role_snapshots/{role_name}.md（v1.4.1 增强 · **P1**）
 
@@ -1655,15 +1662,15 @@ Step 9.5 之后，用户说「**出作品集 / 要案例合册**」时进入（o
 5. 更新 **Skill Weight Baseline**（v1.4.1 新增）：基于多次 Skill Weight Analysis 累积各能力的平均权重
 6. 更新 **Hiring Intent Trends / Talent Persona Trends / Evidence Trends**（≥3 次观察后）
 7. **回写索引 README**（v2.14.0 新增；**v2.17.0 加 `Observed Companies` 列**）：在 `knowledge/role_snapshots/README.md` 的「索引」表登记 / 更新本 Role 一行 ——
-   `Role | Track（受控取值） | Observed JD Count | Observed Companies（已观察公司数） | 文件 | 段完整性`，
-   并同步「按赛道归组」「缺段待刷新」「新赛道候选」三节。
-   - **`Observed Companies` 列 = 本 Role 快照 `Observed Companies` 字段解析出的「不同公司数」**（解析规则见 §Step 10 C 第 7 条），
-     **不是 `Observed JD Count`** —— 二者在「同一公司同批次多份 JD」时会显著背离（实测某岗 4 份 JD / 1 家公司）。
-     该列是「新赛道发现」的唯一输入，**必须每次回写**。
-   - **README 不存在时按本节表头初始化**（表头即结构契约；`knowledge/` 不属 Career DNA SSOT，无需四件套登记），
-     并补齐「按赛道归组 / 缺段待刷新 / 新赛道候选 / 别名冲突 / 已处置」各节骨架。
-   - 首次建档同样必须登记。**新字段 / 新文件不加回写钩子 = 第一天即脏**（v2.12.0 `01_application_index` 缺 Pack 列
-     且 Mode D 从不回写 → 实测 8 个投递包仅登记 2 行的教训）。
+ `Role | Track（受控取值） | Observed JD Count | Observed Companies（已观察公司数） | 文件 | 段完整性`，
+ 并同步「按赛道归组」「缺段待刷新」「新赛道候选」三节。
+ - **`Observed Companies` 列 = 本 Role 快照 `Observed Companies` 字段解析出的「不同公司数」**（解析规则见 §Step 10 C 第 7 条），
+ **不是 `Observed JD Count`** —— 二者在「同一公司同批次多份 JD」时会显著背离（实测某岗 4 份 JD / 1 家公司）。
+ 该列是「新赛道发现」的唯一输入，**必须每次回写**。
+ - **README 不存在时按本节表头初始化**（表头即结构契约；`knowledge/` 不属 Career DNA SSOT，无需四件套登记），
+ 并补齐「按赛道归组 / 缺段待刷新 / 新赛道候选 / 别名冲突 / 已处置」各节骨架。
+ - 首次建档同样必须登记。**新字段 / 新文件不加回写钩子 = 第一天即脏**（v2.12.0 `01_application_index` 缺 Pack 列
+ 且 Mode D 从不回写 → 实测 8 个投递包仅登记 2 行的教训）。
 
 ### B. 更新 / 建档 knowledge/skill_snapshots/{domain_name}.md（v2.22.0 增强 · **P1**）
 
@@ -1685,10 +1692,10 @@ Step 9.5 之后，用户说「**出作品集 / 要案例合册**」时进入（o
 5. 更新 **Typical Results**：该 Skill 的典型成果量化方式
 6. 更新 **Typical Ownership**：基于多次 Evidence Expectation 的 Expected Ownership 均值
 7. **回写索引 README**（v2.22.0 新增）：在 `knowledge/skill_snapshots/README.md` 的「索引」表登记 / 更新本 Domain 一行 ——
-   `Domain（能力域） | 能力数 | Observed JD Count | 文件 | 段完整性`，并同步「未建档 Domain」「缺段待刷新」两节。
-   - **README 不存在时按本节表头初始化**（表头即结构契约；`knowledge/` 不属 Career DNA SSOT，无需四件套登记）。
-   - 首次建档同样必须登记。**新文件 / 新字段不加回写钩子 = 第一天即脏**（同 10.A 第 7 条与
-     v2.12.0 `01_application_index` 的教训）。
+ `Domain（能力域） | 能力数 | Observed JD Count | 文件 | 段完整性`，并同步「未建档 Domain」「缺段待刷新」两节。
+ - **README 不存在时按本节表头初始化**（表头即结构契约；`knowledge/` 不属 Career DNA SSOT，无需四件套登记）。
+ - 首次建档同样必须登记。**新文件 / 新字段不加回写钩子 = 第一天即脏**（同 10.A 第 7 条与
+ v2.12.0 `01_application_index` 的教训）。
 
 ### C. 更新 career-dna/10_career_tracks/{track}.md（v1.4.2 增强 · **P1**）
 
@@ -1699,37 +1706,48 @@ Step 9.5 之后，用户说「**出作品集 / 要案例合册**」时进入（o
 5. 更新 **Evidence Strength**：基于 Evidence Expectation 评估证据强度（Strong / Moderate / Weak）
 6. 更新 **Market Demand Signals / Recent JD Coverage / Market Signal**
 7. **新赛道发现（New Track Discovery v2.17.0）** —— 本步的**常驻分支**：`Track: none` 的快照**无 track 可更新**，
-   发现链路此前正是在此处断掉（「新赛道」只能靠人读 README 时才被想到）。**每次观察后必须执行**：
+ 发现链路此前正是在此处断掉（「新赛道」只能靠人读 README 时才被想到）。**每次观察后必须执行**：
 
-   - **候选池** = 所有 `Track（职业赛道）` 取值为 `none` 的 Role Snapshot（用户侧 `knowledge/role_snapshots/`，
-     索引见其 README 的「按赛道归组 · `none` 组」与「新赛道候选」表）。
-   - **判据** = **同一快照内「已观察的不同公司数」≥ 3**。**计量单位是公司数，不是 JD 数** ——
-     同一公司在同一批次放出 N 份同类 JD 只算 **1** 个市场信号
-     （实测某岗 4 份 JD 全部来自同一公司同一批次；若按 JD 数计该岗早已「达标」，而它实际只有 1 家雇主）。
-   - **计法** = 解析该快照的 `Observed Companies` 字段（受控格式见下）—— **剥离 `（）` 括注后**按 ` · ` / `+` / `、` 切分；
-     `unknown`（JD 未标注公司）**不计入**；**括注内提及的关联方不计入**（母公司 / 客户不算独立观察）。
-   - **动作**：
-     - **未达标** → 在 README「新赛道候选」表更新本 Role 的已观察公司数与「距阈值」列（`3 - N`）；
-     - **达标** → 在 README「新赛道候选」表把该行状态改为 `⚠️ 建议评估`，并**在会话中主动提示用户**：
-       「`{role}` 已跨 3 家公司观察，是否评估新建赛道？」——**并给出观察依据**（哪几家、各多少份 JD）。
-   - **边界（硬）**：**建不建新赛道由人拍板**。本步**只登记候选与提示**，**禁止**自动创建 / 修改
-     赛道文件（新建赛道属 career-dna 写入，须走 Mode A/B 契约；赛道置信度是用户侧判断，不是脚本结论）。
-   - **`none` 不是「废弃」**：它是**未命中已登记赛道**，本身就是发现信号（实测 5/12 快照为 `none`）。
-   - **`Observed Companies` 受控格式**：字段值 = **公司名**（多家用 ` · ` 或 `+` 分隔），
-     每家的说明写在紧跟其后的 `（）` 括注内（证码 / 城市 / 隶属 / 规模）；**括注内容不计入公司计数**；
-     JD 未标注公司 → 写受控值 `unknown`（**不计入**），推断理由写括注。
-     **禁止**把说明写成 ` · ` 分隔的平铺串（会被解析成另一家公司 → 误触发新赛道发现）。
-     由 P2 `role-snapshot-schema` 第 ④ 项校验。
+ - **候选池** = 所有 `Track（职业赛道）` 取值为 `none` 的 Role Snapshot（用户侧 `knowledge/role_snapshots/`，
+ 索引见其 README 的「按赛道归组 · `none` 组」与「新赛道候选」表）。
+ - **判据** = **同一快照内「已观察的不同公司数」≥ 3**。**计量单位是公司数，不是 JD 数** ——
+ 同一公司在同一批次放出 N 份同类 JD 只算 **1** 个市场信号
+ （实测某岗 4 份 JD 全部来自同一公司同一批次；若按 JD 数计该岗早已「达标」，而它实际只有 1 家雇主）。
+ - **计法** = 解析该快照的 `Observed Companies` 字段（受控格式见下）—— **剥离 `` 括注后**按 ` · ` / `+` / `、` 切分；
+ `unknown`（JD 未标注公司）**不计入**；**括注内提及的关联方不计入**（母公司 / 客户不算独立观察）。
+ - **动作**：
+ - **未达标** → 在 README「新赛道候选」表更新本 Role 的已观察公司数与「距阈值」列（`3 - N`）；
+ - **达标** → 在 README「新赛道候选」表把该行状态改为 `⚠️ 建议评估`，并**在会话中主动提示用户**：
+ 「`{role}` 已跨 3 家公司观察，是否评估新建赛道？」——**并给出观察依据**（哪几家、各多少份 JD）。
+ - **边界（硬）**：**建不建新赛道由人拍板**。本步**只登记候选与提示**，**禁止**自动创建 / 修改
+ 赛道文件（新建赛道属 career-dna 写入，须走 Mode A/B 契约；赛道置信度是用户侧判断，不是脚本结论）。
+ - **`none` 不是「废弃」**：它是**未命中已登记赛道**，本身就是发现信号（实测 5/12 快照为 `none`）。
+ - **`Observed Companies` 受控格式**：字段值 = **公司名**（多家用 ` · ` 或 `+` 分隔），
+ 每家的说明写在紧跟其后的 `` 括注内（证码 / 城市 / 隶属 / 规模）；**括注内容不计入公司计数**；
+ JD 未标注公司 → 写受控值 `unknown`（**不计入**），推断理由写括注。
+ **禁止**把说明写成 ` · ` 分隔的平铺串（会被解析成另一家公司 → 误触发新赛道发现）。
+ 由 P2 `role-snapshot-schema` 第 ④ 项校验。
 
-### D. 回写投递索引（v2.12.0 新增 · **P2**）
+### D. 回写投递索引（v2.12.0 新增 · **v2.29.0 拆两档**）
 
-在 `application-tracker/01_application_index.md` 登记 / 更新本次投递一行 ——
+> **为什么拆**（ 勘出）：原「10.D = P2 · 只在出包时登记」⇒ **纯分析跑完不留痕**，22 个 `resume-outputs/` 目录只有 10 个在索引里。
+> 拆法：**分析即登记（P1）** + **出包升级（P2）**。
 
-1. 填写 Company / Industry / Role / City / Salary / Source / **Pack**（相对路径 `../resume-outputs/{YYYYMMDD}-{company}-{role}/`）
-2. Status = `Planned`，Last Update = 当日
-3. 已存在同 Company + Role 行 → **原地更新**，不重复添加
-4. `Status` 由 **Mode E** 在真实投递后流转为 `Applied` 及以后；**Mode D 不写 `Applied`**
-   （否则「已备包」与「已投递」混淆，并虚高 Mode C Step 6 的市场验证率统计）
+#### D-1. 分析即登记（**P1** · 每次 Mode D 分析完成都执行）
+
+在 `application-tracker/01_application_index.md` 登记 / 更新一行：
+
+1. `Status` = **`Analyzed`**，`Type` = **`Analyzed`**，`Last Update` = 当日
+2. `Pack` = `../resume-outputs/{YYYYMMDD}-{company}-{role}/`（**即使只有 `01` 报告也填**，便于反查）
+3. Company / Role 必填；Industry / City / Salary / Source 缺失填 `—`（**禁推测填充**）
+4. 已存在同 Company + Role 行 → **原地更新**，不重复添加
+
+#### D-2. 出包升级（**P2** · 生成 `02`–`09` 材料时执行）
+
+1. `Status` = `Planned`，`Type` = `Pack A` / `Pack B` / `Pack C` / `Pack D`
+2. `Last Update` = 当日；其余字段按实际补齐
+3. `Status` 由 **Mode E** 在真实投递后流转为 `Applied` 及以后；**Mode D 不写 `Applied`**
+ （否则「已备包」与「已投递」混淆，并虚高 Mode C Step 6 的市场验证率统计）
 
 ### Knowledge Update 逻辑总结（v1.4.2）
 
@@ -1737,9 +1755,9 @@ Step 9.5 之后，用户说「**出作品集 / 要案例合册**」时进入（o
 JD
 ↓
 Talent Persona → Role Snapshot（Skill Weight Baseline + Persona Statistics）
-    ↓
+ ↓
 Evidence Expectation → Skill Snapshot（建档 Mode A Step 9.6 / 更新：Typical Evidence + Aliases + Ownership 均值）
-    ↓
+ ↓
 Career Track（Track Confidence Breakdown + Market Validation + Recent JD Coverage）
 ```
 

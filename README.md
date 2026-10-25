@@ -3,7 +3,7 @@
 > 把你的 AI 助手变成私人 Career Manager：以 **Career DNA（职业基因库）** 为唯一事实源，持续建设、管理、升级你的职业资产，而不是每次看到 JD 都从零重写简历。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-v2.25.0-green.svg)](https://github.com/lamhoying/career-manager/releases)
+[![Version](https://img.shields.io/badge/version-v2.34.0-green.svg)](https://github.com/lamhoying/career-manager/releases)
 [![Cross-Agent](https://img.shields.io/badge/agent-agnostic-brightgreen.svg)](#跨平台兼容性)
 
 ---
@@ -331,10 +331,12 @@ career-manager/
 
 ## 版本与更新
 
-完整逐版本变更记录见 [GitHub Release notes](https://github.com/lamhoying/career-manager/releases)。当前版本 **v2.25.0**。
+完整逐版本变更记录见 [GitHub Release notes](https://github.com/lamhoying/career-manager/releases)。当前版本 **v2.34.0**。
 
 ### 版本里程碑
 
+- **v2.34.0**：导出引擎升级——新增 `--auto-fit` 行距自动寻优（按页数与末页填充约束自动选取最大行距，默认开启，附 `--no-auto-fit` 逃生门）；年限口径三值化（总从业 / 行业专项 / 数字化近年限 + 渠道取值表），明确「哪种材料用哪个值」的分派规则，配套模板字段取值规则与投递核对项。
+- **v2.28.0**：作品集合册增强——附录「主动提议」自动化（目标公司属特定行业时自动提示加挂行业经历附录）+ 封面与目录合并同页（上下分栏，减少空白页）。
 - **v2.25.0**：Online Profile 规则补白——新增 `R02b` 成长表达边界：经历层动词按段分层（执行 / 标准化 / 建体系 / 管理决策），成长叙事归位于 `07` / `02_timeline` / `13` / `08`，身份层禁止岗位阶梯叙事进入身份块；并补齐 `R02b` 在规则真源的索引入口。
 - **v2.24.0**：波次 2 全量修复——渲染层按类兜底（字形缺口分类降级）+ 声明即接线（产物必有产生步骤）+ 载体扩展（PDF → PNG 分页 / 长图导出 `render_png.py`）；合册 L2 语义剥离（口径 / 派生自）、行内标记（反引号 / `==强调==`）、项目经历渲染契约根治。
 - **v2.23.5**：简历正文内容位职责边界——总纲「同一信息只在一个位置出现」（One Fact, One Slot）、内容位职责矩阵、项目经历三标签受控化、职业定位去冗余（≤ 4 行）。

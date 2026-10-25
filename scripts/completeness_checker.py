@@ -186,7 +186,7 @@ def check_file_completeness(filepath: Path) -> tuple:
         else:
             completeness = 50
 
-    # Special handling for 07_career_identity - Layer 2 未声明检测（v2.21.0 · F18）
+    # Special handling for 07_career_identity - Layer 2 未声明检测（v2.21.0）
     # 仅靠 PLACEHOLDERS 扣分不足（penalty 上限 0.3）。Layer 2 是身份锚点，
     # 其空值会让 Mode D / Online Profile 的硬身份锚点无兜底降级 ⇒ 单独设上限。
     layer2_reason = None

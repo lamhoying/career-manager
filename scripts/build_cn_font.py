@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """中文字体构建 —— 在 NotoSansSC 子集上补齐「符号 / 标点 / 希腊 / 带圈数字」字形。
 
-背景（对应待办 F36）
+背景（对应待办 ）
 ====================
 assets/fonts/NotoSansSC-{Regular,Bold}.ttf 是 **Noto Sans SC 的子集**。
 **升级前**仅 **7,946 码位**（只保留常用汉字 + 基本标点，**不含** 箭头 / 数学关系 /
@@ -27,7 +27,7 @@ assets/fonts/NotoSansSC-{Regular,Bold}.ttf 是 **Noto Sans SC 的子集**。
 
 为什么不用 fontTools.merge
 ==========================
-  实测 `Merger().merge()` 在「原件（含 GPOS/GSUB）↔ 补丁子集（已 drop layout）」
+  实测 `Merger.merge` 在「原件（含 GPOS/GSUB）↔ 补丁子集（已 drop layout）」
   之间报 `TypeError: '>' not supported between NotImplementedType and int`
   （fontTools/merge/base.py::mergeObjects）—— 两字体**表集合不一致**即触发。
   重子集路线无此约束，且实测既有字形轮廓**逐字节等价**（抽样 500 汉字零漂移），

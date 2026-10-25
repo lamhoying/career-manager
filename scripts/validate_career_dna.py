@@ -54,7 +54,26 @@ validate_career_dna.py - Career DNA 写入闸门（Write Gate）
                           ③ 受控字段（Project 非空 / Variant ∈ {none} ∪ 索引登记值域 / Disclosure ∈ {对外,面试,内部}）
                           ④ 未登记 / 不合规案例**聚合一条**（不逐文件刷屏）
                           ⑤ 规模主谓红扫（「管理 N 人」且 N > 直接带团队上限 ⇒ 越界）
-                          —— 该目录此前「无目录契约、无索引校验、无闸门」三缺（F32）
+                          —— 该目录此前「无目录契约、无索引校验、无闸门」三缺
+  P2  track-confidence-consistency
+                           赛道置信度不自洽（`` · v2.32.0）：
+                           ① **分解式自洽** —— 各赛道文件 `| **Track Confidence（综合置信度）** | **N** | 分量×40% +
+                              分量×35% + 分量×25% = … |` ⇒ `round(calc)` 必须 == cell（容差 ±0.5）
+                           ② **表 ↔ 文件一致** —— `10_career_tracks/README.md` 的**优先级表**与 **Track 导航表**
+                              两表 `Confidence` 列均须等于对应赛道文件的最终值（本次漂移正是两表各漏一处）
+                           —— ⚠️ **误报边界**：只在「同段内能同时解析出三个分量 + 结果」时比对；
+                              分解式缺失 / 写法自由 / cell 为区间者 ⇒ **skip 并打印「未校验」**，**不得报 P2**
+                              （否则自由格式会被判成不一致，重演 那类假阳性）
+                           —— ⚠️ **只查数值一致性，不查排序合理性**（优先级序属人定）
+   P2  track-strategy-schema
+                           赛道文件缺 `## Track Strategy` 段，或段内 `### S1.`–`### S4.` 不全（`` · v2.32.0）
+                           —— 该段此前**闸门零覆盖**（全库检索 `Track Strategy` 0 命中）；
+                              实测曾出现「某成果指标 X→Y 天」被当作独立项目 / 故事条目引用的悬空写法
+                           —— 只做**段形校验**（存在 + S1–S4 齐全）；引用编号与真源的核对属第二阶段
+   P2  gate-check-registry  manifest `gate_checks` 登记的校验项，在源码中**找不到对应实现**（`` 族元校验）
+                           —— 本项存在的理由：**「声明了机制却无实现」是反复出现的病根**
+                              （`stale` 取值 / `track-confidence-consistency` 均属此族）；
+                              用闸门自查「登记了但没实现」，把这类空声明变成可机械检出
   P2  weight-sum          manifest 的 weight 合计 ≠ 100（权重语义 = 占整体完整度的百分比）
                           —— 新增文件后未同步重分配 ⇒ 09 报表分母与各模块「权重 %」标注无法据以手算复核
                              （v2.11.0 加入 13 号文件时漏做重分配，合计漂到 105 且此后 10 个版本无人发现）
@@ -82,14 +101,14 @@ validate_career_dna.py - Career DNA 写入闸门（Write Gate）
                              且声明集合与 `mode_d` §Pack A–D 清单**双向**一致
                           ④ 产物 ⊇ 真源 —— `resume-outputs/{JD}/`（旧代际豁免）产物的 H2
                              须 ⊇ 其真源 H2；落盘名不在映射内即报。
-                             **必备侧须尊重真源自身的标注（v2.26.0 · F58）**：
+                             **必备侧须尊重真源自身的标注（v2.26.0）**：
                              含 `{{…}}` / `{…}` / `[…]` 的标题 = 生成时填入的内容 ⇒
                              占位段转 `.*` 按**模式匹配**（非字面量比对）；
                              含 `条件必填` / `可选` 的标题 = 模板已自证「非常备」⇒ **不计入必备集**
-                          —— v2.23.3 的「薄壳化」只把一致性写进**刀内一次性断言**（下刀起失效，F43）；
-                             `resume-outputs/` 产物侧此前**零校验**（F43）；
+                          —— v2.23.3 的「薄壳化」只把一致性写进**刀内一次性断言**（下刀起失效，）；
+                             `resume-outputs/` 产物侧此前**零校验**；
                              无 canonical 的长尾（`XX_learning_roadmap` / `XX_transition_*`）
-                             此前**无人对账**（F44）。三类标记即「薄壳 / 真源」二元识别的**唯一判据**
+                             此前**无人对账**。三类标记即「薄壳 / 真源」二元识别的**唯一判据**
                              —— 按头部标记识别，**禁硬编码文件名清单**
 
 本脚本 **只报告、绝不修改任何文件**。裁决与处置由调用方（AI/用户）执行：
@@ -102,7 +121,7 @@ validate_career_dna.py - Career DNA 写入闸门（Write Gate）
   - track-constraint-coverage → 按 `10_career_tracks/` 实有赛道，逐条补齐缺失的赛道条目
   - role-snapshot-schema     → 补段（或按模板重建）；Track 改为受控取值（解释移入 Track Note）；
                                别名冲突须人工判定归属，不得两边都留；
-                               Observed Companies 只放公司名，说明移入 `（）` 括注（未标注公司写 unknown）
+                               Observed Companies 只放公司名，说明移入 `` 括注（未标注公司写 unknown）
   - identity-layer-schema    → 补层（或按模板重建）；Layer 2 未声明须走 Mode A Step 8 采集协议
                                （**不得代填** —— 违 R01）；Track / 收录标注改受控取值；
                                Layer 4 的 TC 编号回 04b 核对
@@ -196,8 +215,22 @@ GHOST_SKIP_PREFIXES = (
     "references/",
     "scripts/",
     "application-tracker/",
+    # v2.33.0（/ ）：扫描面扩到 `references/` 与 `10_career_tracks/` 后，
+    # 这两处文档引用的「工作区 / 产物空间」路径才算暴露出来。以下四类**恒在 skill 之外**，
+    # 无法也用不着按任何基准解析 —— 归入 skip 而不是白名单（白名单是「文件」级，这里是「空间」级）。
+    "deliverables/",       # 投递包内净化产物（相对包根书写）
+    "memory/",             # 工作区记忆层（`memory/archives/判据存档.md` 等）
+    ".workbuddy/",         # 工作区治理目录（待办清单 / 脚本）
+    "role_snapshots/",     # `career-dna/knowledge/role_snapshots/` 的简写形态（固定目录名，允许略写）
     "http",
 )
+
+# 「编号二选一」写法：`07/08_boss_greeting.md`（编号随 Pack 变化，A=07 / B=08）。
+# 不是目录分隔符 —— 拆开后取后半再判真伪，否则整条会被当成「不存在的子目录」。
+GHOST_ALT_NO_RE = re.compile(r"^\d{2}/\d{2}_")
+
+# 派生落盘名：`02_resume_cn_final.md` 由 `02_resume_cn.md` 净化派生（的产物名）。
+GHOST_FINAL_SUFFIX = "_final.md"
 
 # 显式白名单：模板名 / 命名模式 / 位于其他目录的固定文件名。
 # 与 JD_OUTPUT_NAMES 同级声明 —— 白名单只允许在这里扩，不要在判断逻辑里写特例。
@@ -262,7 +295,7 @@ ROLE_SNAPSHOT_SEGMENTS = (
     "Trend Intelligence",
 )
 
-# 迁移白名单：建于模板升级之前（2026-07-20 ~ 09-02）的旧实例，段标题未齐属已知历史缺口。
+# 迁移白名单：建于模板升级之前的旧实例，段标题未齐属已知历史缺口。
 # 采用「先上闸门、后补数据」——若先把数据补齐再上闸门，缺口将永远不被记录。
 # 随下次 JD 观察自然补齐后，从此名单移除（白名单只允许收缩）。
 ROLE_SNAPSHOT_MIGRATION_WHITELIST = frozenset(
@@ -307,7 +340,7 @@ REPORT01_TARGET_RE = re.compile(
 )
 PART_REF_RE = re.compile(r"Part\s+(\d+)(?:\.(\d+))?")
 # 01 目标与 Part 之间允许的「间隔」：仅标记符/空白，且有长度上限
-PART_REF_GAP_RE = re.compile(r"^[\s`*:：>_\-—（）()【】\[\]]*$")
+PART_REF_GAP_RE = re.compile(r"^[\s`*:：>_\-—【】\[\]]*$")
 PART_REF_GAP_MAX = 14
 # ---- P2 identity-layer-schema 相关 ----
 # 07_career_identity.md 此前无任何闸门覆盖（13 项校验均不检查它）。
@@ -325,7 +358,7 @@ ID_TC_RE = re.compile(r"(?<![A-Za-z0-9])TC(\d{3})(?![0-9])")
 # 未填写的模板占位（`[赛道文件名 | none]` 等）不报「取值非法」——由 Layer 2 非空检查统一报。
 ID_PLACEHOLDER_PREFIX = ("[", "{", "<")
 
-# ---- P2 skill-snapshot-schema 相关（v2.22.0 · F30） ----
+# ---- P2 skill-snapshot-schema 相关（v2.22.0） ----
 # knowledge/skill_snapshots/ 此前「无建档责任、无索引、无闸门」三缺（role 侧三者皆有）——
 # 实测 13 个 Domain 只有 1 个快照，Mode D 观察到的市场情报无处可流。
 # 段清单 = assets/templates/knowledge/skill_snapshot.md 的 H2 集合（模板为真源）。
@@ -350,7 +383,7 @@ SS_OVERVIEW_ROW_RE = re.compile(r"^\|\s*([A-Za-z][A-Za-z& ]*?（[^）]+）)\s*\|
 
 
 # ---- P2 portfolio-output-schema 相关（v2.23.0 · 作品集案例库） ----
-# portfolio-outputs/ 此前「无目录契约、无索引校验、无闸门」三缺（F32）——
+# portfolio-outputs/ 此前「无目录契约、无索引校验、无闸门」三缺——
 # 该目录在 skill 全库 grep 零命中，写入其中的文件不受任何一致性检查。
 # 规则真源 = references/portfolio_outputs.md（目录契约 / 案例 schema / 披露分级 / 索引契约）。
 # 必备节清单 = assets/templates/resume-outputs/XX_portfolio.md 的 H2 集合（模板为真源，禁脚本内另写）。
@@ -364,7 +397,7 @@ PF_DIRECT_TEAM_MAX = 6
 PF_SCALE_VERB_RE = re.compile(r"(管理|带领|负责|统筹)\s*(\d+)\s*人")
 
 
-# ---- P2 format-source-consistency 相关（v2.23.4 · F43 / F44） ----
+# ---- P2 format-source-consistency 相关（v2.23.4/ ） ----
 # 缺口：`assets/templates/resume-outputs/` 的「种子」分三类（薄壳 / 内联真源 / 声明真源），
 # 此前**无任何闸门覆盖** ——「种子是否还能对上 canonical」「产物是否还含 canonical 的章节」
 # 只靠一次性人工断言（v2.23.3 刀 F 的 54 断言跑在**刀内脚本**里 ⇒ **下刀起失效**）；
@@ -432,7 +465,7 @@ def _norm_h2_set(body: str) -> set:
     return out
 
 
-# ---- F58（v2.26.0）· 必备集须尊重模板标注 ----
+# ---- （v2.26.0）· 必备集须尊重模板标注 ----
 # 缺口：④「产物 ⊇ 真源」原先做**纯字面集合比较**，把模板 H2 的**占位符**与**可选标注**
 # 一并按必备字面量处理 ⇒ 两类**永久假报**（都不是「产物写错」）：
 #   ① 占位符：`05_answer_cards` / `06_gap_analysis` / `09_portfolio_book` 的三个标题天然含
@@ -503,6 +536,54 @@ def _portfolio_required_segments(text: str) -> set:
             body.append(ln)
     _flush()
     return required
+
+
+def _track_conf_cell(body: str):
+    """解析赛道文件的 `Track Confidence` 行 → (cell, e, r, k) 或 None（不可解析）。
+
+    写法容差（实测三种变体都要认）：
+      `| **Track Confidence（综合置信度）** | **65** | 75×40% + 50×35% + 70×25% = 65.0 → **65** |`
+      `| **Track Confidence（综合置信度）** | **72** | **79**×40% + 64×35% + 70×25% = **71.5 → 72** |`
+    ⇒ cell 取第 2 列；三分量按 `×40%` / `×35%` / `×25%` 分别抓（允许 `**` 包裹）；
+      结果以第 2 列为准（分解式里的 `→ N` 只作旁证，不参与判定）。
+    """
+    m = re.search(
+        r"^\|\s*\*\*Track Confidence（综合置信度）\*\*\s*\|\s*\*\*(\d+)\*\*\s*\|\s*(.+?)\s*\|\s*$",
+        body, re.M)
+    if not m:
+        return None
+    cell = int(m.group(1))
+    formula = m.group(2)
+    parts = {}
+    for pct, key in ((40, "e"), (35, "r"), (25, "k")):
+        mm = re.search(r"(\d+)\s*\*{0,2}\s*[×x*]\s*%d%%" % pct, formula)
+        if not mm:
+            return (cell, None, None, None)   # cell 有、分解式不可解析 ⇒ 上层 skip
+        parts[key] = int(mm.group(1))
+    return (cell, parts["e"], parts["r"], parts["k"])
+
+
+def _portfolio_index_states(text: str):
+    """解析「案例总览」表的状态列 → [(文件名, 状态原文)]（仅取能定位到状态列的表格）。"""
+    rows, hdr = [], None
+    for ln in text.split("\n"):
+        if not ln.lstrip().startswith("|"):
+            continue
+        cells = [c.strip() for c in ln.replace("\\|", "\x00").strip().strip("|").split("|")]
+        cells = [c.replace("\x00", "|") for c in cells]
+        norm = [c.strip("*` ") for c in cells]
+        if norm and all(re.fullmatch(r":?-{2,}:?", c) for c in norm if c):
+            continue
+        if hdr is None:
+            if "状态" in norm and "kind" in norm:
+                hdr = {c: i for i, c in enumerate(norm)}
+            continue
+        si = hdr.get("状态", -1)
+        if not (0 <= si < len(cells)):
+            continue
+        for m in PF_INDEX_LINK_RE.finditer(ln):
+            rows.append((m.group(1).strip(), cells[si]))
+    return rows
 
 
 def _parse_portfolio_index(text: str, po_dir: Path):
@@ -603,13 +684,25 @@ def _is_rule_provenance(line: str) -> bool:
     return "合并" in line or re.search(r"原\s*R", line) is not None
 
 
-def _ghost_ref_exists(ref: str, base: Path, declared) -> bool:
+def _ghost_ref_exists(ref: str, base: Path, declared, own_dir: Path | None = None) -> bool:
     """判断一条路径形态引用是否「有真实落点」。
+
+    ⚠️ **解析基准随扫描域变化**（v2.33.0 · `` / ``）—— 本函数被三类文件复用：
+      - **career-dna 根文件**（`own_dir=None`）：按 career-dna 根解析 = 历史行为，**最严**；
+      - **`references/**`**（`own_dir` = 文件自身目录）：该目录内文档互相引用写的是
+        裸文件名（`online_profile_generation.md`）⇒ **自身目录优先**。 实测：
+        扩面后 87 条失败里 **66 条**属「基准不对」而非引用错（``）；
+      - **`10_career_tracks/`**（`own_dir` = 该目录）：跨目录写 `../03_projects.md`，
+        由 `Path` 拼接自然解析，不需特殊规则。
 
     `{...}` 变量段**不用通配匹配** —— 通配会把 `{track}_strategy.md` 误认成
     「`13_interview_narrative_strategy.md` 存在」（后者确实以 `_strategy.md` 结尾），
-    从而把幽灵引用洗白。改为：变量化引用必须带目录（如 `10_career_tracks/{track}.md`），
-    且该目录在 career-dna/ 下真实存在；不带目录的变量化引用一律视为可疑。
+    从而把幽灵引用洗白。改为按域分级：
+      - **career-dna 根**：变量化引用必须带目录（如 `10_career_tracks/{track}.md`），
+        且该目录在 career-dna/ 下真实存在；不带目录的变量化引用一律视为可疑；
+      - **非根域**（`references/` / `10_career_tracks/`）：变量化写法是「给人看的占位说明」
+        （`{name}.md` / `<实例文档>.md` / `{Company}_{Role}.md`），不指向具体落点 ⇒ 放行。
+        ⚠️ 放行**只放宽「占位形态」**，字面路径引用照旧逐条验真（成对验证见 ``）。
     """
     if ref in GHOST_REF_WHITELIST or ref in JD_OUTPUT_NAMES or ref in declared:
         return True
@@ -619,15 +712,32 @@ def _ghost_ref_exists(ref: str, base: Path, declared) -> bool:
     # 抄一份进脚本 = 造第二定义源（且与本 skill 的版本链无关）。
     if ref in (_pack_output_names(Path(__file__).resolve().parent.parent) or ()):
         return True
+    # 派生落盘名：`XX_final.md` 由 `XX.md` 净化派生（产物名，非 skill 文件）
+    if ref.endswith(GHOST_FINAL_SUFFIX):
+        if _ghost_ref_exists(
+            ref[: -len(GHOST_FINAL_SUFFIX)] + ".md", base, declared, own_dir
+        ):
+            return True
+    # 「编号二选一」写法 `07/08_boss_greeting.md` ⇒ 取后半（`08_boss_greeting.md`）再判
+    if GHOST_ALT_NO_RE.match(ref) and _ghost_ref_exists(
+        ref.split("/", 1)[1], base, declared, own_dir
+    ):
+        return True
     if any(ref.startswith(p) for p in GHOST_SKIP_PREFIXES) or "://" in ref:
         return True
     rel = ref[2:] if ref.startswith("./") else ref
     if rel.startswith("career-dna/"):
         rel = rel[len("career-dna/") :]
-    if "{" in rel:
+    if any(t in rel for t in ("{", "}", "*", "<", ">")):
+        if own_dir is not None:          # 非根域：占位说明，放行（域分级 · 拍板「甲」）
+            return True
         parent = rel.rsplit("/", 1)[0] if "/" in rel else ""
         return bool(parent) and (base / parent).is_dir()
-    return (base / rel).exists()
+    # 字面路径：按 career-dna 根 → 文件自身目录 → skill 根 依次尝试
+    bases = [base] + ([own_dir] if own_dir is not None else [])
+    bases.append(Path(__file__).resolve().parent.parent)
+    return any((b / rel).exists() for b in bases)
+
 
 
 def _count_track_entries(section_lines) -> int:
@@ -722,7 +832,7 @@ def collect_long_lines(path: Path):
 
 
 # ---- P2 pdf-glyph-coverage 相关（v2.23.1 · PDF 静默丢字） ----
-# 起因（F36）：合册 PDF 由 reportlab **直接绘制**（`html_to_pdf`），而 reportlab **无字体回退** ——
+# 起因：合册 PDF 由 reportlab **直接绘制**（`html_to_pdf`），而 reportlab **无字体回退** ——
 # 字符不在字体 cmap 里 ⇒ 画不出、不报错、文本层不留痕。用户看到的「符号丢失」即此。
 # 两层机制 + 本闸门的分工：
 #   ㊁ 主机制 = **字体本身覆盖**（`scripts/build_cn_font.py` 重子集补齐字形，补到 9,313 码位）
@@ -746,12 +856,12 @@ GLYPH_SKIP_NAMES = frozenset({"readme.md", "game_experience_template.md"})
 # 豁免类别（**丢失不改变语义** 或 **本就不可见**）—— 只留「真·不可见」：
 #   Cf 格式符｜Mn·Me 组合符（含变体选择符 U+FE0F —— `⚠️` 的第二个码位）｜Zl·Zp·Zs 分隔符
 #     ⇒ 不可见字符，**无字形需求**（reportlab 丢掉它们不产生任何视觉差）
-# ⚠️ **v2.24.0（F41 ㊁）起 `So` 已移出豁免** —— 收窄前 `⭐`（U+2B50）被「装饰类」吞掉 ⇒
+# ⚠️ **v2.24.0起 `So` 已移出豁免** —— 收窄前 `⭐`（U+2B50）被「装饰类」吞掉 ⇒
 #     **静默丢字且无人知**。现在按「渲染器是否兜底」分流：符号类 ⇒ 渲染器已**按类降级**（有损但不丢字）
 #     ⇒ 报 `pdf-glyph-degraded`（提示改用文字）；非符号类 ⇒ 仍会**静默丢字** ⇒ 报 `pdf-glyph-coverage`（真缺陷）。
 # ⚠️ 判定顺序：**先**判 U+FFFD —— 它同样是 `So`，若先走豁免会被静默吞掉（真缺陷被豁免掩盖）。
 GLYPH_EXEMPT_CATS = frozenset({"Cf", "Mn", "Me", "Zl", "Zp", "Zs"})
-# 渲染器 `export_resume.py:_generic_glyph_fallback()` 的按类兜底覆盖集（须与 `_GLYPH_SYMBOL_CATS` 对齐）。
+# 渲染器 `export_resume.py:_generic_glyph_fallback` 的按类兜底覆盖集（须与 `_GLYPH_SYMBOL_CATS` 对齐）。
 # 落进本集 ⇒ 「有损降级、不丢字」；落不进本集 ⇒ 「真丢字」。
 GLYPH_GENERIC_FALLBACK_CATS = frozenset({"So", "Sm", "Sk", "Sc"})
 GLYPH_INVISIBLE_OK = frozenset("\t\n\r\x0b\x0c")
@@ -1000,15 +1110,28 @@ def validate(career_dna_dir: str = "./career-dna"):
 
     # ---- P2: 幽灵文件引用（非 NN_ 前缀 / 变量化路径的 .md 引用） ----
     # 与 unresolved-anchor 互补：后者只认 NN_xxx.md；本规则覆盖 `{track}_strategy.md`
-    # 这类「变量化路径」。扫描范围 = career-dna/ 根目录文件 + skill 自带的 assets/templates/
-    # （模板是 career-dna 文件的种子，其指针必须是真实的）。两类引用都按 career-dna 根解析。
-    ghost_targets = list(present.items())
-    templates_root = Path(__file__).resolve().parent.parent / "assets" / "templates"
+    # 这类「变量化路径」。
+    # **扫描面 = 4 个域**（v2.33.0 · `` / `` 扩面）：
+    #   ① career-dna/ 根文件 ② skill 自带 assets/templates/（种子，指针必须真实）
+    #   ③ references/（skill 侧规范文档）④ 10_career_tracks/（赛道文件）
+    # ③④ 的解析基准 = **文件自身目录**（见 `_ghost_ref_exists` 的域分级说明）——
+    # 不这样做会把 66 条正确引用判成幽灵（ `` 实测）。
+    ghost_targets = [(n, p, None) for n, p in present.items()]
+    skill_root = Path(__file__).resolve().parent.parent
+    templates_root = skill_root / "assets" / "templates"
     if templates_root.is_dir():
         for tpl in sorted(templates_root.rglob("*.md")):
-            ghost_targets.append((tpl.name, tpl))
+            ghost_targets.append((tpl.name, tpl, None))
+    for scope_dir, scope_label in (
+        (skill_root / "references", "references"),
+        (base / "10_career_tracks", "10_career_tracks"),
+    ):
+        if not scope_dir.is_dir():
+            continue
+        for p in sorted(scope_dir.rglob("*.md")):
+            ghost_targets.append((f"{scope_label}/{p.name}", p, p.parent))
 
-    for name, path in ghost_targets:
+    for name, path, own_dir in ghost_targets:
         if path.is_dir():
             continue
         try:
@@ -1021,11 +1144,120 @@ def validate(career_dna_dir: str = "./career-dna"):
             if not ref or ref in seen:
                 continue
             seen.add(ref)
-            if _ghost_ref_exists(ref, base, declared):
+            if _ghost_ref_exists(ref, base, declared, own_dir):
                 continue
             findings.append(
                 ("P2", "ghost-file-ref", name, f"引用了不存在的文件 → {ref}")
             )
+
+    # ---- P2: 赛道置信度一致性（v2.32.0 · track-confidence-consistency） ----
+    # 病根：赛道分值曾靠「人工 grep」兜住 ——  实测「某赛道」拆分后 README 两处仍写 74
+    # （赛道文件已 70），**闸门零覆盖**。本项只查「数值一致性」，不查排序合理性（优先级序属人定）。
+    tracks_dir = base / "10_career_tracks"
+    if tracks_dir.is_dir():
+        conf = {}       # 文件名 -> cell
+        skipped = []    # 分解式不可解析（须打印「未校验」，不报 P2）
+        for tf in sorted(tracks_dir.glob("*.md")):
+            if tf.name == "README.md":
+                continue
+            try:
+                tb = tf.read_text(encoding="utf-8")
+            except Exception:
+                continue
+            cell = _track_conf_cell(tb)
+            if cell is None:
+                continue                      # 无该行 = 尚未填（不属本项管辖）
+            c, e, r, k = cell
+            conf[tf.name] = c
+            if e is None:
+                skipped.append(tf.name)
+                continue
+            calc = e * 0.4 + r * 0.35 + k * 0.25
+            if abs(calc - c) > 0.5:
+                findings.append(
+                    ("P2", "track-confidence-consistency", tf.name,
+                     f"分解式 {e}×40% + {r}×35% + {k}×25% = {calc:.1f} ≠ cell {c}")
+                )
+
+        readme = tracks_dir / "README.md"
+        if readme.is_file() and conf:
+            rb = readme.read_text(encoding="utf-8")
+            mism = []
+            # ① 优先级表：`| 2 | <赛道显示名> | NN% | \`<赛道slug>.md\` | …`
+            for m in re.finditer(r"^\|[^|\n]*\|[^|\n]*\|\s*(\d+)%\s*\|\s*`([\w.\-]+\.md)`", rb, re.M):
+                pct, fn = int(m.group(1)), m.group(2)
+                if fn in conf and pct != conf[fn]:
+                    mism.append(f"优先级表 {fn} {pct}% ≠ {conf[fn]}")
+            # ② Track 导航表：`| [<赛道显示名](<赛道slug>.md) | NN% | …`
+            for m in re.finditer(r"^\|\s*\[[^\]]+\]\(([\w.\-]+\.md)\)\s*\|\s*(\d+)%\s*\|", rb, re.M):
+                fn, pct = m.group(1), int(m.group(2))
+                if fn in conf and pct != conf[fn]:
+                    mism.append(f"导航表 {fn} {pct}% ≠ {conf[fn]}")
+            for msg in mism:
+                findings.append(("P2", "track-confidence-consistency", "README.md", msg))
+        if skipped:
+            print(f"   ℹ️ track-confidence-consistency：{len(skipped)} 条分解式不可解析 ⇒ 未校验（{', '.join(skipped[:4])}…）")
+
+        # ---- P2: Track Strategy 段形（v2.32.0 · track-strategy-schema） ----
+        # 病根：该段此前闸门零覆盖（全库检索 `Track Strategy` 0 命中）⇒ 段缺失 / S 节缺档
+        # 均不可机械检出（实测曾把「某成果指标 X→Y 天」当独立项目 / 故事条目引用）。
+        for tf in sorted(tracks_dir.glob("*.md")):
+            if tf.name == "README.md":
+                continue
+            try:
+                tb = tf.read_text(encoding="utf-8")
+            except Exception:
+                continue
+            if "## Track Strategy" not in tb:
+                findings.append(("P2", "track-strategy-schema", tf.name, "缺少 `## Track Strategy` 段"))
+                continue
+            seg = tb.split("## Track Strategy", 1)[1].split("\n## ", 1)[0]
+            miss = [s for s in ("S1", "S2", "S3", "S4")
+                    if not re.search(r"^### %s\." % s, seg, re.M)]
+            if miss:
+                findings.append(
+                    ("P2", "track-strategy-schema", tf.name, f"缺节：{', '.join(miss)}"))
+
+    # ---- P2: 校验项登记 ↔ 实现一致性（元校验 · gate-check-registry） ----
+    # 「声明了机制却无实现」是反复出现的病根（`stale` 取值 / `track-confidence-consistency` 均属此族）。
+    # 用闸门自查：manifest.gate_checks 登记的 code 必须在源码里真实出现，否则即空声明。
+    _reg = manifest.get("gate_checks") or []
+    if _reg:
+        _src = Path(__file__).read_text(encoding="utf-8")
+        _missing = [c.get("code") for c in _reg
+                    if c.get("code") and f'"{c["code"]}"' not in _src]
+        if _missing:
+            findings.append(
+                ("P2", "gate-check-registry", "career_dna_manifest.json",
+                 f"已登记但源码无实现：{', '.join(_missing)}"))
+
+    # ---- P2: 产物侧年限口径（v2.32.0 · format-source-consistency 子项） ----
+    # 真源 = 02_timeline.md 受控块（年限口径：对外总量统一表述，不显具体行业与起止日期）；
+    # 只查**日期门槛之后**的包（`RESUME_OUTPUT_GATE_FROM`）—— 历史包按 「不回补」，永久豁免。
+    _ro_root = base.parent / "resume-outputs"
+    if _ro_root.is_dir():
+        for _pack in sorted(_ro_root.iterdir()):
+            if not _pack.is_dir() or len(_pack.name) < 8 or not _pack.name[:8].isdigit():
+                continue
+            if _pack.name[:8] < RESUME_OUTPUT_GATE_FROM:
+                continue
+            for _fn in ("02_resume_cn.md", "deliverables/02_resume_cn_final.md"):
+                _f = _pack / _fn
+                if not _f.is_file():
+                    continue
+                try:
+                    _b = _f.read_text(encoding="utf-8")
+                except Exception:
+                    continue
+                _m = re.search(r"\*\*工作年限\*\*\s*[:：]\s*(.+)", _b)
+                if not _m:
+                    continue
+                _val = _m.group(1).strip()
+                if not re.match(r"4\s*年\+", _val):
+                    findings.append((
+                        "P2", "format-source-consistency", f"{_pack.name}/{_fn}",
+                        f"工作年限「{_val[:18]}」≠ 受控口径「4 年+」"
+                    ))
 
     # ---- P2: 残留规则编号引用（下游引用了真源已废弃的编号） ----
     # 真源 = references/online_profile_generation.md；扫描 references/ + assets/templates/。
@@ -1229,7 +1461,7 @@ def validate(career_dna_dir: str = "./career-dna"):
                     ]
                     if bad:
                         problems.append(
-                            "Observed Companies 受控格式违规 —— 说明须写 `（）` 括注，"
+                            "Observed Companies 受控格式违规 —— 说明须写 `` 括注，"
                             f"不得平铺进公司名（可疑片段: {' | '.join(bad[:3])}）"
                         )
 
@@ -1285,7 +1517,7 @@ def validate(career_dna_dir: str = "./career-dna"):
         elif "[一句话市场身份" in body or "[定位方向" in body:
             problems.append("Layer 2 仍为模板占位符 —— 未采集（须走 Mode A Step 8 采集协议）")
 
-        # ③（F15）Layer 2 的 Track 取值 ∈ 赛道文件名 ∪ {none}
+        # ③Layer 2 的 Track 取值 ∈ 赛道文件名 ∪ {none}
         tracks_root = base / "10_career_tracks"
         id_track_names = set()
         if tracks_root.is_dir():
@@ -1304,7 +1536,7 @@ def validate(career_dna_dir: str = "./career-dna"):
                     f"{'/'.join(sorted(id_track_names)) or '(无赛道文件)'} 或 none"
                 )
 
-        # ④（F14）Layer 5 的收录标注 ∈ Layer 2 条目名 ∪ {none}
+        # ④Layer 5 的收录标注 ∈ Layer 2 条目名 ∪ {none}
         l2_names = _extract_layer2_names(body)
         for val in ID_LISTED_RE.findall(body):
             v = val.strip()
@@ -1315,7 +1547,7 @@ def validate(career_dna_dir: str = "./career-dna"):
                     f"收录标注 `{v}` 悬空 —— 必须是本文 Layer 2 的条目名或 none"
                 )
 
-        # ⑤（F10）Layer 4 的 TC 编号必须存在于 04b
+        # ⑤Layer 4 的 TC 编号必须存在于 04b
         cb = base / "04b_transferable_capabilities.md"
         if cb.is_file():
             try:
@@ -1333,7 +1565,7 @@ def validate(career_dna_dir: str = "./career-dna"):
                 ("P2", "identity-layer-schema", identity_path.name, "；".join(problems[:4]))
             )
 
-    # ---- P2: manifest 权重合计（v2.22.0 · F9） ----
+    # ---- P2: manifest 权重合计（v2.22.0） ----
     # 「权重」语义 = 占整体完整度的百分比 ⇒ 合计必须恰为 100，否则 09 报表的分母失真、
     # 各模块标注的「权重 %」无法据以手算复核。v2.11.0 加入 13 号文件时漏做重分配（漂到 105），
     # 此后 10 个版本无人发现 ⇒ 把该不变量机械化。
@@ -1473,6 +1705,23 @@ def validate(career_dna_dir: str = "./career-dna"):
                     "P2", "portfolio-output-schema", "README.md",
                     f"索引悬空 {len(po_dangling)} 行（{' / '.join(po_dangling[:3])}）"
                     " —— 索引表每行须指向真实存在的文件"
+                ))
+
+            # ---- ③ 受控字段：状态 ∈ 值域（`` · v2.32.0）----
+            # 值域真源 = references/portfolio_outputs.md §6「状态取值域」；
+            # `stale` 为  新增（源变更后案例正文未同步 ⇒ 待刷新，禁自动改写正文）。
+            PF_STATE_VALUES = ("Ready", "Need Evidence", "辅助材料", "内部工作稿", "模板", "stale")
+            bad_state = []
+            for fn, raw in _portfolio_index_states(po_readme.read_text(encoding="utf-8")):
+                if fn not in po_index:
+                    continue
+                if not any(v in raw for v in PF_STATE_VALUES):
+                    bad_state.append(f"{fn} → {raw[:20]}")
+            if bad_state:
+                findings.append((
+                    "P2", "portfolio-output-schema", "README.md",
+                    f"状态取值越界 {len(bad_state)} 行（{' / '.join(bad_state[:3])}）"
+                    " —— 须 ∈ {✅ Ready / ⚠️ Need Evidence / 📄 辅助材料 / ⚠️ 内部工作稿 / 🧩 模板 / 🕒 stale}"
                 ))
 
         registered_variants = {v for (_k, v) in po_index.values() if v}
@@ -1616,7 +1865,7 @@ def validate(career_dna_dir: str = "./career-dna"):
             ))
 
     # ---- P2: 版式源一致性（种子分类 / 薄壳 ⊆ canonical / 落盘名映射 / 产物 ⊇ 真源） ----
-    # v2.23.4（F43 + F44）。识别「薄壳 / 真源」一律按**头部标记**，不按文件名清单
+    # v2.23.4（+ ）。识别「薄壳 / 真源」一律按**头部标记**，不按文件名清单
     # （硬编码清单在下一次重命名 / 新增种子时必失效）。
     fs_skill = find_manifest().parent.parent
     fs_seed_root = fs_skill / SEED_DIR_REL

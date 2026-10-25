@@ -4,7 +4,7 @@ Export Resume Finalization Script (v2.8.1) — HTML 模板驱动架构
 
 流程：
     final.md（净化定稿内容）
-        → build_data() 解析为结构化数据（姓名/意向/2×2信息/节/条目）
+        → build_data 解析为结构化数据（姓名/意向/2×2信息/节/条目）
         → mini_template 渲染 resume_template.html（v1 抽象模板）→ final.html（v2 完整版）
         → HTML → PDF（Platypus，样式从模板 CSS 变量提取）
         → HTML → DOCX（最简转换，效果可接受部分损失）
@@ -25,6 +25,7 @@ Export Resume Finalization Script (v2.8.1) — HTML 模板驱动架构
 
 import argparse
 import base64
+import json
 import re
 import sys
 import unicodedata
@@ -79,7 +80,7 @@ _ARROW_FALLBACK = {
 }
 _FB_KEYS = frozenset(_ARROW_FALLBACK)
 
-# F41（v2.24.0）：惰性字形缺口 —— **按类兜底**（逐键枚举永远滞后于语料）。
+# （v2.24.0）：惰性字形缺口 —— **按类兜底**（逐键枚举永远滞后于语料）。
 #   判据 = 字体无字形 ∧ 显式降级表无项 ∧ 属「符号类」∧ 非真·不可见
 #     ⇒ 降级为通用占位（保证 PDF **永不静默丢字**）。
 #   ⚠️ **只兜符号类**：字母 / 汉字等非符号类**不擅自替换**（会破坏语义），保持原样并交给
@@ -90,7 +91,7 @@ _GLYPH_SYMBOL_CATS = frozenset({"So", "Sm", "Sk", "Sc"})
 _GLYPH_INVISIBLE_CATS = frozenset({"Cf", "Mn", "Me", "Zl", "Zp", "Zs"})
 _GLYPH_CORRUPT_CP = 0xFFFD                              # 数据损坏哨兵 —— 禁兜底（否则掩盖损坏）
 
-# F57（v2.24.0）：==强调== 用的主题色 —— 由 html_to_pdf() 从模板 --accent 注入（不得硬编码色板）。
+# （v2.24.0）：==强调== 用的主题色 —— 由 html_to_pdf 从模板 --accent 注入（不得硬编码色板）。
 _CURRENT_ACCENT = "#1564BF"
 
 
@@ -155,13 +156,13 @@ def _pdf_safe(s: str) -> str:
         if ch in _ARROW_FALLBACK:
             out.append(_ARROW_FALLBACK[ch])
             continue
-        g = _generic_glyph_fallback(ch)       # F41：按类兜底（符号类 → ·）
+        g = _generic_glyph_fallback(ch)       # ：按类兜底（符号类 →）
         out.append(ch if g is None else g)
     return "".join(out)
 
 
 def _fmt(s: str) -> str:
-    """转义 + **加粗** → <b>；==强调== → <span class="em-accent">（v2.24.0 · F57）。
+    """转义 + **加粗** → <b>；==强调== → <span class="em-accent">（v2.24.0）。
 
     ⚠️ **斜体对本项目 CJK 字体无效**（NotoSansSC 无 italic 变体，reportlab 静默忽略 <i>）⇒
        「强调」的唯一可用形态 = **加粗 + 主题色**（实测 reportlab <font color> 与 docx run-level 均支持）。
@@ -194,7 +195,7 @@ def parse_md(text: str):
          ("hr",    "")                                 ← 独占一行的 ---
          HTML 注释块（<!-- … -->，可跨行）整体跳过，不进入元素流；
          行尾注释（`正文 <!-- 说明 -->`）一并剥离 —— 否则注释文字会混进字段值。
-    兼容性：新 kind 对 build_data_resume()（简历）无对应分支 ⇒ 静默忽略；
+    兼容性：新 kind 对 build_data_resume（简历）无对应分支 ⇒ 静默忽略；
             注释跳过对既有语料是 no-op（简历定稿 md 实测 0 处注释）。
     """
     elements = []
@@ -334,7 +335,7 @@ def build_data_resume(md_text: str, photo_path: str = "") -> dict:
                     cur["段落"].append(_t)
         elif kind == "body":
             # v2.27.0：**裸行 = 当前条目的「缩进注记」**（无 bullet，仅缩进 + 粗体标签）
-            # 取代 F47② 的「裸行并入 bullet 行」—— 那一版会把注记当 bullet 渲染，层次出不来。
+            # 取代 的「裸行并入 bullet 行」—— 那一版会把注记当 bullet 渲染，层次出不来。
             # ⚠️ 仍写进「注」而非另开列表 ⇒ **保序**（模板引擎无 `{{#if}}`）。
             if cur:
                 if cur["条目"]:
@@ -358,7 +359,7 @@ def _pf_escape(s: str) -> str:
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
-# F51（v2.24.0）：合册**不支持行内 code** —— 反引号**渲染时剥离、内容原样保留**。
+# （v2.24.0）：合册**不支持行内 code** —— 反引号**渲染时剥离、内容原样保留**。
 #   契约（09_portfolio_book.md）已明写「三问」；原先反引号被 _pf_escape 原样保留 ⇒ 字面印出。
 _INLINE_CODE_RE = re.compile(r"`([^`\n]+)`")
 
@@ -416,7 +417,7 @@ def _pf_split_tags(val: str):
     return [t.strip() for t in re.split(r"[｜|]", val) if t.strip()]
 
 
-# F35（v2.24.0 · L2 语义剥离）：封面 `派生自` 字段 —— 印**内部文件路径 + 案例库结构**
+# （v2.24.0 · L2 语义剥离）：封面 `派生自` 字段 —— 印**内部文件路径 + 案例库结构**
 #   （`portfolio-outputs/{case}.md @日期`）⇒ 无对外语义，渲染时**整段剥离**。
 #   判据 = 「段」的**纯文本**（剥 `**` 与 HTML 标签）以「派生自：」起始。
 _PF_DERIVED_FROM_RE = re.compile(r"^(?:\*+)?\s*派生自\s*(?:\*+)?\s*[:：]")
@@ -428,7 +429,7 @@ def _pf_plain_text(s: str) -> str:
 
 
 def _pf_strip_cover_l2(val: str) -> str:
-    """F35（v2.24.0 · L2）：剥离封面元信息里的 `派生自` 段。
+    """（v2.24.0 · L2）：剥离封面元信息里的 `派生自` 段。
 
     处理两种写法：**整行**（`> **派生自**：…`）与**同行分段**（`… ｜ **派生自**：…`）。
     分段式只删**命中段** ⇒ 同行承载的 姓名 / 应聘 **不被连带丢失**（不静默丢内容）。
@@ -448,7 +449,7 @@ def _pf_split_facts(事实条: str):
       · 口径段按标签识别（不按位置）—— 位置决定前 3 段的默认标签
       · 非口径段 < 3 ⇒ **整行降级**为单行卡（原文一字不丢，不硬切）
       · 其余游离片段（刀 A 会把案例头部的 bullet/正文并进事实条）⇒ **中性 full 行**（不丢内容）
-      · **F35（v2.24.0 · L2 语义剥离）**：`口径` 段**不进事实卡**；值仍随第二返回值交回调用方
+      · **（v2.24.0 · L2 语义剥离）**：`口径` 段**不进事实卡**；值仍随第二返回值交回调用方
     """
     事实条 = _PF_BLOCK_TAG_RE.sub("", 事实条 or "").strip()
     segs = [s.strip() for s in 事实条.split("｜")]
@@ -462,14 +463,14 @@ def _pf_split_facts(事实条: str):
         else:
             pos.append((k, s, v))
     if len(pos) < 3:
-        # F35：降级单行卡改由**非口径段**拼回 ⇒ 口径段（L2）不印，其余一字不丢
+        # ：降级单行卡改由**非口径段**拼回 ⇒ 口径段（L2）不印，其余一字不丢
         kept = [s for _k, s, _v in pos]
         return ([{"标签": "", "值": " ｜ ".join(kept), "cls": " full"}] if kept else []), kou
     rows = []
     for i, (k, s, v) in enumerate(pos[:3]):
         rows.append({"标签": k or _PF_FACT_LABELS[i],
                      "值": (s if k is None else v), "cls": ""})
-    # F35（v2.24.0 · L2）：游离片段（pos[3:]）原**并入「口径」格** ⇒ 现改**中性 full 行**
+    # （v2.24.0 · L2）：游离片段（pos[3:]）原**并入「口径」格** ⇒ 现改**中性 full 行**
     #   —— 它们是案例头部并进来的正文 / bullet，属**对外可见事实**，不得跟着 口径 一起被剥掉。
     rest = [s for _k, s, _v in pos[3:]]
     if rest:
@@ -477,19 +478,19 @@ def _pf_split_facts(事实条: str):
     return rows, kou
 
 
-# ---------- F40：附录区（Appendix） ----------
+# ---------- ：附录区（Appendix） ----------
 
 _PF_APPENDIX_PREFIX = "附录"      # 受控前缀：`## 附录：{名}` ⇒ 归附录桶（规则真源见 references/portfolio_outputs.md §7）
 
 
 def _pf_is_appendix(val: str) -> bool:
-    """标题纯文本是否以受控前缀「附录」起始（F40 · 单一判据源）。"""
+    """标题纯文本是否以受控前缀「附录」起始（单一判据源）。"""
     plain = re.sub(r"<[^>]+>", "", val or "").strip()
     return plain.startswith(_PF_APPENDIX_PREFIX)
 
 
 def _pf_appendix_html(items) -> str:
-    """附录区 → HTML（F40）。
+    """附录区 → HTML。
 
     与案例块**同构**（.hero / .facts / .sub），唯一差别 = 外层 `<section class="appendix">`
     ⇒ 由模板 CSS 弱化标题区；**独立桶** ⇒ 不进 `.toc`、不计案例数。
@@ -658,7 +659,7 @@ def _facts_row_parts(row):
 
 
 def _hex_rgb01_pure(h: str):
-    """#RRGGBB / RRGGBB → (r,g,b) 0-1 浮点。不做 var() 解引用（调用方已解引用）。"""
+    """#RRGGBB / RRGGBB → (r,g,b) 0-1 浮点。不做 var 解引用（调用方已解引用）。"""
     h = h.strip().lstrip("#")
     return tuple(int(h[i:i + 2], 16) / 255.0 for i in (0, 2, 4))
 
@@ -683,7 +684,7 @@ def build_data_portfolio(md_text: str, photo_path: str = "", css: dict = None) -
            "页眉块": str, "页脚块": str, "水印块": str, "附录块": str,
            "案例": [{"标题","事实条","事实卡行","徽章","标签","摘要块",
                      "小节":[{"标题","html"}]}],
-           "附录": [同"案例"结构]（F40 · 独立桶 ⇒ 不进目录 / 不计案例数）,
+           "附录": [同"案例"结构]（独立桶 ⇒ 不进目录 / 不计案例数）,
            "证件照", "header_shape_layers": [], "header_decos": []}
     css = 模板 CSS 变量表（extract_css_vars 结果）⇒ 页眉 / 页脚 / 水印块据此判定开关；
           缺省 None ⇒ 按合册默认（--header: auto / --footer: page-x-of-y / --watermark: trace）。
@@ -695,7 +696,7 @@ def build_data_portfolio(md_text: str, photo_path: str = "", css: dict = None) -
             "header_shape_layers": [], "header_decos": []}
     cur, sub = None, None            # 当前案例 / 当前小节
     bullets = []                     # 连续 bullet 缓冲（合成 <ul>）
-    bucket = "案例"                  # F40：当前区段桶 —— "案例" / "附录"（受控前缀判定）
+    bucket = "案例"                  # ：当前区段桶 —— "案例" / "附录"（受控前缀判定）
 
     def flush_sub():
         nonlocal bullets
@@ -713,11 +714,11 @@ def build_data_portfolio(md_text: str, photo_path: str = "", css: dict = None) -
             cur = {"标题": _pf_inline(val), "事实条": "", "事实卡行": [], "徽章": [],
                    "标签": [], "摘要块": "", "小节": []}
             sub, bullets = None, []
-            # F40：受控前缀「附录」⇒ 归**附录桶**（不进目录 / 不计案例数 / 恒置尾）
+            # ：受控前缀「附录」⇒ 归**附录桶**（不进目录 / 不计案例数 / 恒置尾）
             bucket = "附录" if _pf_is_appendix(val) else "案例"
             data[bucket].append(cur)
         elif kind == "quote" and cur is None:
-            # F35（v2.24.0 · L2）：封面 `派生自` 段印内部路径 ⇒ **剥离后再决定是否入册**
+            # （v2.24.0 · L2）：封面 `派生自` 段印内部路径 ⇒ **剥离后再决定是否入册**
             _cv = _pf_strip_cover_l2(val)
             if _cv:
                 data["封面"].append(_pf_inline(_cv))      # 首个 ## 之前的引用 = 封面元信息
@@ -757,11 +758,11 @@ def build_data_portfolio(md_text: str, photo_path: str = "", css: dict = None) -
                     cur["事实条"] = (cur["事实条"] + " ｜ " + frag) if cur["事实条"] else frag
     flush_sub()
     # ---- 刀 B：案例级派生（事实卡行 / 徽章）+ 目录块 / 页脚块 ----
-    # F40：附录与案例**同构派生**（事实卡 / 徽章）；但**目录块只由「案例」生成** ⇒ 附录不进目录
+    # ：附录与案例**同构派生**（事实卡 / 徽章）；但**目录块只由「案例」生成** ⇒ 附录不进目录
     for c in data["案例"] + data["附录"]:
         rows, _kou = _pf_split_facts(c["事实条"])
         c["事实卡行"] = rows
-        # F35（v2.24.0 · L2 语义剥离）：`口径` 徽章**不再输出**（原为「口径：{值}」）。
+        # （v2.24.0 · L2 语义剥离）：`口径` 徽章**不再输出**（原为「口径：{值}」）。
         #   值仍由 _pf_split_facts 返回（_kou）以备调试 / 核查，**不进任何输出产物**。
         c["徽章"].extend({"文本": t, "cls": " plain"} for t in c["标签"])
     data["目录块"] = _pf_toc_html(data["案例"], data["附录"])   # v2.28.0：附录进目录
@@ -774,7 +775,7 @@ def build_data_portfolio(md_text: str, photo_path: str = "", css: dict = None) -
         css["--watermark"] = "draft"
     data["页眉块"] = _pf_header_html(css, data["封面原文"])
     data["水印块"] = _pf_watermark_html(css, data["封面原文"])
-    # ---- F40：附录区（`kind=doc` 附加资料）HTML —— 置尾 · 不进目录 / 不计案例数 ----
+    # ---- ：附录区（`kind=doc` 附加资料）HTML —— 置尾 · 不进目录 / 不计案例数 ----
     data["附录块"] = _pf_appendix_html(data["附录"])
     return data
 
@@ -865,7 +866,7 @@ def rich_text(node: Node):
                 if val.tag == "b":
                     walk(val, True)
                 elif val.tag == "span" and "em-accent" in val.cls():
-                    walk(val, True)         # F57：DOCX **降级为加粗**（不涉色 —— docx 定性为「可损」）
+                    walk(val, True)         # ：DOCX **降级为加粗**（不涉色 —— docx 定性为「可损」）
                 elif val.tag == "br":
                     out.append(("\n", bold))
                 else:
@@ -893,7 +894,7 @@ def _node_markup(node: Node) -> str:
                 walk(val)
                 out.append("</b>")
             elif val.tag == "span" and "em-accent" in val.cls():
-                out.append('<b><font color="%s">' % _CURRENT_ACCENT)   # F57：加粗 + 主题色
+                out.append('<b><font color="%s">' % _CURRENT_ACCENT)   # ：加粗 + 主题色
                 walk(val)
                 out.append("</font></b>")
             elif val.tag == "br":
@@ -1007,7 +1008,7 @@ def _portfolio_metrics(cv, cv_px) -> dict:
 
     变量名以合册模板的声明为准，仅在缺失时才回落到简历同名变量
     （否则「模板里声明的变量」= 空声明 ⇒ 改模板不生效，属静默降级）。
-    ⚠️ 本函数返回的每个字号，使用处必须经 _pf_style() 注入 leading。
+    ⚠️ 本函数返回的每个字号，使用处必须经 _pf_style 注入 leading。
     """
     def _pt(pf_var, rs_var, dflt):
         raw = cv(pf_var, "").strip()
@@ -1040,7 +1041,7 @@ def html_to_pdf(html_text: str, out_path: Path, profile: str = "resume", _total:
     _total：页脚 --footer: page-x-of-y 需要的**总页数**（首趟为空 ⇒ 先数页数再整函数重跑；
             重跑而非复用 flowables —— reportlab build 会消费 flowable，复用是错的）。
     page_height：**页面高度（pt）**；`None` = A4（默认，向后兼容）。传大值 ⇒ **单张超高页** ——
-            PNG 长图（F25）走此路径（内容不分页 ⇒ 无页背景 / 水印接缝；页宽恒为 A4 宽）。
+            PNG 长图走此路径（内容不分页 ⇒ 无页背景 / 水印接缝；页宽恒为 A4 宽）。
             ⚠️ 只改页高、不改页宽 ⇒ 版式（内容宽 = A4宽 − 左右边距）不变。
     返回：总页数（int）。
     """
@@ -1059,7 +1060,7 @@ def html_to_pdf(html_text: str, out_path: Path, profile: str = "resume", _total:
         return v
     accent = HexColor(cv("--accent", "#1564BF"))
     global _CURRENT_ACCENT
-    _CURRENT_ACCENT = cv("--accent", "#1564BF")   # F57：行内强调色源 = 模板 --accent
+    _CURRENT_ACCENT = cv("--accent", "#1564BF")   # ：行内强调色源 = 模板 --accent
     line_c = HexColor(cv("--line", "#D9E2F0"))
     text_c = HexColor(cv("--text", "#1A1A1A"))
     block_bg = HexColor(cv("--block-bg", "#EAF2FA"))
@@ -1497,10 +1498,10 @@ def html_to_pdf(html_text: str, out_path: Path, profile: str = "resume", _total:
         def _pf_badge(span, plain=False):
             """徽章 → (1×1 圆角 Table, 宽)。真底色：预混色填充（reportlab 无 rgba）。
 
-            F50（v2.24.0）：原用 `Paragraph.wrap()` 的**返回宽**当固有宽 —— 它返回的是
+            （v2.24.0）：原用 `Paragraph.wrap` 的**返回宽**当固有宽 —— 它返回的是
             **实际排版用宽（= 可用宽）**，不是文本固有宽（实测 avail=400 → w=400.00）
             ⇒ `_pack_badges` 的换行判据 `cur_w + w + gap > avail` **恒真** ⇒ 徽章退化「1 枚 / 行」。
-            改用 `pdfmetrics.stringWidth()` 取**文本固有宽**（pt，与 colWidths 同尺度）。
+            改用 `pdfmetrics.stringWidth` 取**文本固有宽**（pt，与 colWidths 同尺度）。
             """
             raw = _pdf_safe(span.text)
             txt = _pf_escape(raw)
@@ -1586,7 +1587,7 @@ def html_to_pdf(html_text: str, out_path: Path, profile: str = "resume", _total:
             ⚠️ 不复用简历 .header 的形状背景 —— 那是**页面级 onPage 绘制**（页的属性、非块的属性），
                硬复用会把整页形状画进每个案例。视觉同源靠**配色/变量同源**保证。
             标题段样式名固定 "pf_ct" —— 目录回填（afterFlowable）据此识别。
-            ⚠️ F40 + v2.28.0：附录（ap=True）标题用样式名 **"pf_at"** ⇒ 目录里作 **1 级**条目
+            ⚠️ + v2.28.0：附录（ap=True）标题用样式名 **"pf_at"** ⇒ 目录里作 **1 级**条目
                （单独分组 · 弱一档：正文色 + 缩进 + 小 1pt）；字号降为小节级、色转正文色 ⇒ 视觉弱化。
             """
             blob = []
@@ -1713,7 +1714,7 @@ def html_to_pdf(html_text: str, out_path: Path, profile: str = "resume", _total:
                 def _cover_items():
                     """构建封面 flowables（**可重复调用**：测量一次、渲染一次）。
 
-                    ⚠️ 必须重建而非复用：wrap() 会改 flowable 内部状态，
+                    ⚠️ 必须重建而非复用：wrap 会改 flowable 内部状态，
                        测量过的实例不能再拿去 build（沿用本文件既有纪律「重跑而非复用」）。
                     按 DOM 顺序渲染（标题 / 装饰线 / 元信息）—— 顺序即版式，勿重排。
                     """
@@ -1740,7 +1741,7 @@ def html_to_pdf(html_text: str, out_path: Path, profile: str = "resume", _total:
                                                   alignment=1)))
                     return items
 
-                # ---- 动态上留白（刀 D · F37）----
+                # ---- 动态上留白（刀 D）----
                 # 旧实现固定 Spacer(1, 36) ⇒ 内容全部堆在上半页，下半页空白（owner 反馈）。
                 # 现按「可用高 − 内容高」的 --cover-top-ratio 分配上留白（0.5 = 数学居中）。
                 # ⚠️ clamp 是必需的：留白算大 ⇒ 封面溢出成 2 页 ⇒ _total 与页脚口径全错。
@@ -1791,7 +1792,7 @@ def html_to_pdf(html_text: str, out_path: Path, profile: str = "resume", _total:
             elif child.tag == "section" and "case" in cls:
                 story.extend(_pf_case(child))
             elif child.tag == "section" and "appendix" in cls:
-                # F40：附录区（置尾 · 不计案例数 · 不进目录）
+                # ：附录区（置尾 · 不计案例数 · 不进目录）
                 story.extend(_pf_case(child, ap=True))
 
 
@@ -1989,7 +1990,7 @@ def html_to_pdf(html_text: str, out_path: Path, profile: str = "resume", _total:
                            page_height=page_height)
     if use_toc:
         doc = _PortfolioDocTemplate(str(out_path), **doc_kw)
-        # reportlab 5.x：页面回调是 build() 参数；multiBuild 才能把目录页码回填
+        # reportlab 5.x：页面回调是 build 参数；multiBuild 才能把目录页码回填
         doc.multiBuild(story, onFirstPage=_on_page, onLaterPages=_on_page)
     else:
         doc = SimpleDocTemplate(str(out_path), **doc_kw)
@@ -2076,7 +2077,7 @@ def _add_field(p, instr: str, placeholder: str = "", font=None, size=None, color
 
 
 def _center_section_vertically(sec) -> None:
-    """封面节纵向居中（刀 D · F37）：python-docx 原生支持 ⇒ sectPr/vAlign=center。
+    """封面节纵向居中（刀 D）：python-docx 原生支持 ⇒ sectPr/vAlign=center。
 
     ⚠️ 只对「封面独立成节」使用 —— 多页节里居中会把整节内容拉到垂直中间。
     """
@@ -2089,7 +2090,7 @@ def _center_section_vertically(sec) -> None:
 
 def _docx_header(sec, left: str, right: str, ms: float, small: float, color: str,
                  accent: str):
-    """DOCX 页眉（刀 D · F38）：左 = 姓名（full 档附加联系），右 = 应聘 公司 · 岗位。
+    """DOCX 页眉（刀 D）：左 = 姓名（full 档附加联系），右 = 应聘 公司 · 岗位。
 
     Word 逐页自动重复（放进 sec.header 即生效）⇒ 无需像 PDF 那样手工画。
     """
@@ -2210,7 +2211,7 @@ def html_to_docx(html_text: str, out_path: Path, profile: str = "resume"):
         footer_mode = cv("--footer", "page-x-of-y").strip()
         footer_title = ""
         # ---- 刀 D：页眉 / 水印开关 ----
-        # ⚠️ --watermark 在 DOCX **未实现**（python-docx 无原生水印，须手写 VML）⇒ 见待办 F39。
+        # ⚠️ --watermark 在 DOCX **未实现**（python-docx 无原生水印，须手写 VML）⇒ 见待办 。
         #    这里显式提示一次，避免「以为加了水印」——静默忽略才是最坏的结果。
         header_mode = cv("--header", "auto").strip() or "none"
         wm_mode = cv("--watermark", "trace").strip() or "none"
@@ -2272,7 +2273,7 @@ def html_to_docx(html_text: str, out_path: Path, profile: str = "resume"):
         def _df_hero(hero, ap=False):
             """案例标题区（刀 B）：标题挂 Heading 1（**目录域只收集标题样式**，不挂则域为空）·
             徽章行 = 左竖条 + 底色 + run 级底纹。
-            ⚠️ F40：附录（ap=True）**不挂 Heading 1** ⇒ **不进 Word 目录域**
+            ⚠️ ：附录（ap=True）**不挂 Heading 1** ⇒ **不进 Word 目录域**
                （目录域只收集标题样式）；字号降为小节级、色转正文色 ⇒ 视觉弱化。"""
             t = _ds(hero, "case-title")
             if t is not None:
@@ -2371,7 +2372,7 @@ def html_to_docx(html_text: str, out_path: Path, profile: str = "resume"):
             cls = node.cls()
             if "cover" in cls:
                 if cover_page == "always" and not _has_toc:
-                    # 封面纵向居中（刀 D · F37）：DOCX 走节级 vAlign；封面独立成节时才安全
+                    # 封面纵向居中（刀 D）：DOCX 走节级 vAlign；封面独立成节时才安全
                     _center_section_vertically(doc.sections[0])
                 for d in node.children:
                     dcls = d.cls()
@@ -2413,7 +2414,7 @@ def html_to_docx(html_text: str, out_path: Path, profile: str = "resume"):
             elif node.tag == "section" and "case" in cls:
                 _df_case(node)
             elif node.tag == "section" and "appendix" in cls:
-                # F40：附录区（置尾 · 不计案例数 · 不进目录域）
+                # ：附录区（置尾 · 不计案例数 · 不进目录域）
                 _df_case(node, ap=True)
         if cover_page != "always" or _has_toc:
             # 封面未独立成节（含 v2.28.0「封面 + 目录合并同页」）⇒ 页眉 / 页脚落在第 1 节
@@ -2425,7 +2426,7 @@ def html_to_docx(html_text: str, out_path: Path, profile: str = "resume"):
                              text_c, accent)
         if wm_mode != "none":
             print("ℹ️ DOCX 不生成水印（--watermark 仅对 PDF / HTML 生效；DOCX 需手写 VML，"
-                  "见待办 F39）")
+                  "见待办 ）")
 
 
 
@@ -2658,6 +2659,89 @@ def make_static_preview(template_text: str, out_path: Path, profile: str = "resu
     return out_path
 
 
+# ---- v2.32.0：auto-fit 行距寻优 ----
+# 目的：内容多则自动收紧、内容少则放宽，使 PDF 恰好占满 --fit-max-pages 页（默认 2），
+#       把末页留白压到最小；且**绝不越过页数上限**（宁可报「内容超标」，不缩到不可读）。
+# 判据：行距 ↑ ⇒ 内容总高 ↑ ⇒ 页数 ↑（近似单调；孤行 / 条目不可分割会有 ±1 行跳变）
+#       ⇒ 满足「页数 ≤ 上限」的**最大行距** = 末页留白最小。
+# 二级变量：行距封顶（= --fit-max）后，若仍有空间，再抬 --entry-space（仅影响条目之间空隙）。
+_AUTOFIT_LINE_RE = re.compile(r"--line-spacing:\s*[0-9.]+;")
+_AUTOFIT_ENTRY_RE = re.compile(r"--entry-space:\s*[0-9.]+px;")
+
+
+def _fit_with_css(html_text: str, line=None, entry=None) -> str:
+    """只替换 `:root` 声明处（`var(--line-spacing)` 的用法不受影响）。"""
+    out = html_text
+    if line is not None:
+        out = _AUTOFIT_LINE_RE.sub(f"--line-spacing: {line:.3f};", out, count=1)
+    if entry is not None:
+        out = _AUTOFIT_ENTRY_RE.sub(f"--entry-space: {int(entry)}px;", out, count=1)
+    return out
+
+
+def autofit_spacing(html_text: str, profile: str = "resume", lo: float = 1.26,
+                    hi: float = 1.60, max_pages: int = 2, entry_max: int = 14):
+    """在「页数 ≤ max_pages」约束下取最大行距（行距封顶后再取最大条目间距）。
+
+    返回 (html, meta)。meta = {ok, line_spacing, entry_space, pages, attempts, note}
+    ⚠️ 只做**试渲染**（临时目录），不写任何产物；最终版式由调用方用返回的 html 渲染。
+    """
+    import tempfile
+    attempts = 0
+
+    def pages_of(h: str) -> int:
+        nonlocal attempts
+        attempts += 1
+        with tempfile.TemporaryDirectory() as td:
+            n = html_to_pdf(h, Path(td) / "_autofit.pdf", profile)
+        return n if isinstance(n, int) else 10 ** 6
+
+    def _meta(ok, line, entry, pages, note=""):
+        return {"ok": ok, "line_spacing": round(line, 3), "entry_space": int(entry),
+                "pages": pages, "attempts": attempts, "fit_min": lo, "fit_max": hi,
+                "max_pages": max_pages, "note": note}
+
+    # 阶段 1：行距 —— 从上限往下粗扫（0.06）找首个「页数 ≤ 上限」，再向上细化（0.005）
+    upper_fail, best = None, None
+    v = hi
+    while v >= lo - 1e-9:
+        if pages_of(_fit_with_css(html_text, line=v)) <= max_pages:
+            best = v
+            break
+        upper_fail = v
+        v = round(v - 0.06, 3)
+    if best is None:
+        return html_text, _meta(False, lo, 2, pages_of(html_text),
+                                "最小行距仍超页数上限 ⇒ 需删内容")
+
+    if upper_fail is not None:
+        v = best
+        while v + 0.005 < upper_fail - 1e-9:
+            nv = round(v + 0.005, 3)
+            if pages_of(_fit_with_css(html_text, line=nv)) <= max_pages:
+                v = nv
+            else:
+                break
+        best = v
+
+    html_out = _fit_with_css(html_text, line=best)
+    pages = pages_of(html_out)
+
+    # 阶段 2：条目间距 —— 仅当行距已顶到上限（说明内容偏少）才继续填充
+    entry = 2
+    if abs(best - hi) < 1e-9:
+        for e in range(2, entry_max + 1, 2):
+            if pages_of(_fit_with_css(html_out, entry=e)) <= max_pages:
+                entry = e
+            else:
+                break
+        if entry > 2:
+            html_out = _fit_with_css(html_out, entry=entry)
+            pages = pages_of(html_out)
+
+    return html_out, _meta(True, best, entry, pages)
+
+
 def main():
     ap = argparse.ArgumentParser(description="Export final resume via HTML template (v2.8.1)")
     ap.add_argument("--input", required=True, help="deliverables/02_resume_cn_final.md")
@@ -2666,13 +2750,22 @@ def main():
     ap.add_argument("--format", choices=["html", "pdf", "docx", "all", "preview", "pages",
                                          "png", "png-long"], default="all",
                     help="preview = 用模板内嵌示例数据生成静态预览（改模板后刷新预览用）；"
-                         "png = 分页 PNG + 长图 PNG（F25）；png-long = 只出长图")
+                         "png = 分页 PNG + 长图 PNG；png-long = 只出长图")
     ap.add_argument("--profile", choices=["auto", "resume", "portfolio"], default="auto",
                     help="渲染 profile：auto = 读模板头 render-profile 标记，无标记则 resume")
     ap.add_argument("--photo", default=None, help="证件照（可选）")
     ap.add_argument("--theme", default=None, help="配色覆盖（可选，覆盖模板 CSS 变量）")
     ap.add_argument("--png-width", type=int, default=1160,
                     help="PNG 目标宽度 px（默认 1160 = Boss 消息卡片建议宽；1740 = 1.5×）")
+    ap.add_argument("--auto-fit", dest="auto_fit", action="store_true", default=True,
+                    help="行距自动寻优（v2.34.0）：在页数 ≤ --fit-max-pages 的前提下取最大行距，"
+                         "行距封顶后再抬条目间距 ⇒ 末页留白最小。**默认开启**（ owner 拍板）")
+    ap.add_argument("--no-auto-fit", dest="auto_fit", action="store_false",
+                    help="关闭行距自动寻优（回到 v2.33.0 及以前的固定行距行为）")
+    ap.add_argument("--fit-min", type=float, default=1.26, help="auto-fit 行距下限（可读性地板，默认 1.26）")
+    ap.add_argument("--fit-max", type=float, default=1.60, help="auto-fit 行距上限（默认 1.60）")
+    ap.add_argument("--fit-max-pages", type=int, default=2, help="auto-fit 页数上限（默认 2）")
+    ap.add_argument("--fit-entry-max", type=int, default=14, help="auto-fit 条目间距上限 px（默认 14）")
     args = ap.parse_args()
 
     in_path = Path(args.input)
@@ -2692,9 +2785,18 @@ def main():
         tpl_path = Path(args.template)
         profile = args.profile if args.profile != "auto" else _detect_profile(tpl_path)
     else:
-        # 不做文件名推断（脆）；auto + 无模板 ⇒ resume（完全向后兼容），
-        # 合册须显式给 --template（走自声明）或 --profile portfolio。
-        profile = "resume" if args.profile == "auto" else args.profile
+        # ``（v2.32.0）：auto 时**只按契约固定名**识别合册 —— 不改「不做任意文件名推断」的原决策
+        # （任意名推断脆；但 `09_portfolio_book*.md` / `XX_portfolio*.md` 是**契约命名**，不脆）。
+        # 病根：`--profile auto` 曾把 `09_portfolio_book_final.md` 静默当简历渲（11 页 → 4 页），
+        #       命令仍打印「已生成」⇒ 只能靠页数比对发现。
+        if args.profile != "auto":
+            profile = args.profile
+        else:
+            _inp = Path(args.input).name.lower()
+            _is_book = _inp.startswith("09_portfolio_book") or _inp.startswith("xx_portfolio")
+            profile = "portfolio" if _is_book else "resume"
+            if _is_book:
+                print(f"   ℹ️ profile=portfolio（按契约名识别：{Path(args.input).name}）")
         here = Path(__file__).resolve().parent
         tpl_path = here.parent / "assets" / "templates" / TEMPLATES[profile]
     if not tpl_path.exists():
@@ -2813,6 +2915,18 @@ def main():
     out_dir = in_path.parent
     stem = in_path.stem
 
+    fit_meta = None
+    if getattr(args, "auto_fit", False) and profile == "resume":
+        html, fit_meta = autofit_spacing(html, profile, args.fit_min, args.fit_max,
+                                         args.fit_max_pages, args.fit_entry_max)
+        if fit_meta.get("ok"):
+            print(f"🎯 auto-fit：line-spacing {fit_meta['line_spacing']} · "
+                  f"entry-space {fit_meta['entry_space']}px · {fit_meta['pages']} 页"
+                  f"（试渲染 {fit_meta['attempts']} 次）")
+        else:
+            print(f"⚠️ auto-fit 未生效：最小行距 {fit_meta['fit_min']} 仍为 {fit_meta['pages']} 页"
+                  f"（> 上限 {fit_meta['max_pages']}）⇒ 未改版式，请删减内容")
+
     if args.format == "pages":
         # 刀 C ⑩：只试渲染取真实页数，不写任何文件（供 Step 9.6 Phase A / Portfolio Gate 报数）
         import tempfile
@@ -2853,7 +2967,7 @@ def main():
             print(f"❌ DOCX 需要 python-docx：{e}")
 
     if args.format in ("png", "png-long"):
-        # F25（v2.24.0）：PNG = **PDF 的再派生**（final.md → HTML → PDF → PNG）——
+        # （v2.24.0）：PNG = **PDF 的再派生**（final.md → HTML → PDF → PNG）——
         # 不截图 HTML（HTML 是浏览器连续流，与 A4 分页 + onPage 背景层**不同源**）。
         # `png` = 分页图 + 长图（两者都出）；`png-long` = 只出长图。
         import tempfile
@@ -2886,6 +3000,11 @@ def main():
                             long_pdf, png_dir / f"{stem}_long.png", args.png_width))
                 except ImportError as e:
                     print(f"❌ PNG 需要 pypdfium2（Apache-2.0）+ Pillow：{e}")
+
+    if fit_meta:
+        (out_dir / "_render_meta.json").write_text(
+            json.dumps(fit_meta, ensure_ascii=False, indent=2), encoding="utf-8")
+        results.append(out_dir / "_render_meta.json")
 
     if not results:
         sys.exit(1)

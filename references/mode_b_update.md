@@ -105,17 +105,17 @@ python3 scripts/completeness_checker.py [career-dna目录路径]
 |-------------|------|
 | `01_profile` / `02_timeline` / `03_projects` / `04_skill_graph` / `07_career_identity` / `10_career_tracks/` / `12_portfolio_candidates` | `11_online_profile.md`（Online Career Profile v2.2） |
 | `04_skill_graph` | `04b_transferable_capabilities.md`（Transferable Capability v2.3） |
-| `03_projects` / `05_story_bank` / `04_skill_graph` | `12_portfolio_candidates.md` + `portfolio-outputs/` **索引 + 受影响案例**（变更 ⇒ 该案例变体标 `stale`） |
+| `03_projects` / `05_story_bank` / `04_skill_graph` | `12_portfolio_candidates.md` + `portfolio-outputs/` **索引 + 受影响案例**（变更 ⇒ 该案例变体标 `🕒 stale` —— **取值语义见 `portfolio_outputs.md` §6 状态取值域**，本表不重复定义） |
 | `07_career_identity` / `02_timeline` / `05_story_bank` / `03_projects` / `04b` | `13_interview_narrative_strategy.md` —— **仅派生区 Part 1-3** |
 
 **⚠️ 13 号文件的分区刷新规则（v2.11.0）**：
 
 - 只重生成 **Part 1-3（派生区）**；**Part 4-12（手写区）绝不能被覆盖** —— 那里装的是推不出来的方法论与战术
-  （三阶段结构 / 数字卡 / 口径纵深 / 分轮次与分题型打法 / 面试后跟进 / 复盘回路 / 反向尽调 / 录用阶段 / 英文面试）。
+ （三阶段结构 / 数字卡 / 口径纵深 / 分轮次与分题型打法 / 面试后跟进 / 复盘回路 / 反向尽调 / 录用阶段 / 英文面试）。
 - 刷新**前**：确认手写区现有内容（如需要，先暂存）。
 - 刷新**后**：运行 `validate_career_dna.py` —— 若报 P1 `derived-part-drift`，说明手写区被吃掉，
-  **必须先从模板重建缺失的 Part 骨架，再提示用户补回内容**（不得静默放过）；
-  若报 P1 `undeclared-part`，说明有 Part 未登记入 manifest，须补登记或删除。
+ **必须先从模板重建缺失的 Part 骨架，再提示用户补回内容**（不得静默放过）；
+ 若报 P1 `undeclared-part`，说明有 Part 未登记入 manifest，须补登记或删除。
 - 刷新后同步更新头部 `Last Generated` 与 `Source Files Version`（07/05/02/03/04b）。
 
 **⚠️ 案例库（`portfolio-outputs/`）专项纪律（v2.23.0）**：
@@ -162,13 +162,13 @@ python3 scripts/completeness_checker.py [career-dna目录路径]
 
 ```
 ① 场景锚定：把用户拉回具体情境
-   "你提到 XX 项目延期那次……"
+ "你提到 XX 项目延期那次……"
 ② 维度提示：给出 2-3 个提示关键词（不强迫按序回答）
-   "冲突双方是谁 / 你当时的立场 / 最后怎么收场的"
+ "冲突双方是谁 / 你当时的立场 / 最后怎么收场的"
 ③ 示例锚点：可选，给 1 句话示例降低表达门槛
-   "比如：'我坚持先砍范围再谈排期'"
+ "比如：'我坚持先砍范围再谈排期'"
 ④ 自由兜底：明确告知
-   "你也可以用自己的方式讲，我负责整理成话术"
+ "你也可以用自己的方式讲，我负责整理成话术"
 ```
 
 ### 核心原则

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""PDF → PNG 栅格化（F25 · v2.24.0）。
+"""PDF → PNG 栅格化（v2.24.0）。
 
 派生关系（唯一合法路径）：
     final.md → HTML → PDF → **PNG**
@@ -63,7 +63,7 @@ def _render(page, width_px: int):
 
 
 def _clean(img):
-    """去元数据（EXIF / info）—— 避免软件指纹随图外泄（F25 打磨项 ⑥）。"""
+    """去元数据（EXIF / info）—— 避免软件指纹随图外泄。"""
     from PIL import Image
     out = Image.new(img.mode, img.size)
     out.paste(img)

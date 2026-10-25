@@ -38,15 +38,16 @@ v2.0: 我投了以后发生了什么？
 2. Status = Applied
 3. Last Update = 当前日期
 4. **Pack**：若对应 `resume-outputs/{YYYYMMDD}-{company}-{role}/` 目录已存在 → 填相对链接
-   （`../resume-outputs/{YYYYMMDD}-{company}-{role}/`）；无包则填 `—`
+ （`../resume-outputs/{YYYYMMDD}-{company}-{role}/`）；无包则填 `—`
 5. Notes 可选填
 
 ### 规则
 
 - 公司 + 岗位 若已存在 → 提示"已记录，是否更新状态？"，不重复添加
+- **若该行 `Status` 仍为 `Analyzed`**（仅分析、未备料）→ **原地升级为 `Applied`**，`Type` 按实际（无 Pack 则保持 `Analyzed`），**不新增行**
 - 薪资 / 期望薪资 可选填
 - **`Pack` 列与 `resume-outputs/` 目录名必须一致**（`{YYYYMMDD}-{company}-{role}`）——
-  不一致说明 pack 目录被改名或尚未生成，须先核对再填
+ 不一致说明 pack 目录被改名或尚未生成，须先核对再填
 
 ---
 
@@ -84,12 +85,12 @@ v2.0: 我投了以后发生了什么？
 2. 写入 / 更新 Timeline
 3. 追加 Feedback / Personal Notes / Lessons Learned
 4. **若本次是面试事件** → 在 `Interview Log` 追加一行（日期 / 轮次 / 面试官 / 形式 / 时长 / 结果），
-   并提示用户 **24 小时内**补 `Interview Retro`（复盘四问与归因规则见
-   `career-dna/13_interview_narrative_strategy.md` Part 9）
+ 并提示用户 **24 小时内**补 `Interview Retro`（复盘四问与归因规则见
+ `career-dna/13_interview_narrative_strategy.md` Part 9）
 5. **若已进入录用阶段（Offer / 背调）** → 在 `Timeline` 追加录用节点，并把本轮 Offer 结构、
-   谈判过程与结果、背调进展记入 `Feedback` / `Personal Notes`。
-   谈判原则、背调材料清单与口径要求见 `career-dna/13_interview_narrative_strategy.md` Part 11 ——
-   **Mode E 只记录本轮实际发生的事，不复制通用原则**
+ 谈判过程与结果、背调进展记入 `Feedback` / `Personal Notes`。
+ 谈判原则、背调材料清单与口径要求见 `career-dna/13_interview_narrative_strategy.md` Part 11 ——
+ **Mode E 只记录本轮实际发生的事，不复制通用原则**
 
 ### 规则
 
@@ -98,9 +99,9 @@ v2.0: 我投了以后发生了什么？
 - Lessons Learned 为用户自身反思
 - **Interview Log / Interview Retro 只记录事实，不做归因结论** —— 归因分类由用户填写，不由 skill 推断
 - **反哺路径（v2.10.0）**：复盘中出现的改进需求（如「同一问题被问了 2 次」「同一卡壳点重复出现」），
-  由**用户显式发起 Mode B 承接**，才写回 `13_interview_narrative_strategy.md` 手写区 /
-  `05_story_bank.md` / `08_question_backlog.md`。
-  **Mode E 自身永不写 `career-dna/`** —— 见 Important Rule 5 与 13 Part 9.5。
+ 由**用户显式发起 Mode B 承接**，才写回 `13_interview_narrative_strategy.md` 手写区 /
+ `05_story_bank.md` / `08_question_backlog.md`。
+ **Mode E 自身永不写 `career-dna/`** —— 见 Important Rule 5 与 13 Part 9.5。
 
 ---
 
@@ -147,4 +148,4 @@ v2.0: 我投了以后发生了什么？
 3. **Case 按需建档**。不预先生成空白档案。
 4. **状态由用户手动更新**。不自动推测（如 Boss"已读"不自动标记 Viewed）。
 5. **不对接 Career DNA**。投递结果不自动修正 Match Score / Track Confidence / Role Authenticity。
-   复盘产生的反哺需求**由用户显式发起 Mode B 承接**；Mode E 自身永不写 `career-dna/`。
+ 复盘产生的反哺需求**由用户显式发起 Mode B 承接**；Mode E 自身永不写 `career-dna/`。
