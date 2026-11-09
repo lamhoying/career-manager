@@ -56,7 +56,7 @@ validate_career_dna.py - Career DNA 写入闸门（Write Gate）
                           ⑤ 规模主谓红扫（「管理 N 人」且 N > 直接带团队上限 ⇒ 越界）
                           —— 该目录此前「无目录契约、无索引校验、无闸门」三缺
   P2  track-confidence-consistency
-                           赛道置信度不自洽（`` · v2.32.0）：
+                           赛道置信度不自洽（v2.32.0）：
                            ① **分解式自洽** —— 各赛道文件 `| **Track Confidence（综合置信度）** | **N** | 分量×40% +
                               分量×35% + 分量×25% = … |` ⇒ `round(calc)` 必须 == cell（容差 ±0.5）
                            ② **表 ↔ 文件一致** —— `10_career_tracks/README.md` 的**优先级表**与 **Track 导航表**
@@ -66,11 +66,11 @@ validate_career_dna.py - Career DNA 写入闸门（Write Gate）
                               （否则自由格式会被判成不一致，重演 那类假阳性）
                            —— ⚠️ **只查数值一致性，不查排序合理性**（优先级序属人定）
    P2  track-strategy-schema
-                           赛道文件缺 `## Track Strategy` 段，或段内 `### S1.`–`### S4.` 不全（`` · v2.32.0）
+                           赛道文件缺 `## Track Strategy` 段，或段内 `### S1.`–`### S4.` 不全（v2.32.0）
                            —— 该段此前**闸门零覆盖**（全库检索 `Track Strategy` 0 命中）；
                               实测曾出现「某成果指标 X→Y 天」被当作独立项目 / 故事条目引用的悬空写法
                            —— 只做**段形校验**（存在 + S1–S4 齐全）；引用编号与真源的核对属第二阶段
-   P2  gate-check-registry  manifest `gate_checks` 登记的校验项，在源码中**找不到对应实现**（`` 族元校验）
+   P2  gate-check-registry  manifest `gate_checks` 登记的校验项，在源码中**找不到对应实现**（族元校验）
                            —— 本项存在的理由：**「声明了机制却无实现」是反复出现的病根**
                               （`stale` 取值 / `track-confidence-consistency` 均属此族）；
                               用闸门自查「登记了但没实现」，把这类空声明变成可机械检出
@@ -360,7 +360,7 @@ ID_PLACEHOLDER_PREFIX = ("[", "{", "<")
 
 # ---- P2 skill-snapshot-schema 相关（v2.22.0） ----
 # knowledge/skill_snapshots/ 此前「无建档责任、无索引、无闸门」三缺（role 侧三者皆有）——
-# 实测 13 个 Domain 只有 1 个快照，Mode D 观察到的市场情报无处可流。
+# 实测 Domain 数量远多于快照数量，Mode D 观察到的市场情报无处可流。
 # 段清单 = assets/templates/knowledge/skill_snapshot.md 的 H2 集合（模板为真源）。
 SKILL_SNAPSHOT_SEGMENTS = (
     "能力列表及市场情报",
@@ -429,6 +429,87 @@ PACK_SECTION_END = "### Portfolio Selection"
 # ⚠️ 该日期**只允许前移**（收缩豁免面），不得后移。
 RESUME_OUTPUT_GATE_FROM = "20260923"
 _PACK_OUTPUT_NAMES_CACHE = {}
+
+
+# 只认「**<字段名>** | **<数值>**」表格形态；字段名须含「年限」二字，
+# 不硬编码具体名称 ⇒ 与用户侧受控块的命名解耦，改字段名不影响本闸门。
+TENURE_ROW_RE = re.compile(
+    r"\|\s*\*\*[^*\n]*年限\*\*\s*\|\s*\*\*([^*|]+)\*\*"
+)
+
+
+CAP_TOOL_RE = re.compile(r"[（(]([^）)]{1,40})[）)]")
+
+
+def _capability_tool_findings(body: str, where: str, sg_text: str, require_trace: bool = True):
+    """核心能力行「工具附注」合规检查（v2.37.0）。
+
+    规则真源 = mode_d §Capability Mapping + QA-5；本函数只做**可机检的那部分**：
+      ① 工具附注 <= 2 处；② 每处括号内只允许 1 个工具；③ 工具须在 04_skill_graph 有条目；
+      ④ 有附注须有 `<!-- tool-slot: ... -->` 留痕。
+
+    ⚠️ **判据边界**：核心能力括号里也可能是**范围枚举**
+    （例：`范围A / 范围B / 范围C`、`职能A/职能B`）—— 这类中文并列枚举不是工具。二者只能靠**形态**区分：
+    工具名多为**英文/技术 token**（形如 `<ToolA>` / `<ToolB>`），
+    而枚举多为中文职能词。故本函数**只对「英文样 token」做工具判定**；纯中文括号
+    **整体 skip**（中文工具名无法与职能词机检区分 ⇒ 交人工 QA-5）。
+    首跑若不做此收窄，会把历史产物全判违规（早期验证曾出现多条假阳性）。
+
+    解析不到「核心能力」节 => 返回空 = skip，不报。
+    """
+    m = re.search(r"^##\s*核心能力\s*$(.*?)(?=^##\s|\Z)", body, re.S | re.M)
+    if not m:
+        return []
+    line = ""
+    for l in m.group(1).split("\n"):
+        if l.strip():
+            line = l.strip()
+            break
+    if not line:
+        return []
+
+    EN_TOKEN_RE = re.compile(r"^[A-Za-z][A-Za-z0-9+#._\- ]*$")
+    out, slots = [], 0
+    for raw in CAP_TOOL_RE.findall(line):
+        toks = [t.strip() for t in re.split(r"[/、,，]", raw) if t.strip()]
+        en = [t for t in toks if EN_TOKEN_RE.match(t)]
+        if not en:
+            continue                      # 纯中文 => 范围枚举 / 中文工具名 => 不机检
+        slots += 1
+        if len(en) > 1:
+            out.append((where, "附注「%s」含并列多个工具 => 括号内只允许 1 个" % " / ".join(en)))
+        for t in en:
+            if t not in sg_text:
+                out.append((where, "附注工具「%s」在 04_skill_graph 无独立条目 => 无证据工具，禁附" % t))
+    if slots > 2:
+        out.append((where, "核心能力工具附注 %d 处 > 上限 2 处（v2.37.0）" % slots))
+    if require_trace and slots and "tool-slot" not in body:
+        out.append((where, "有工具附注但缺 `<!-- tool-slot: ... -->` 判定留痕（不附也要写）"))
+    return out
+
+
+def _tenure_allow_values(base: Path):
+    """从 `02_timeline.md` 的「年限口径」受控块解析**允许的年限数值集合**（v2.35.0）。
+
+    为什么要解析而不是写死：真源是会变的 —— 受控值可能由**单值扩为多值**
+    （按渠道 / 维度分别取值），若本脚本继续硬编码一个值，真源一改就产生**假阳性**，
+    并反过来逼生成端写出与真源相反的字段（历史实例曾按渠道取值表命中误报）。
+    返回 (数值集合, 原值列表)；解析失败 / 文件缺失 ⇒ (set(), [])，调用方据此 **skip 不报**。
+    """
+    f = base / "02_timeline.md"
+    if not f.is_file():
+        return set(), []
+    try:
+        txt = f.read_text(encoding="utf-8")
+    except Exception:
+        return set(), []
+    vals = [m.group(1).strip() for m in TENURE_ROW_RE.finditer(txt)]
+    nums = set()
+    for v in vals:
+        m = re.search(r"\d+(?:\.\d+)?", v)
+        if m:
+            nums.add(float(m.group(0)))
+    return nums, vals
 
 
 def _pack_output_names(skill_dir: Path):
@@ -538,12 +619,68 @@ def _portfolio_required_segments(text: str) -> set:
     return required
 
 
+def _parse_tracker_rows(path: Path):
+    """解析投递追踪表三列。返回行 dict 列表；**无三列（旧实例）返回 None**（调用方 skip）。"""
+    lines = path.read_text(encoding="utf-8").split("\n")
+    header = None
+    for ln in lines:
+        if ln.startswith("|") and "Company" in ln and "Track" in ln:
+            header = [c.strip() for c in ln.strip().strip("|").split("|")]
+            break
+    if header is None:
+        return None
+    need = ("Track", "Match", "Outcome")
+    if not all(any(n in h for h in header) for n in need):
+        return None
+    idx = {n: next(i for i, h in enumerate(header) if n in h) for n in need}
+    ci = next((i for i, h in enumerate(header) if h == "Company"), None)
+    ri = next((i for i, h in enumerate(header) if h == "Role"), None)
+    pi = next((i for i, h in enumerate(header) if h == "Pack"), None)
+    rows = []
+    for ln in lines:
+        if not ln.startswith("|"):
+            continue
+        cells = [c.strip() for c in ln.strip().strip("|").split("|")]
+        if len(cells) != len(header):
+            continue
+        if set(cells[idx["Track"]]) <= set("-: "):
+            continue                      # 分隔行
+        if cells[idx["Track"]] == "Track":
+            continue                      # 表头
+        rows.append({
+            "company": cells[ci] if ci is not None else "",
+            "role": cells[ri] if ri is not None else "",
+            "pack": cells[pi] if pi is not None else "",
+            "track": cells[idx["Track"]].strip("`"),
+            "match": cells[idx["Match"]],
+            "outcome": cells[idx["Outcome"]],
+        })
+    return rows
+
+
+def _report01_meta(rep: Path):
+    """从 01 报告取 (Track, Match)：Track 读「报告元信息表」，Match 读 §3.1。取不到返回 None。"""
+    try:
+        txt = rep.read_text(encoding="utf-8")
+    except Exception:
+        return None, None
+    mt = re.search(r"^\|\s*\*\*Track（职业赛道）\*\*\s*\|\s*`([a-z_]+|none)`", txt, re.M)
+    track = mt.group(1) if mt else None
+    match = None
+    m3 = re.search(r"^###\s*3\.1\s*Match Summary(.*?)(?=^###|\Z)", txt, re.M | re.S)
+    if m3:
+        mm = re.search(r"Overall Match Score[^|]*\|\s*\*\*(\d{1,3})%", m3.group(1))
+        if mm:
+            match = mm.group(1)
+    return track, match
+
+
 def _track_conf_cell(body: str):
     """解析赛道文件的 `Track Confidence` 行 → (cell, e, r, k) 或 None（不可解析）。
 
     写法容差（实测三种变体都要认）：
-      `| **Track Confidence（综合置信度）** | **65** | 75×40% + 50×35% + 70×25% = 65.0 → **65** |`
-      `| **Track Confidence（综合置信度）** | **72** | **79**×40% + 64×35% + 70×25% = **71.5 → 72** |`
+      `| **Track Confidence（综合置信度）** | **<N>** | <a>×40% + <b>×35% + <c>×25% = <N> |`
+      `| **Track Confidence（综合置信度）** | **<N>** | **<a>**×40% + <b>×35% + <c>×25% = <R> → **<N>** |`
     ⇒ cell 取第 2 列；三分量按 `×40%` / `×35%` / `×25%` 分别抓（允许 `**` 包裹）；
       结果以第 2 列为准（分解式里的 `→ N` 只作旁证，不参与判定）。
     """
@@ -691,7 +828,7 @@ def _ghost_ref_exists(ref: str, base: Path, declared, own_dir: Path | None = Non
       - **career-dna 根文件**（`own_dir=None`）：按 career-dna 根解析 = 历史行为，**最严**；
       - **`references/**`**（`own_dir` = 文件自身目录）：该目录内文档互相引用写的是
         裸文件名（`online_profile_generation.md`）⇒ **自身目录优先**。 实测：
-        扩面后 87 条失败里 **66 条**属「基准不对」而非引用错（``）；
+        扩面后多数失败属「基准不对」而非引用错；
       - **`10_career_tracks/`**（`own_dir` = 该目录）：跨目录写 `../03_projects.md`，
         由 `Path` 拼接自然解析，不需特殊规则。
 
@@ -1115,7 +1252,7 @@ def validate(career_dna_dir: str = "./career-dna"):
     #   ① career-dna/ 根文件 ② skill 自带 assets/templates/（种子，指针必须真实）
     #   ③ references/（skill 侧规范文档）④ 10_career_tracks/（赛道文件）
     # ③④ 的解析基准 = **文件自身目录**（见 `_ghost_ref_exists` 的域分级说明）——
-    # 不这样做会把 66 条正确引用判成幽灵（ `` 实测）。
+    # 不这样做会把大量正确引用判成幽灵（实测）。
     ghost_targets = [(n, p, None) for n, p in present.items()]
     skill_root = Path(__file__).resolve().parent.parent
     templates_root = skill_root / "assets" / "templates"
@@ -1151,14 +1288,14 @@ def validate(career_dna_dir: str = "./career-dna"):
             )
 
     # ---- P2: 赛道置信度一致性（v2.32.0 · track-confidence-consistency） ----
-    # 病根：赛道分值曾靠「人工 grep」兜住 ——  实测「某赛道」拆分后 README 两处仍写 74
-    # （赛道文件已 70），**闸门零覆盖**。本项只查「数值一致性」，不查排序合理性（优先级序属人定）。
+    # 病根：赛道分值曾靠人工核对兜住 —— 实测某赛道拆分后 README 仍留有旧分值
+    # （与赛道文件不一致），**闸门零覆盖**。本项只查「数值一致性」，不查排序合理性（优先级序属人定）。
     tracks_dir = base / "10_career_tracks"
     if tracks_dir.is_dir():
         conf = {}       # 文件名 -> cell
         skipped = []    # 分解式不可解析（须打印「未校验」，不报 P2）
         for tf in sorted(tracks_dir.glob("*.md")):
-            if tf.name == "README.md":
+            if tf.name == "README.md" or tf.name.startswith("_"):
                 continue
             try:
                 tb = tf.read_text(encoding="utf-8")
@@ -1202,7 +1339,7 @@ def validate(career_dna_dir: str = "./career-dna"):
         # 病根：该段此前闸门零覆盖（全库检索 `Track Strategy` 0 命中）⇒ 段缺失 / S 节缺档
         # 均不可机械检出（实测曾把「某成果指标 X→Y 天」当独立项目 / 故事条目引用）。
         for tf in sorted(tracks_dir.glob("*.md")):
-            if tf.name == "README.md":
+            if tf.name == "README.md" or tf.name.startswith("_"):
                 continue
             try:
                 tb = tf.read_text(encoding="utf-8")
@@ -1218,6 +1355,51 @@ def validate(career_dna_dir: str = "./career-dna"):
                 findings.append(
                     ("P2", "track-strategy-schema", tf.name, f"缺节：{', '.join(miss)}"))
 
+        # ---- P2: 投递追踪表三列一致性（v2.39.0 · application-track-schema） ----
+        # 病根：Mode D 每次都产出 Track/Match，但 tracker 无结构化列 ⇒ 多次分析仅少数被复用，
+        #   「该重点投哪条赛道」永远无人回答。本项守三列的取值域 + 「与 01 报告一致」。
+        # 误报边界：tracker 缺失 / 三列未加（旧实例）/ 对应 01 报告取不到 ⇒ **skip，绝不报 P2**。
+        _tracker = base.parent / "application-tracker" / "01_application_index.md"
+        if not _tracker.is_file():
+            print("   ℹ️ application-track-schema：未找到 tracker ⇒ 未校验")
+        else:
+            _trows = _parse_tracker_rows(_tracker)
+            if _trows is None:
+                print("   ℹ️ application-track-schema：tracker 无 Track/Match/Outcome 三列（旧实例）⇒ 未校验")
+            else:
+                _tset = {p.stem for p in tracks_dir.glob("*.md")
+                         if p.name != "README.md" and not p.name.startswith("_")}
+                _outc = {"—", "NONE", "SCREEN", "INTERVIEW", "REJECT", "OFFER"}
+                _nc = _nm = 0
+                for r in _trows:
+                    _who = f"{r['company']} / {r['role']}"
+                    if r["track"] not in _tset and r["track"] not in {"none", "—"}:
+                        findings.append(("P2", "application-track-schema", _who,
+                                         f"Track `{r['track']}` 不在赛道取值域内"))
+                    if r["match"] != "—" and not re.fullmatch(r"\d{1,3}", r["match"]):
+                        findings.append(("P2", "application-track-schema", _who,
+                                         f"Match `{r['match']}` 非 0–100 整数或 —"))
+                    if r["outcome"] not in _outc:
+                        findings.append(("P2", "application-track-schema", _who,
+                                         f"Outcome `{r['outcome']}` 不在枚举内"))
+                    _pk = r["pack"].strip()
+                    if not _pk.startswith("../resume-outputs/"):
+                        _nc += 1
+                        continue
+                    _rep = base.parent / _pk[3:] / "01_jd_match_report.md"
+                    _rt, _rm = _report01_meta(_rep)
+                    if _rt is None and _rm is None:
+                        _nc += 1
+                        continue
+                    if _rt and r["track"] not in {"—", _rt}:
+                        findings.append(("P2", "application-track-schema", _who,
+                                         f"Track `{r['track']}` ≠ 01 报告 `{_rt}`"))
+                    if _rm and r["match"] not in {"—", _rm}:
+                        findings.append(("P2", "application-track-schema", _who,
+                                         f"Match {r['match']} ≠ 01 报告 {_rm}"))
+                if _nc:
+                    print(f"   ℹ️ application-track-schema：{_nc} 行无 01 报告可对 ⇒ 仅校取值域")
+
     # ---- P2: 校验项登记 ↔ 实现一致性（元校验 · gate-check-registry） ----
     # 「声明了机制却无实现」是反复出现的病根（`stale` 取值 / `track-confidence-consistency` 均属此族）。
     # 用闸门自查：manifest.gate_checks 登记的 code 必须在源码里真实出现，否则即空声明。
@@ -1231,9 +1413,25 @@ def validate(career_dna_dir: str = "./career-dna"):
                 ("P2", "gate-check-registry", "career_dna_manifest.json",
                  f"已登记但源码无实现：{', '.join(_missing)}"))
 
-    # ---- P2: 产物侧年限口径（v2.32.0 · format-source-consistency 子项） ----
-    # 真源 = 02_timeline.md 受控块（年限口径：对外总量统一表述，不显具体行业与起止日期）；
-    # 只查**日期门槛之后**的包（`RESUME_OUTPUT_GATE_FROM`）—— 历史包按 「不回补」，永久豁免。
+    # ---- P2: 产物侧年限口径（v2.32.0 · format-source-consistency 子项 · v2.35.0 去硬编码） ----
+    # 真源 = 02_timeline.md「年限口径」受控块（v2.34.0 起为**三值 + 渠道取值表**）。
+    # **允许值一律从真源解析**（`_tenure_allow_values`），脚本内**禁写死具体年限** ——
+    #   写死即第二真源：真源一改（单值 → 三值），校验就与真源对打，产出假阳性，
+    #   并反向逼生成端写出与渠道表相反的字段（某历史投递包实测踩中）。
+    # 只查**日期门槛之后**的包（`RESUME_OUTPUT_GATE_FROM`）—— 历史包按「不回补」，永久豁免。
+    # 误报边界：真源解析失败 / 字段内无数值 ⇒ **skip 并打印「未校验」，绝不报 P2**。
+    _tenure_allowed, _tenure_vals = _tenure_allow_values(base)
+    if not _tenure_allowed:
+        print("  [skip] 年限口径真源解析失败 ⇒ 「产物侧年限口径」本项未校验")
+    _sg_file = base / "04_skill_graph.md"
+    _sg_text = ""
+    if _sg_file.is_file():
+        try:
+            _sg_text = _sg_file.read_text(encoding="utf-8")
+        except Exception:
+            _sg_text = ""
+    if not _sg_text:
+        print("  [skip] 04_skill_graph 读取失败 => 「核心能力工具位」本项未校验")
     _ro_root = base.parent / "resume-outputs"
     if _ro_root.is_dir():
         for _pack in sorted(_ro_root.iterdir()):
@@ -1249,14 +1447,30 @@ def validate(career_dna_dir: str = "./career-dna"):
                     _b = _f.read_text(encoding="utf-8")
                 except Exception:
                     continue
+                # 核心能力工具位（v2.37.0）—— 放在年限判断**之前**：
+                # 否则「无工作年限字段」的包会在下方 continue 掉、本项被漏检。
+                if _sg_text:
+                    # 净化产物（*_final.md）本就会剥掉所有注释 ⇒ 不要求 tool-slot 留痕，
+                    # 否则「按规则净化」会被闸门判违规（自相矛盾）。
+                    for _where, _msg in _capability_tool_findings(
+                            _b, "%s/%s" % (_pack.name, _fn), _sg_text,
+                            require_trace="final" not in _fn):
+                        findings.append(("P2", "capability-tool-slot", _where, _msg))
+
                 _m = re.search(r"\*\*工作年限\*\*\s*[:：]\s*(.+)", _b)
                 if not _m:
                     continue
                 _val = _m.group(1).strip()
-                if not re.match(r"4\s*年\+", _val):
+                if not _tenure_allowed:
+                    continue
+                _nm = re.search(r"\d+(?:\.\d+)?", _val)
+                if not _nm:
+                    continue
+                if float(_nm.group(0)) not in _tenure_allowed:
                     findings.append((
                         "P2", "format-source-consistency", f"{_pack.name}/{_fn}",
-                        f"工作年限「{_val[:18]}」≠ 受控口径「4 年+」"
+                        f"工作年限「{_val[:18]}」的数值不在受控口径 "
+                        f"{sorted(_tenure_allowed)} 内（真源 = 02_timeline.md 年限口径）"
                     ))
 
     # ---- P2: 残留规则编号引用（下游引用了真源已废弃的编号） ----
@@ -1357,7 +1571,7 @@ def validate(career_dna_dir: str = "./career-dna"):
         track_files = [
             p
             for p in tracks_dir.glob("*.md")
-            if p.is_file() and p.stem.lower() != "readme"
+            if p.is_file() and p.stem.lower() != "readme" and not p.name.startswith("_")
         ]
         track_count = len(track_files)
         if track_count:
@@ -1707,9 +1921,9 @@ def validate(career_dna_dir: str = "./career-dna"):
                     " —— 索引表每行须指向真实存在的文件"
                 ))
 
-            # ---- ③ 受控字段：状态 ∈ 值域（`` · v2.32.0）----
+            # ---- ③ 受控字段：状态 ∈ 值域（v2.32.0）----
             # 值域真源 = references/portfolio_outputs.md §6「状态取值域」；
-            # `stale` 为  新增（源变更后案例正文未同步 ⇒ 待刷新，禁自动改写正文）。
+            # `stale` 为新增（源变更后案例正文未同步 ⇒ 待刷新，禁自动改写正文）。
             PF_STATE_VALUES = ("Ready", "Need Evidence", "辅助材料", "内部工作稿", "模板", "stale")
             bad_state = []
             for fn, raw in _portfolio_index_states(po_readme.read_text(encoding="utf-8")):

@@ -84,6 +84,8 @@ Career DNA 现有能力
 | `application-tracker/01_application_index.md` | 投递记录 + 面试结果 |
 | `07_career_identity` Layer 2 | Career Positioning |
 | `10_career_tracks/` | 各 Track Confidence |
+| `career-dna/10_career_tracks/_recommendation.md` | **匹配视图**（v2.39.0）—— `Recommend` 公式与当前 A/B/C 三值；本步是它的**唯一定期复核点** |
+| `application-tracker/02_status_definitions.md` | `Outcome` 枚举（B 项的输入来源） |
 | `knowledge/role_snapshots/README.md` | **「新赛道候选」表**（v2.17.0）—— 由 `mode_d` Step 10 C 第 7 条累积的观察计数，本步只**消费**，不重算 |
 
 **分析维度**：
@@ -94,8 +96,9 @@ Career DNA 现有能力
 | **定位偏离检查** | 如果某个 Track 面试率高但 07 未将其列为主/次定位 → 检查是否需要更新 Career Positioning |
 | **叙事效果** | 面试反馈中是否有关于「你是什么样的人」的信号 |
 | **新赛道候选**（v2.17.0） | 读 `role_snapshots` README 的候选表：是否有岗已达「同一快照 ≥3 家不同公司」→ 建议评估新建赛道；**只建议，新建须走 Mode A/B**（判据定义在 `mode_d` §Step 10 C 第 7 条，本步不复制） |
+| **推荐分复核**（v2.39.0） | 读 `career-dna/10_career_tracks/_recommendation.md`：① 各赛道 `n`（已投且 `Outcome ≠ —` 的样本数）是否已达 3；② 达标的赛道重算 `B` 并更新 `Recommend`；③ `C`（意愿）**只核对、不代填** —— 与 `07` Layer 2 冲突时提示用户，由用户改 |
 
-**输出**：分析报告（不自动修改 07，仅建议）。
+**输出**：分析报告（不自动修改 07，仅建议）；该文件的 `B` / `Recommend` 列**可同批刷新**（属派生计算，非身份变更），`C` 列不动。
 
 ### Step 7: Track Strategy Generation（赛道策略生成 v2.7.1）
 

@@ -167,7 +167,7 @@ Output Contracts 定义每个求职策略（Pack A/B/C/D）对应的文件产出
 | 内容 | 唯一定义源 | 本合约的约束 |
 |---|---|---|
 | 四条行级写法（二级缩进行 / 悬挂块 / 裸行注记 / 栏目强调） | `assets/templates/resume-outputs/resume_template.html`（约定注释）+ `pack_templates/02_resume_cn_template.md`（版式规则块） | 净化（Step 9.5 L1/L2）**只剥标注、不碰行级形态** |
-| 核心能力**工具位** | `mode_d` §Capability Mapping（正文）+ `pack_templates/02` | **默认不挂附注**；全节合计 **≤1 处**；工具唯一展开位 = 「技能与认证 · 技能」行 |
+| 核心能力**工具位** | `mode_d` §Capability Mapping（正文）+ `pack_templates/02` | **至多 2 处**附注、每处**仅 1 个工具**（v2.37.0）；资格 = JD 原文明示（只认 `01` Part 1）**或** `04` 首选证据，且 `04` 须有该工具条目；须留 `<!-- tool-slot -->` 判定痕；工具唯一展开位 = 「技能与认证 · 技能」行 |
 | 工具附注闸门 | `mode_d` **QA-5**（`Capability Tool Slot Check`，v2.27.0 改名） | 「核心能力工具数 ≤1 且该工具满足强调 × 证据」 |
 
 > ⚠️ **渲染端契约**：`export_resume.py` 按行首形态注入 `<div class="hang|sub">` 与 `.entry-note` ⇒ **不要在 md 里手调空格**（悬挂缩进由 `_emw` 按**渲染后纯文字宽度**折算——数源串会把 `==技能==` 算成 7 字符而错位）。

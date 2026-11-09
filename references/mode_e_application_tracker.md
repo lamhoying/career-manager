@@ -39,7 +39,11 @@ v2.0: 我投了以后发生了什么？
 3. Last Update = 当前日期
 4. **Pack**：若对应 `resume-outputs/{YYYYMMDD}-{company}-{role}/` 目录已存在 → 填相对链接
  （`../resume-outputs/{YYYYMMDD}-{company}-{role}/`）；无包则填 `—`
-5. Notes 可选填
+5. **Track / Match（v2.39.0）**：从对应 `01_jd_match_report.md` 取 ——
+ `Track` = 头部「报告元信息表」Track 行的受控值（赛道文件名 / `none`）；`Match` = §3.1 `Overall Match Score`。
+ **无对应包的裸投递**（先投后补分析）⇒ 两列均填 `—`，并在 Notes 记「无 01 报告」
+6. **Outcome = `—`** —— 刚投递、对方尚未反馈；后续由 E2 维护
+7. Notes 可选填
 
 ### 规则
 
@@ -63,11 +67,28 @@ v2.0: 我投了以后发生了什么？
 2. 更新 Status 列
 3. 更新 Last Update 列
 4. **不动 `Pack` 列** —— pack 目录不会因投递状态变化而改名
+5. **同步 `Outcome`（v2.39.0）** —— 按下列映射：`Applied / Viewed / Contacted` → `SCREEN`；
+ `HR Interview` 及以上 → `INTERVIEW`；`Rejected` → `REJECT`；`Offer` → `OFFER`；
+ **`Analyzed` / `Planned` 保持 `—`**（尚未真实投递）
 
 ### 规则
 
 - 仅允许正向流转。终态（Rejected / Withdrawn）不可再变
 - 若进入 Stage 4 (HR Interview)、Offer，或 Stage 8 (Rejected) → 自动触发 E3 建档检查
+- **`Outcome = NONE`（长期无回音）只能由用户确认后写入** —— `Applied` 满 4 周且无任何反馈时提示用户，
+ **不得按天数自动判定**（不自动学习，见文件头纪律）
+
+---
+
+## 字段维护责任表（v2.39.0）
+
+> 三列分析结论**只有一个写入者**，禁止跨模式抢写（守「单一真源」）。
+
+| 列 | 首次写入 | 后续维护 | 禁止 |
+|---|---|---|---|
+| `Track` | Mode D §D-1（源自 `01` 报告元信息表） | Mode E 仅在补分析后修正 | Mode E 凭岗位名自判 |
+| `Match` | Mode D §D-1（源自 `01` §3.1） | 重跑分析时同步更新 | 填 `Decision Score` / 按 `Notes` 反推 |
+| `Outcome` | Mode E §E1（填 `—`） | Mode E §E2 按状态映射 | **Mode D 写非 `—` 值** / 按天数自动判定 |
 
 ---
 

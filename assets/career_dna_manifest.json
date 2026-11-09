@@ -1,6 +1,6 @@
 {
-  "manifest_version": "2.24.0",
-  "updated": "2026-09-27",
+  "manifest_version": "2.26.0",
+  "updated": "2026-10-29",
   "purpose": "Career DNA 文件清单的唯一定义源（Single Source of Truth）。init_career_dna.py / completeness_checker.py / validate_career_dna.py 均从此文件读取，禁止在脚本或文档中另行硬编码清单。",
   "write_contract": [
     "career-dna/ 是用户的唯一事实源（SSOT）。任何在 career-dna/ 根目录新增的文件，必须先在本清单登记（filename + name + desc + weight + kind），并提供 assets/templates/career-dna/ 下的同名模板。",
@@ -261,6 +261,16 @@
       "code": "gate-check-registry",
       "level": "P2",
       "desc": "登记项 ↔ 实现一致性（v2.32.0 元校验）"
+    },
+    {
+      "code": "capability-tool-slot",
+      "level": "P2",
+      "desc": "核心能力行工具附注合规（v2.37.0：≤2 处 / 每处 1 个 / 必须有 04 证据 / 须留判定痕）"
+    },
+    {
+      "code": "application-track-schema",
+      "level": "P2",
+      "desc": "投递追踪表三列（v2.39.0：Track 取值域 / Match 0-100 / Outcome 枚举 / 与 01 报告一致；取不到则 skip）"
     }
   ]
 }

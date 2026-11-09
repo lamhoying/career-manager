@@ -602,8 +602,16 @@ def _pf_watermark_text(css, lines, mode: str) -> str:
     draft 档恒带 `DRAFT · 待确认` 前缀（显著 ⇒ 解决 Gate 阶段预览件被误投）。
     """
     raw = ((css or {}).get("--watermark-text", "auto") or "").strip()
+    # md 封面可声明「水印：auto / generic / 任意文案」⇒ 覆盖模板默认（内容驱动：单岗切回 auto 不用改脚本）
+    _md_wm = _pf_cover_field(lines, "水印")
+    if _md_wm:
+        raw = _md_wm
     raw = raw.strip('"').strip("'").strip()
-    if raw and raw.lower() not in ("auto", "none"):
+    if raw.lower() == "generic":
+        # 通用作品集（一稿多投 / 公开发布）—— **不含公司名**，避免投 A 家的册子印着 B 家
+        name = _pf_cover_field(lines, "姓名")
+        base = " · ".join([p for p in (name, "作品集", "请勿转发") if p])
+    elif raw and raw.lower() not in ("auto", "none"):
         base = raw
     else:
         name = _pf_cover_field(lines, "姓名")
@@ -1050,7 +1058,8 @@ def html_to_pdf(html_text: str, out_path: Path, profile: str = "resume", _total:
     from reportlab.lib.colors import HexColor
     import io as _io
     from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer, Table,
-                                    TableStyle, Image, HRFlowable, Preformatted, PageBreak)
+                                    TableStyle, Image, HRFlowable, Preformatted, PageBreak,
+                                    KeepTogether)
     from reportlab.lib.styles import ParagraphStyle
 
     bold_font = _reg_cn_fonts()
@@ -1876,7 +1885,18 @@ def html_to_pdf(html_text: str, out_path: Path, profile: str = "resume", _total:
                                    colWidths=[col_left * cm, photo_w_cm * cm],
                                    style=header_style)
                 story.append(header_tbl)
-                story.append(Spacer(1, 6))  # header 与首节之间的固定小间距（节标题上方由 --heading-space-before 控制）
+                # v2.36.0 header↔首节重叠修复：背景块（shape / image）按**固定**
+                # --header-bg-height 绘制，其高度常大于表格实测高度 ⇒ 背景"多出来的那段"
+                # 会把紧随其后的节标题压住（实测：节标题叠在蓝底边上）。
+                # 修法：补「背景高 − 表格高」的差额；两者一致时退回原 6pt，不影响既有版式。
+                _post_gap = 6.0
+                if header_bg_height:
+                    try:
+                        _bw, _bh = header_tbl.wrap(page_w_cm * cm, 10 ** 6)
+                        _post_gap = max(6.0, float(header_bg_height) - float(_bh) + 6.0)
+                    except Exception:
+                        _post_gap = 6.0
+                story.append(Spacer(1, _post_gap))  # header 与首节间距（差额补偿后）
 
             elif child.tag == "section" and "section" in child.cls():
                 title = next((c for c in child.children if c.tag == "div" and "section-title" in c.cls()), None)
@@ -1923,20 +1943,30 @@ def html_to_pdf(html_text: str, out_path: Path, profile: str = "resume", _total:
                         if not first_entry:
                             story.append(Spacer(1, entry_space))  # ★ 条目之间间距（--entry-space）
                         first_entry = False
+                        # v2.36.0 标题落页底修复：把「条目标题（公司/项目行）」与其后
+                        # **首个内容块**装进 KeepTogether —— 报告无需 keep-with-next，若标题恰好
+                        # 落在页尾，reportlab 会把两者一起推到下一页（实测：某条目标题孤立在第 1 页页底）。
+                        # ⚠️ 只在条目内部绑定，不跨条目：否则整节会被迫同页、撑出第 3 页。
+                        _ent = []
                         meta = next((c for c in sub.children if c.tag == "div" and "entry-meta" in c.cls()), None)
                         if meta:
                             style_meta = ParagraphStyle("meta_indent", parent=s_meta, leftIndent=body_indent)
-                            story.append(Paragraph(_node_markup(meta), style_meta))
+                            _ent.append(Paragraph(_node_markup(meta), style_meta))
                         for note in sub.children:
                             if note.tag == "div" and "entry-note" in note.cls():
-                                story.append(Paragraph(_node_markup(note),
+                                _ent.append(Paragraph(_node_markup(note),
                                              ParagraphStyle("note_indent", parent=s_body, leftIndent=body_indent)))
                         ul = sub.find_first("ul")
                         if ul:
                             for li in ul.children:
                                 if li.tag == "li":
                                     style_li = ParagraphStyle("li_indent", parent=s_bullet, leftIndent=bullet_indent)
-                                    story.append(Paragraph("• " + _node_markup(li), style_li))
+                                    _ent.append(Paragraph("• " + _node_markup(li), style_li))
+                        if len(_ent) >= 2:
+                            story.append(KeepTogether(_ent[:2]))
+                            story.extend(_ent[2:])
+                        elif _ent:
+                            story.append(_ent[0])
 
     def _collect_toc_titles(flowable, out):
         """收集 flowable 里的案例标题段（样式名 pf_ct），**含嵌套表格单元格**。
@@ -2742,6 +2772,75 @@ def autofit_spacing(html_text: str, profile: str = "resume", lo: float = 1.26,
     return html_out, _meta(True, best, entry, pages)
 
 
+IDENTITY_MAP = {
+    # key（identity 文件字段） → 模板中可能出现的占位符写法
+    "name":       ["[姓名]", "[Name]"],
+    "phone":      ["[电话]", "[Phone]"],
+    "email":      ["[邮箱]", "[Email]"],
+    "school":     ["[学校]", "[University]"],
+    "edu_period": ["[起止时间]", "[Period]"],
+    "city":       ["[城市]", "[City]"],
+}
+
+# 默认身份文件位置（工作区之外）。存在即自动注入 —— 出包不需要额外参数。
+DEFAULT_IDENTITY = Path.home() / ".career-manager" / "identity.yaml"
+
+
+def load_identity(path: Path) -> dict:
+    """读取本地身份配置（简单 `key: value`，不引入 YAML 依赖）。
+
+    ⚠️ **PII 边界**：本文件存放于工作区之外（`~/.career-manager/identity.yaml`）。
+    本函数是**唯一合法读者**；AI / 生成管线**禁止直接读取其内容**（只传路径给本脚本）。
+    依据：`career-dna/01_profile.md` §PII 隔离 —— 模型不需要知道这些值，只需脚本在渲染时注入。
+    """
+    data = {}
+    try:
+        raw = path.read_text(encoding="utf-8")
+    except Exception as e:
+        print(f"   ⚠️ identity 读取失败（{type(e).__name__}）⇒ 保持占位符输出")
+        return data
+    for line in raw.split("\n"):
+        s = line.strip()
+        if not s or s.startswith("#") or ":" not in s:
+            continue
+        k, v = s.split(":", 1)
+        v = v.strip().strip('"').strip("'")
+        if v:
+            data[k.strip()] = v
+    return data
+
+
+def apply_identity(md_text: str, ident: dict):
+    """在**内存中**把占位符替换为真值（不写回源文件 ⇒ 源文件永久保持占位符）。
+
+    返回 (新文本, 未覆盖的占位符列表)。缺字段时**不报错、不阻断**，只提示。
+    """
+    missing = []
+    for key, placeholders in IDENTITY_MAP.items():
+        val = ident.get(key)
+        for ph in placeholders:
+            if ph in md_text:
+                if val:
+                    md_text = md_text.replace(ph, val)
+                else:
+                    missing.append(ph)
+    return md_text, missing
+
+
+def _identity_looks_unfilled(ident: dict) -> bool:
+    """检测 identity 是否仍是**未填的模板**（值里含「你的…」这类占位文字）。
+
+    未填 ⇒ 必须拒绝注入 —— 否则会把「你的姓名」原样印到简历上（实测风险：用户复制了
+    `identity.example.yaml` 但没改内容，自动注入照样会成功 ⇒ 产出废件）。
+    """
+    hints = ("你的", "your ", "[", "待填", "xxx", "示例")
+    for v in ident.values():
+        low = (v or "").lower()
+        if any(h in low for h in hints):
+            return True
+    return False
+
+
 def main():
     ap = argparse.ArgumentParser(description="Export final resume via HTML template (v2.8.1)")
     ap.add_argument("--input", required=True, help="deliverables/02_resume_cn_final.md")
@@ -2754,6 +2853,10 @@ def main():
     ap.add_argument("--profile", choices=["auto", "resume", "portfolio"], default="auto",
                     help="渲染 profile：auto = 读模板头 render-profile 标记，无标记则 resume")
     ap.add_argument("--photo", default=None, help="证件照（可选）")
+    ap.add_argument("--identity", default=None,
+                    help="身份配置路径。**不传也生效**：默认读 ~/.career-manager/identity.yaml（存在即注入）；"
+                         "传路径 ⇒ 用指定文件；传 none ⇒ 禁用注入（保留占位符，用于脱敏演示）。"
+                         "注入在内存完成，源 md 不被修改（永久保留占位符）")
     ap.add_argument("--theme", default=None, help="配色覆盖（可选，覆盖模板 CSS 变量）")
     ap.add_argument("--png-width", type=int, default=1160,
                     help="PNG 目标宽度 px（默认 1160 = Boss 消息卡片建议宽；1740 = 1.5×）")
@@ -2818,6 +2921,27 @@ def main():
         sys.exit(1)
 
     md_text = in_path.read_text(encoding="utf-8")
+
+    # ---- 身份注入（v2.40.1 · PII 隔离）: 只在内存替换，源文件保持占位符 ----
+    # 默认即生效：不传 --identity 也会尝试读 DEFAULT_IDENTITY（存在才注入，不存在静默跳过）
+    _ident_arg = (args.identity or "").strip()
+    if _ident_arg.lower() in ("none", "off", "-"):
+        _ident_path = None                      # 显式禁用（脱敏演示用）
+    elif _ident_arg:
+        _ident_path = Path(_ident_arg).expanduser()
+    else:
+        _ident_path = DEFAULT_IDENTITY if DEFAULT_IDENTITY.exists() else None
+    if _ident_path and _ident_path.exists():
+        ident = load_identity(_ident_path)
+        if ident and _identity_looks_unfilled(ident):
+            print("   ⚠️ identity 疑似**未填写**（值里仍有「你的…」等占位文字）⇒ 已跳过注入，输出保持占位符")
+        elif ident:
+            md_text, _miss = apply_identity(md_text, ident)
+            if _miss:
+                print(f"   ⚠️ identity 未覆盖：{', '.join(sorted(set(_miss)))} ⇒ 该处输出仍是占位符")
+            if not args.photo and ident.get("photo"):
+                args.photo = ident["photo"]
+            print(f"   ✅ identity 已注入（{len(ident)} 个字段）")
     tpl_text = _inline_palette(tpl_path.read_text(encoding="utf-8"))
     if profile == "portfolio":
         # css 传入 ⇒ 页脚块可读 --footer（以模板声明为准；未声明 ⇒ 合册默认 page-x-of-y）

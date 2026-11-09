@@ -58,7 +58,15 @@ Online Profile = 07 + 10 + 04b + 03 的动态投影
      本字段**单向**（身份层 → 市场层），且**不参与任何派生计算**（不进 Track Confidence / Match / Decision Score）。
 
      ⚠️ 命名区分：本节的 `Primary / Secondary / Emerging` 是 **Positioning**（按**用户声明**，可多条并存），
-     与赛道文件的 `Primary / Secondary / Supporting` **Track**（按 **Confidence 排序**）**同名不同义**，读取时不得混用。 -->
+     与赛道文件的 `Primary / Secondary / Supporting` **Track**（按 **Confidence 排序**）**同名不同义**，读取时不得混用。
+
+     ⚠️ **实际作用边界（v2.40.0 新增）**：本层条目**不产生任何独立展示位** —— `11` 的身份自称位只读 **Primary**；
+     `02` 简历「职业定位」也只读 **Primary**；`13` Part 1-3 读 Layer 1/3/5。
+     条目的确定作用只有三处：① **`Layer 5 ∖ Layer 2` 的减项**（主作用：被收录的方向自动解禁）；
+     ② Mode C Step 2 的「已收录方向」上下文；③ `11`「擅长 3 条」的**取材优先级**（v2.40.0 接线）。
+     ⇒ **若某条既与 Layer 5 无交集、也未进「擅长 3 条」，净影响 = 0，属登记性条目** ——
+     登记价值 = 身份完整性 + 未来解禁开关 + Mode C 上下文，**不是产出**。
+     ⇒ 生成端**不得**为了「让某条产生作用」而擅自把它写进身份自称位（那是扩张身份，须改 Primary 或走 Mode B）。 -->
 
 **Primary Positioning（主定位）**：
 [一句话市场身份，如 "Technical Project Manager — 技术背景的项目交付与组织推动者"]（Track: [赛道文件名 | none]）

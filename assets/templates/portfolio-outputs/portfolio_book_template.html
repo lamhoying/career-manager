@@ -96,7 +96,9 @@
     --header: auto;            /* none | auto | full —— 页眉（刀 D 新增）；简历模板不声明 ⇒ none */
     --watermark: trace;        /* none | trace | draft —— 水印（刀 D 新增）；简历模板不声明 ⇒ none */
     --watermark-opacity: 0.04; /* 水印不透明度（刀 D 新增）；建议 3%–6%，禁 > 10% */
-    --watermark-text: auto;    /* 水印文案（刀 D 新增）；auto = 由封面元信息派生（姓名 + 应聘公司） */
+    --watermark-text: generic; /* 水印文案：generic = 「姓名 · 作品集 · 请勿转发」（通用版·默认·不含公司名）；
+                                 auto = 「姓名 · 应聘 {公司} · 仅供招聘评估使用」（**仅单岗投递**时显式覆盖）；
+                                 也可填任意固定文案 */
     --hero-bar: 4px;           /* 案例标题区左侧竖条宽 */
   }
 

@@ -680,7 +680,10 @@ resume-outputs/{YYYYMMDD}-{company}-{role}/
 
 新增三部分：JD Metadata / Original JD / AI Extracted Summary，保留完整 JD 上下文用于回溯。
 
-**Part 1: JD Metadata（JD元信息）** — Company（公司） / Role（岗位） / Date（日期） / Source（来源） / Track（赛道）
+**Part 1: JD Metadata（JD元信息）** — Company（公司） / Role（岗位） / Date（日期） / Source（来源） / ~~Track（赛道）~~
+> ⚠️ **Track 落点已迁（v2.39.0）**：`Track` 不再写在 Part 1 或头部注释，改为**标题后的「报告元信息表」一行**
+> （`| **Track（职业赛道）** | \`<赛道文件名>\`（<登记日 · 原判留痕>） |`）—— 因老包 Part 1 是代码块、无法放表格。
+> 现行为以 `references/pack_templates/01_jd_match_report_template.md` 为准；本行保留仅为追溯 v1.3 形态。
 **Part 2: Original JD（JD原文）** — 完整 JD 原文存档
 **Part 3: AI Extracted Summary（AI提取摘要）** — Core Responsibilities（核心职责） / Must Have Skills（硬性要求） / Nice To Have（加分项） / Tools（工具） / Keywords（关键词） / Risk Factors（风险点）
 **Part 4: Match Analysis（匹配分析）** — Match Score（匹配度） / Strengths（优势） / Gaps（缺口） / Recommended Projects（推荐项目） / Stories（推荐故事） / High Risk Questions（高风险问题） / ATS Keywords（关键词）

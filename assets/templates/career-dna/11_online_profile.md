@@ -169,17 +169,7 @@ TC001, TC002, TC006
 
 ---
 
-## Multi-Track Coverage（多赛道覆盖 v2.2）
+## Multi-Track Coverage（**v2.39.0 起废止**）
 
-<!-- 确保一份在线简历同时覆盖多个 Track -->
-<!-- ⚠️ 本表的 Primary / Secondary = 赛道侧 Track 层级（按 **Confidence 排序**），
- 与 07 Layer 2 的 Positioning 层级（按**用户声明**）**同名不同义**，不得混用（v2.21.0）。 -->
-
-| Track | Coverage（覆盖率） | 状态 |
-|------|:--:|------|
-| **Primary**: [Track Name] | [XX]% | ≥ 60% ✅ / ⚠️ 不足 |
-| **Secondary**: [Track Name] | [XX]% | ≥ 25% ✅ / ⚠️ 不足 |
-| **Adjacent**: [Track Name] | [XX]% | ≥ 15% ✅ / ⚠️ 不足 |
-
-> Coverage = 该在线简历展示的能力中，有多少覆盖了此 Track 的需求。
-> 如果任一项不足 → 重新选择项目与经历。
+> 赛道覆盖率阈值表已废止，**本模板不再生成任何覆盖率表**；对外展示边界由 `07` Layer 2 决定。
+> 规则唯一定义源与旧实例处置见 `references/online_profile_generation.md` §Multi-Track Coverage Rules。
